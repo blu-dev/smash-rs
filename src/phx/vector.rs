@@ -7,6 +7,27 @@ pub struct Vector2f {
     pub y: f32
 }
 
+impl Vector2f {
+    pub const fn zero() -> Self {
+        Self {
+            x: 0.0,
+            y: 0.0
+        }
+    }
+
+    pub fn new(x: f32, y: f32) -> Self {
+        Self { x, y }
+    }
+
+    pub fn mag(self) -> f32 {
+        (self.x.powi(2) + self.y.powi(2)).sqrt()
+    }
+
+    pub fn normalize(self) -> Self {
+        self / self.mag()
+    }
+}
+
 impl fmt::Display for Vector2f {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         if f.alternate() {
@@ -106,6 +127,28 @@ pub struct Vector3f {
     pub x: f32,
     pub y: f32,
     pub z: f32
+}
+
+impl Vector3f {
+    pub const fn zero() -> Self {
+        Self {
+            x: 0.0,
+            y: 0.0,
+            z: 0.0
+        }
+    }
+
+    pub fn new(x: f32, y: f32, z: f32) -> Self {
+        Self { x, y, z }
+    }
+
+    pub fn mag(self) -> f32 {
+        (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
+    }
+
+    pub fn normalize(self) -> Self {
+        self / self.mag()
+    }
 }
 
 impl fmt::Display for Vector3f {
@@ -217,6 +260,29 @@ pub struct Vector4f {
     pub y: f32,
     pub z: f32,
     pub w: f32
+}
+
+impl Vector4f {
+    pub const fn zero() -> Self {
+        Self {
+            x: 0.0,
+            y: 0.0,
+            z: 0.0,
+            w: 0.0
+        }
+    }
+
+    pub fn new(x: f32, y: f32, z: f32, w: f32) -> Self {
+        Self { x, y, z, w }
+    }
+
+    pub fn mag(self) -> f32 {
+        (self.x.powi(2) + self.y.powi(2) + self.z.powi(2) + self.w.powi(2)).sqrt()
+    }
+
+    pub fn normalize(self) -> Self {
+        self / self.mag()
+    }
 }
 
 impl fmt::Display for Vector4f {
