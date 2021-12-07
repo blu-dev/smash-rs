@@ -395,3 +395,7 @@ impl Neg for Vector4f {
         }
     }
 }
+
+pub type Vec2 = Vector2f;
+pub type Vec3 = Vector3f;
+pub type Vec4 = Vector4f;
