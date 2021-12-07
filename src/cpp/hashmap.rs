@@ -49,11 +49,11 @@ impl<K, V> MapEntry<K, V> {
 
 #[repr(C)]
 pub struct HashMap<K, V> {
-    pub buckets: *const *mut MapEntry<K, V>,
-    pub bucket_count: usize,
-    pub entries: *mut MapEntry<K, V>,
-    pub entry_count: usize,
-    pub prime_coefficient: f32 // no clue if that's the right name or not, but it's 1.0f
+    buckets: *const *mut MapEntry<K, V>,
+    bucket_count: usize,
+    entries: *mut MapEntry<K, V>,
+    entry_count: usize,
+    prime_coefficient: f32 // no clue if that's the right name or not, but it's 1.0f
 }
 
 impl<K, V> HashMap<K, V> {
