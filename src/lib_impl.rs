@@ -1,5 +1,9 @@
 mod table;
+mod value;
 
 pub mod lib {
-    pub use super::*;
+    use super::*;
+
+    pub use table::*;
+    pub use value::*;
 }

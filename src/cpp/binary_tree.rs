@@ -11,6 +11,72 @@ pub struct TreeNode<O: PartialOrd, V> {
     value: V
 }
 
+pub struct RecursiveTreeNodeIter<'a, O: PartialOrd, V> {
+    node: &'a TreeNode<O, V>,
+    done_left: bool,
+    done_right: bool,
+    done_self: bool,
+    current_node: Option<Box<RecursiveTreeNodeIter<'a, O, V>>>
+}
+
+impl<'a, O: PartialOrd, V> RecursiveTreeNodeIter<'a, O, V> {
+    pub fn new(node: &'a TreeNode<O, V>) -> Self {
+        Self {
+            node,
+            done_left: false,
+            done_right: false,
+            done_self: false,
+            current_node: None
+        }
+    }
+}
+
+impl<'a, O: PartialOrd, V> Iterator for RecursiveTreeNodeIter<'a, O, V> {
+    type Item = (&'a O, &'a V);
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if !self.done_left {
+            if self.current_node.is_none() {
+                self.current_node = self.node.left().map(|node| Box::new(RecursiveTreeNodeIter::new(node)));
+            }
+            match &mut self.current_node {
+                Some(current_node) => match current_node.next() {
+                    Some(v) => return Some(v),
+                    None => {
+                        self.done_left = true;
+                        self.current_node = None;
+                    }
+                },
+                None => {
+                    self.done_left = true;
+                }
+            }
+        }
+        if !self.done_self {
+            self.done_self = true;
+            return Some((self.node.key(), self.node.value()));
+        }
+        if !self.done_right {
+            if self.current_node.is_none() {
+                self.current_node = self.node.right().map(|node| Box::new(RecursiveTreeNodeIter::new(node)));
+            }
+            match &mut self.current_node {
+                Some(current_node) => match current_node.next() {
+                    Some(v) => return Some(v),
+                    None => {
+                        self.done_right = true;
+                        self.current_node = None;
+                    }
+                },
+                None => {
+                    self.done_right = true;
+                }
+            }
+        }
+        None
+    }
+}
+
 impl<O: PartialOrd, V> TreeNode<O, V> {
     pub fn left(&self) -> Option<&TreeNode<O, V>> {
         if self.left.is_null() {
@@ -90,18 +156,18 @@ impl<O: PartialOrd, V> TreeNode<O, V> {
 
     pub fn get(&self, key: &O) -> Option<&V> {
         match key.partial_cmp(self.key()) {
-            Some(Ordering::Less) => self.left().map(|x| x.get(key)).flatten(),
+            Some(Ordering::Less) => self.right().map(|x| x.get(key)).flatten(),
             Some(Ordering::Equal) => Some(self.value()),
-            Some(Ordering::Greater) => self.right().map(|x| x.get(key)).flatten(),
+            Some(Ordering::Greater) => self.left().map(|x| x.get(key)).flatten(),
             None => None
         }        
     }
 
     pub fn get_mut(&mut self, key: &O) -> Option<&mut V> {
         match key.partial_cmp(self.key()) {
-            Some(Ordering::Less) => self.left_mut().map(|x| x.get_mut(key)).flatten(),
+            Some(Ordering::Less) => self.right_mut().map(|x| x.get_mut(key)).flatten(),
             Some(Ordering::Equal) => Some(self.value_mut()),
-            Some(Ordering::Greater) => self.right_mut().map(|x| x.get_mut(key)).flatten(),
+            Some(Ordering::Greater) => self.left_mut().map(|x| x.get_mut(key)).flatten(),
             None => None
         }
     }
@@ -158,16 +224,14 @@ impl<O: PartialOrd, V> Tree<O, V> {
 
 pub struct KeyValueIter<'a, O: PartialOrd, V> {
     tree: &'a Tree<O, V>,
-    current_node: *const TreeNode<O, V>,
-    is_left: bool,
+    root: Option<RecursiveTreeNodeIter<'a, O, V>>
 }
 
 impl<'a, O: PartialOrd, V> KeyValueIter<'a, O, V> {
     pub fn new(tree: &'a Tree<O, V>) -> Self {
         Self {
             tree,
-            current_node: std::ptr::null(),
-            is_left: true
+            root: None
         }
     }
 }
@@ -176,68 +240,13 @@ impl<'a, O: PartialOrd, V> Iterator for KeyValueIter<'a, O, V> {
     type Item = (&'a O, &'a V);
 
     fn next(&mut self) -> Option<Self::Item> {
-        if self.current_node.is_null() {
-            if self.tree.root.is_null() {
-                None
-            } else {
-                self.current_node = self.tree.root;
-                self.is_left = true;
-                unsafe {
-                    Some(((*self.current_node).key(), (*self.current_node).value()))
-                }
-            }
-        } else if self.is_left {
-            let next = unsafe {
-                (*self.current_node).left()
-            };
-            match next {
-                Some(node) => {
-                    self.current_node = node as *const TreeNode<O, V>;
-                    Some((node.key(), node.value()))
-                },
-                None => {
-                    self.is_left = false;
-                    self.next()
-                }
-            }
-        } else {
-            let next = unsafe {
-                (*self.current_node).right()
-            };
-            match next {
-                Some(node) => {
-                    self.current_node = node as *const TreeNode<O, V>;
-                    self.is_left = true;
-                    Some((node.key(), node.value()))
-                },
-                None => {
-                    let mut current_node = unsafe {
-                        (*self.current_node).parent()
-                    };
-                    let mut previous = self.current_node;
-                    while let Some(current) = current_node {
-                        if let Some(parent) = current.parent() {
-                            if let Some(right) = parent.right() {
-                                if right as *const TreeNode<O, V> != previous {
-                                    self.current_node = right as *const TreeNode<O, V>;
-                                    self.is_left = true;
-                                    return Some((right.key(), right.value()));
-                                } else {
-                                    previous = parent as *const TreeNode<O, V>;
-                                    current_node = parent.parent();
-                                }
-                            } else {
-                                previous = parent as *const TreeNode<O, V>;
-                                current_node = parent.parent();
-                            }
-                        } else {
-                            return None;
-                        }
-                    }
-                    None
-                }
-            }
-        }       
+        if self.root.is_none() {
+            self.root = self.tree.root().map(|x| RecursiveTreeNodeIter::new(x));
+        }
+        self.root
+            .as_mut()
+            .map(|root| root.next())
+            .flatten()
     }
 }
 
