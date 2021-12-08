@@ -65,6 +65,14 @@ impl<T> Vector<T> {
             }
         }
     }
+
+    pub fn iter(&self) -> VectorIter<T> {
+        VectorIter::new(self)
+    }
+
+    pub fn iter_mut(&mut self) -> VectorIterMut<T> {
+        VectorIterMut::new(self)
+    }
 }
 
 impl<T> Index<usize> for Vector<T> {
@@ -100,6 +108,15 @@ pub struct VectorIter<'a, T> {
     index: usize
 }
 
+impl<'a, T> VectorIter<'a, T> {
+    pub fn new(vector: &'a Vector<T>) -> Self {
+        Self {
+            vector,
+            index: 0
+        }
+    }
+}
+
 impl<'a, T> Iterator for VectorIter<'a, T> {
     type Item = &'a T;
 
@@ -113,6 +130,15 @@ impl<'a, T> Iterator for VectorIter<'a, T> {
 pub struct VectorIterMut<'a, T> {
     vector: &'a mut Vector<T>,
     index: usize
+}
+
+impl<'a, T> VectorIterMut<'a, T> {
+    pub fn new(vector: &'a mut Vector<T>) -> Self {
+        Self {
+            vector,
+            index: 0
+        }
+    }
 }
 
 impl<'a, T> Iterator for VectorIterMut<'a, T> {

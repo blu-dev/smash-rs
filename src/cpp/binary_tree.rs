@@ -205,8 +205,8 @@ impl<O: PartialOrd, V> Tree<O, V> {
         self.length
     }
 
-    pub fn iter(&self) -> KeyValueIter<O, V> {
-        KeyValueIter::new(self)
+    pub fn iter(&self) -> TreeKeyValueIter<O, V> {
+        TreeKeyValueIter::new(self)
     }
 
     pub fn get(&self, key: &O) -> Option<&V> {
@@ -222,12 +222,12 @@ impl<O: PartialOrd, V> Tree<O, V> {
     }
 }
 
-pub struct KeyValueIter<'a, O: PartialOrd, V> {
+pub struct TreeKeyValueIter<'a, O: PartialOrd, V> {
     tree: &'a Tree<O, V>,
     root: Option<RecursiveTreeNodeIter<'a, O, V>>
 }
 
-impl<'a, O: PartialOrd, V> KeyValueIter<'a, O, V> {
+impl<'a, O: PartialOrd, V> TreeKeyValueIter<'a, O, V> {
     pub fn new(tree: &'a Tree<O, V>) -> Self {
         Self {
             tree,
@@ -236,7 +236,7 @@ impl<'a, O: PartialOrd, V> KeyValueIter<'a, O, V> {
     }
 }
 
-impl<'a, O: PartialOrd, V> Iterator for KeyValueIter<'a, O, V> {
+impl<'a, O: PartialOrd, V> Iterator for TreeKeyValueIter<'a, O, V> {
     type Item = (&'a O, &'a V);
 
     fn next(&mut self) -> Option<Self::Item> {
