@@ -57,6 +57,30 @@ impl<S: AsRef<str>> From<S> for Hash40 {
 
 impl fmt::Display for Hash40 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{:#x}", self.0)
+        if f.alternate() {
+            write!(f, "{:#}", self.0)
+        } else {
+            write!(f, "{}", self.0)
+        }
+    }
+}
+
+impl fmt::LowerHex for Hash40 {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        if f.alternate() {
+            write!(f, "{:#x}", self.0)
+        } else {
+            write!(f, "{:x}", self.0)
+        }
+    }
+}
+
+impl fmt::UpperHex for Hash40 {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        if f.alternate() {
+            write!(f, "{:#X}", self.0)
+        } else {
+            write!(f, "{:X}", self.0)
+        }
     }
 }

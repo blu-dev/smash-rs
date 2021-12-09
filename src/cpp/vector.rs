@@ -1,4 +1,5 @@
-use std::ops::{Index, IndexMut, Range};
+use std::{ops::{Index, IndexMut, Range}, iter::FromIterator};
+use skyline::libc::free;
 
 #[repr(C)]
 pub struct Vector<T> {
@@ -72,6 +73,27 @@ impl<T> Vector<T> {
 
     pub fn iter_mut(&mut self) -> VectorIterMut<T> {
         VectorIterMut::new(self)
+    }
+
+    pub fn into_vec(self) -> Vec<T> {
+        unsafe {
+            let vec = Vec::from_iter(self.iter().map(|x| std::ptr::read(x as *const T)));
+            std::mem::forget(self);
+            vec
+        }
+    }
+}
+
+impl<T> Drop for Vector<T> {
+    fn drop(&mut self) {
+        unsafe {
+            let mut current = self.start;
+            while current != self.end {
+                std::ptr::drop_in_place(current);
+                current = current.add(1);
+            }
+            free(self.start as _);
+        }
     }
 }
 

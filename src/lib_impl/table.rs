@@ -23,6 +23,12 @@ pub struct L2CTable {
 }
 
 impl L2CTable {
+    pub(crate) fn initialize_raw_memory(this: *mut Self, cap: i32) {
+        unsafe {
+            table_ctor(this, cap);
+        }
+    }
+
     pub fn new() -> Self {
         Self::new_with_capacity(0)
     }
