@@ -304,6 +304,10 @@ impl L2CAgent {
             sv_set_function_hash(self, func, name)
         }
     }
+
+    pub fn sv_get_function_by_hash(&self, name: phx::Hash40) -> Option<LuaBindFn> {
+        self.function_map.get(&name)
+    }
 }
 
 impl Drop for L2CAgent {
