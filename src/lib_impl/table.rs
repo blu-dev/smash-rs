@@ -18,7 +18,7 @@ pub struct L2CTable {
     padding: u32,
     array: cpp::Vector<lib::L2CValue>,
     map: cpp::Tree<phx::Hash40, lib::L2CValue>,
-    agent: *mut c_void, // to become L2CAgent
+    agent: *mut lib::L2CAgent,
     metatable: *mut L2CTable
 }
 
