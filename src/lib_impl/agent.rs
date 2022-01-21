@@ -306,7 +306,7 @@ impl L2CAgent {
     }
 
     pub fn sv_get_function_by_hash(&self, name: phx::Hash40) -> Option<LuaBindFn> {
-        self.function_map.get(&name)
+        self.function_map.get(&name).map(|x| *x)
     }
 }
 

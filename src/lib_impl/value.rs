@@ -145,7 +145,7 @@ extern "C" {
     fn as_table(v: *const L2CValue) -> *mut lib::L2CTable;
 
     #[link_name = "\u{1}_ZNK3lib8L2CValue9to_stringEv"]
-    fn to_string(v: *const L2CValue) -> cpp::String;
+    fn to_string(v: *const L2CValue) -> lib::L2CValueHack;
 }
 
 // This enforces a return-on-stack policy for all L2CValues
@@ -355,7 +355,12 @@ impl L2CValue {
 
     pub fn to_string(&self) -> String {
         unsafe {
-            to_string(self).to_string()
+            let value: L2CValue = to_string(self).into();
+            if matches!(value.ty, ValueType::String) {
+                (*value.raw.c_string).to_string()
+            } else {
+                String::from("error!")
+            }
         }
     }
 

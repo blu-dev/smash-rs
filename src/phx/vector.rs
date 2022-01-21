@@ -126,7 +126,7 @@ impl Neg for Vector2f {
 pub struct Vector3f {
     pub x: f32,
     pub y: f32,
-    pub z: f32
+    pub z: f32,
 }
 
 impl Vector3f {
