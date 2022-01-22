@@ -5,17 +5,24 @@ use super::cpp::*;
 
 #[repr(C)]
 pub struct L2CFighterCommon {
-    fighter_base:                    lua2cpp::L2CFighterBase,
-    pub attack_info:                 lib::L2CValue,
-    pub damage_info:                 lib::L2CValue,
-    pub guard_info:                  lib::L2CValue,
-    pub item_info:                   lib::L2CValue,
-    pub ladder_info:                 lib::L2CValue,
-    pub swallowed_info:              lib::L2CValue,
-    pub swim_info:                   lib::L2CValue,
-    pub bayonetta_final_target_info: lib::L2CValue,
-    pub final_damage_info:           lib::L2CValue,
-    pub rockman_final_target_info:   lib::L2CValue
+    fighter_base:                     lua2cpp::L2CFighterBase,
+    pub attack_info:                  lib::L2CValue,
+    pub damage_info1:                 lib::L2CValue,
+    pub damage_info2:                 lib::L2CValue,
+    pub guard_info:                   lib::L2CValue,
+    pub item_info1:                   lib::L2CValue,
+    pub item_info2:                   lib::L2CValue,
+    pub ladder_info1:                 lib::L2CValue,
+    pub ladder_info2:                 lib::L2CValue,
+    pub swallowed_info1:              lib::L2CValue,
+    pub swallowed_info2:              lib::L2CValue,
+    pub swallowed_info3:              lib::L2CValue,
+    pub swim_info1:                   lib::L2CValue,
+    pub swim_info2:                   lib::L2CValue,
+    pub bayonetta_final_target_info1: lib::L2CValue,
+    pub bayonetta_final_target_info2: lib::L2CValue,
+    pub final_damage_info:            lib::L2CValue,
+    pub rockman_final_target_info:    lib::L2CValue
 }
 
 impl Deref for L2CFighterCommon {
@@ -21433,5 +21440,30 @@ impl L2CFighterCommon {
         unsafe {
             sys_line_waza_customize_control(self).into()
         }
+    }
+}
+
+#[cfg(feature = "type_assert")]
+impl L2CFighterCommon {
+    pub fn assert() {
+        assert_eq!(size_of!(L2CFighterCommon), 0x228);
+        assert_eq!(offset_of!(L2CFighterCommon, fighter_base),                 0x0);
+        assert_eq!(offset_of!(L2CFighterCommon, attack_info),                  0x118);
+        assert_eq!(offset_of!(L2CFighterCommon, damage_info1),                 0x128);
+        assert_eq!(offset_of!(L2CFighterCommon, damage_info2),                 0x138);
+        assert_eq!(offset_of!(L2CFighterCommon, guard_info),                   0x148);
+        assert_eq!(offset_of!(L2CFighterCommon, item_info1),                   0x158);
+        assert_eq!(offset_of!(L2CFighterCommon, item_info2),                   0x168);
+        assert_eq!(offset_of!(L2CFighterCommon, ladder_info1),                 0x178);
+        assert_eq!(offset_of!(L2CFighterCommon, ladder_info2),                 0x188);
+        assert_eq!(offset_of!(L2CFighterCommon, swallowed_info1),              0x198);
+        assert_eq!(offset_of!(L2CFighterCommon, swallowed_info2),              0x1A8);
+        assert_eq!(offset_of!(L2CFighterCommon, swallowed_info3),              0x1B8);
+        assert_eq!(offset_of!(L2CFighterCommon, swim_info1),                   0x1C8);
+        assert_eq!(offset_of!(L2CFighterCommon, swim_info2),                   0x1D8);
+        assert_eq!(offset_of!(L2CFighterCommon, bayonetta_final_target_info1), 0x1E8);
+        assert_eq!(offset_of!(L2CFighterCommon, bayonetta_final_target_info2), 0x1F8);
+        assert_eq!(offset_of!(L2CFighterCommon, final_damage_info),            0x208);
+        assert_eq!(offset_of!(L2CFighterCommon, rockman_final_target_info),    0x218);
     }
 }

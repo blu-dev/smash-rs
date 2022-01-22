@@ -629,3 +629,15 @@ impl L2CFighterBase {
         }
     }
 }
+
+#[cfg(feature = "type_assert")]
+impl L2CFighterBase {
+    pub fn assert() {
+        assert_eq!(size_of!(L2CFighterBase), 0x118);
+        assert_eq!(offset_of!(L2CFighterBase, global_table), 0xC8);
+        assert_eq!(offset_of!(L2CFighterBase, line_state), 0xD8);
+        assert_eq!(offset_of!(L2CFighterBase, vector2_metatable), 0xE8);
+        assert_eq!(offset_of!(L2CFighterBase, vector3_metatable), 0xF8);
+        assert_eq!(offset_of!(L2CFighterBase, vector4_metatable), 0x108);
+    }
+}

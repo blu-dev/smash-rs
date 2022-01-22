@@ -140,3 +140,15 @@ impl L2CAgentBase {
         }
     }
 }
+
+#[cfg(feature = "type_assert")]
+impl L2CAgentBase {
+    pub fn assert() {
+        assert_eq!(size_of!(L2CAgentBase), 0xC8);
+        assert_eq!(offset_of!(L2CAgentBase, agent), 0x0);
+        assert_eq!(offset_of!(L2CAgentBase, statuses), 0x48);
+        assert_eq!(offset_of!(L2CAgentBase, coroutines), 0x60);
+        assert_eq!(offset_of!(L2CAgentBase, yield_via_exception), 0xc0);
+        assert_eq!(offset_of!(L2CAgentBase, coroutine_release_control), 0xc1);
+    }
+}

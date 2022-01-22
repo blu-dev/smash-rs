@@ -42,4 +42,8 @@ pub fn validate() {
     lib::L2CValue::assert();
     lib::L2CValueHack::assert();
     lib::Rect::assert();
+
+    lua2cpp::L2CAgentBase::assert();
+    lua2cpp::L2CFighterBase::assert();
+    lua2cpp::L2CFighterCommon::assert();
 }
