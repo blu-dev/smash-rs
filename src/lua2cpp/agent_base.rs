@@ -24,9 +24,6 @@ extern "C" {
     #[link_name = "_ZNK7lua2cpp12L2CAgentBase28is_coroutine_release_controlEv"]
     fn is_coroutine_release_control(this: *mut L2CAgentBase) -> bool;
 
-    #[link_name = "_ZN7lua2cpp12L2CAgentBaseC1EPN3app12BattleObjectEPNS1_26BattleObjectModuleAccessorEP9lua_State"]
-    fn L2CAgentBase_ctor(this: *mut L2CAgentBase, object: *mut app::BattleObject, module_accessor: *mut app::BattleObjectModuleAccessor, lua_state: *mut lua_State);
-
     #[link_name = "_ZN7lua2cpp12L2CAgentBase25reserve_status_data_arrayEj"]
     fn reserve_status_data_array(this: *mut L2CAgentBase, length: u32);
     
@@ -109,7 +106,7 @@ impl L2CAgentBase {
     /// Yields the current coroutine back to the parent
     /// WARNING: If this function is called from Rust code *without* either an EH frame or any other way
     /// to avoid an invalid EH frame, then there this will crash
-    pub fn coroutine_yield(&mut self) {
+    pub fn coroutine_yield(&mut self) -> bool {
         unsafe {
             coroutine_yield(self)
         }
