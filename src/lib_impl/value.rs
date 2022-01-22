@@ -171,6 +171,15 @@ impl From<L2CValue> for L2CValueHack {
     }
 }
 
+#[cfg(feature = "type_assert")]
+impl L2CValueHack {
+    pub fn assert() {
+        assert_eq!(size_of!(L2CValueHack), 0x20);
+        assert_eq!(offset_of!(L2CValueHack, value), 0x0);
+        assert_eq!(offset_of!(L2CValueHack, extra_space), 0x10);
+    }
+}
+
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum ValueType {
@@ -865,5 +874,14 @@ impl IndexMut<String> for L2CValue {
                 &mut *result
             }
         }
+    }
+}
+
+#[cfg(feature = "type_assert")]
+impl L2CValue {
+    pub fn assert() {
+        assert_eq!(size_of!(L2CValue), 0x10);
+        assert_eq!(offset_of!(L2CValue, ty), 0x0);
+        assert_eq!(offset_of!(L2CValue, raw), 0x8);
     }
 }

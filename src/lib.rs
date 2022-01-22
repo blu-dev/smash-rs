@@ -36,4 +36,10 @@ pub fn validate() {
     app::LinkEventThrow::assert();
     app::LinkEventTouchItem::assert();
     app::LinkEventYoshiTamagoDamageEffect::assert();
+
+    lib::L2CAgent::assert();
+    lib::L2CTable::assert();
+    lib::L2CValue::assert();
+    lib::L2CValueHack::assert();
+    lib::Rect::assert();
 }

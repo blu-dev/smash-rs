@@ -317,3 +317,15 @@ impl Drop for L2CAgent {
         }
     }
 }
+
+#[cfg(feature = "type_assert")]
+impl L2CAgent {
+    pub fn assert() {
+        assert_eq!(size_of!(L2CAgent),                     0x48);
+        assert_eq!(offset_of!(L2CAgent, vtable),           0x0);
+        assert_eq!(offset_of!(L2CAgent, lua_state),        0x8);
+        assert_eq!(offset_of!(L2CAgent, function_map),     0x10);
+        assert_eq!(offset_of!(L2CAgent, battle_object),    0x38);
+        assert_eq!(offset_of!(L2CAgent, module_accessor), 0x40);
+    }
+}

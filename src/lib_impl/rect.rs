@@ -63,3 +63,14 @@ impl Into<lib::L2CValue> for Rect {
         }
     }
 }
+
+#[cfg(feature = "type_assert")]
+impl Rect {
+    pub fn assert() {
+        assert_eq!(size_of!(Rect), 0x10);
+        assert_eq!(offset_of!(Rect, left),   0x0);
+        assert_eq!(offset_of!(Rect, right),  0x4);
+        assert_eq!(offset_of!(Rect, top),    0x8);
+        assert_eq!(offset_of!(Rect, bottom), 0xC);
+    }
+}

@@ -125,3 +125,15 @@ impl IndexMut<phx::Hash40> for L2CTable {
         &mut self.map[index]
     }
 }
+
+#[cfg(feature = "type_assert")]
+impl L2CTable {
+    pub fn assert() {
+        assert_eq!(size_of!(L2CTable), 0x48);
+        assert_eq!(offset_of!(L2CTable, ref_count), 0x0);
+        assert_eq!(offset_of!(L2CTable, array), 0x8);
+        assert_eq!(offset_of!(L2CTable, map), 0x20);
+        assert_eq!(offset_of!(L2CTable, agent), 0x38);
+        assert_eq!(offset_of!(L2CTable, metatable), 0x40);
+    }
+}
