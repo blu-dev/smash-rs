@@ -1,3 +1,4 @@
+use crate::*;
 use std::{fmt, ops::{Mul, Add, Sub, Neg, MulAssign, AddAssign, SubAssign, Div, DivAssign}};
 
 #[derive(Debug, Copy, Clone, PartialEq)]
@@ -25,6 +26,33 @@ impl Vector2f {
 
     pub fn normalize(self) -> Self {
         self / self.mag()
+    }
+}
+
+impl From<lib::L2CValue> for Vector2f {
+    fn from(val: lib::L2CValue) -> Self {
+        Self {
+            x: val["x"].get(),
+            y: val["y"].get()
+        }
+    }
+}
+
+impl From<&lib::L2CValue> for Vector2f {
+    fn from(val: &lib::L2CValue) -> Self {
+        Self {
+            x: val["x"].get(),
+            y: val["y"].get()
+        }
+    }
+}
+
+impl Into<lib::L2CValue> for Vector2f {
+    fn into(self) -> lib::L2CValue {
+        let mut value = lib::L2CValue::new_table();
+        value["x"] = self.x.into();
+        value["y"] = self.y.into();
+        value
     }
 }
 
@@ -151,6 +179,36 @@ impl Vector3f {
     }
 }
 
+impl From<lib::L2CValue> for Vector3f {
+    fn from(val: lib::L2CValue) -> Self {
+        Self {
+            x: val["x"].get(),
+            y: val["y"].get(),
+            z: val["z"].get()
+        }
+    }
+}
+
+impl From<&lib::L2CValue> for Vector3f {
+    fn from(val: &lib::L2CValue) -> Self {
+        Self {
+            x: val["x"].get(),
+            y: val["y"].get(),
+            z: val["z"].get()
+        }
+    }
+}
+
+impl Into<lib::L2CValue> for Vector3f {
+    fn into(self) -> lib::L2CValue {
+        let mut value = lib::L2CValue::new_table();
+        value["x"] = self.x.into();
+        value["y"] = self.y.into();
+        value["z"] = self.z.into();
+        value
+    }
+}
+
 impl fmt::Display for Vector3f {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         if f.alternate() {
@@ -260,6 +318,39 @@ pub struct Vector4f {
     pub y: f32,
     pub z: f32,
     pub w: f32
+}
+
+impl From<lib::L2CValue> for Vector4f {
+    fn from(val: lib::L2CValue) -> Self {
+        Self {
+            x: val["x"].get(),
+            y: val["y"].get(),
+            z: val["z"].get(),
+            w: val["w"].get()
+        }
+    }
+}
+
+impl From<&lib::L2CValue> for Vector4f {
+    fn from(val: &lib::L2CValue) -> Self {
+        Self {
+            x: val["x"].get(),
+            y: val["y"].get(),
+            z: val["z"].get(),
+            w: val["w"].get()
+        }
+    }
+}
+
+impl Into<lib::L2CValue> for Vector4f {
+    fn into(self) -> lib::L2CValue {
+        let mut value = lib::L2CValue::new_table();
+        value["x"] = self.x.into();
+        value["y"] = self.y.into();
+        value["z"] = self.z.into();
+        value["w"] = self.w.into();
+        value
+    }
 }
 
 impl Vector4f {
