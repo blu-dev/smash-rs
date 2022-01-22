@@ -3,8 +3,17 @@ use super::cpp::*;
 
 #[repr(C)]
 pub struct L2CFighterCommon {
-    agent_base: lua2cpp::L2CAgentBase,
-    // ...
+    fighter_base:                    lua2cpp::L2CFighterBase,
+    pub attack_info:                 lib::L2CValue,
+    pub damage_info:                 lib::L2CValue,
+    pub guard_info:                  lib::L2CValue,
+    pub item_info:                   lib::L2CValue,
+    pub ladder_info:                 lib::L2CValue,
+    pub swallowed_info:              lib::L2CValue,
+    pub swim_info:                   lib::L2CValue,
+    pub bayonetta_final_target_info: lib::L2CValue,
+    pub final_damage_info:           lib::L2CValue,
+    pub rockman_final_target_info:   lib::L2CValue
 }
 
 impl L2CFighterCommon {
