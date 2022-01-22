@@ -1,6 +1,40 @@
 use crate::*;
 
-pub type StatusFn = extern "C" fn(*mut L2CAgentBase) -> lib::L2CValueHack;
+type StatusFn = extern "C" fn(*mut L2CAgentBase) -> lib::L2CValueHack;
+
+extern "C" {
+    #[link_name = "_ZN7lua2cpp12L2CAgentBase14call_coroutineEiN3phx6Hash40E"]
+    fn call_coroutine(this: *mut L2CAgentBase, idx: i32, function_hash: phx::Hash40) -> phx::Fiber;
+
+    #[link_name = "_ZN7lua2cpp12L2CAgentBase14change_contextEPN3app12BattleObjectEPNS1_26BattleObjectModuleAccessorE"]
+    fn change_context(this: *mut L2CAgentBase, object: *mut app::BattleObject, module_accessor: *mut app::BattleObjectModuleAccessor);
+
+    #[link_name = "_ZN7lua2cpp12L2CAgentBase15clean_coroutineEi"]
+    fn clean_coroutine(this: *mut L2CAgentBase) -> bool;
+
+    #[link_name = "_ZN7lua2cpp12L2CAgentBase15coroutine_yieldEv"]
+    fn coroutine_yield(this: *mut L2CAgentBase) -> bool;
+
+    #[link_name = "_ZNK7lua2cpp12L2CAgentBase16get_parent_fiberEv"]
+    fn get_parent_fiber(this: *mut L2CAgentBase) -> phx::Fiber;
+
+    #[link_name = "_ZNK7lua2cpp12L2CAgentBase26get_unused_coroutine_indexEi"]
+    fn get_unused_coroutine_index(this: *mut L2CAgentBase, max: i32) -> i32;
+
+    #[link_name = "_ZNK7lua2cpp12L2CAgentBase28is_coroutine_release_controlEv"]
+    fn is_coroutine_release_control(this: *mut L2CAgentBase) -> bool;
+
+    #[link_name = "_ZN7lua2cpp12L2CAgentBaseC1EPN3app12BattleObjectEPNS1_26BattleObjectModuleAccessorEP9lua_State"]
+    fn L2CAgentBase_ctor(this: *mut L2CAgentBase, object: *mut app::BattleObject, module_accessor: *mut app::BattleObjectModuleAccessor, lua_state: *mut lua_State);
+
+    #[link_name = "_ZN7lua2cpp12L2CAgentBase25reserve_status_data_arrayEj"]
+    fn reserve_status_data_array(this: *mut L2CAgentBase, length: u32);
+    
+    #[link_name = "_ZN7lua2cpp12L2CAgentBase16resume_coroutineEiRi"]
+    fn resume_coroutine(this: *mut L2CAgentBase, index: i32, success: *mut i32) -> i32;
+
+    
+}
 
 #[repr(C)]
 struct StatusData {
@@ -41,7 +75,57 @@ pub struct L2CAgentBase {
     agent: lib::L2CAgent,
     statuses: cpp::Vector<StatusData>,
     coroutines: [Coroutine; 4],
-    unused: u8,
+    yield_via_exception: bool,
     coroutine_release_control: bool,
     padding: [u8; 6]
+}
+
+impl L2CAgentBase {
+    /// Starts a coroutine on this agent
+    /// # Arguments
+    /// * `coroutine_idx`: The index (0-3) of which coroutine to call this function on.
+    /// * `function_hash`: The hash of the function to call for this coroutine
+    /// 
+    /// Returns the parent of the fiber that begins running the coroutine
+    pub fn call_coroutine(&mut self, coroutine_idx: i32, function_hash: phx::Hash40) -> phx::Fiber {
+        unsafe {
+            call_coroutine(self, coroutine_idx, function_hash)
+        }
+    }
+
+    pub fn change_context(&mut self, object: *mut app::BattleObject, module_accessor: *mut app::BattleObjectModuleAccessor) {
+        unsafe {
+            change_context(self, object, module_accessor)
+        }
+    }
+
+    /// Checks all 4 coroutines to see if they are finished and if they have finished and finalizes them if so
+    pub fn clean_coroutine(&mut self) -> bool {
+        unsafe {
+            clean_coroutine(self)
+        }
+    }
+
+    /// Yields the current coroutine back to the parent
+    /// WARNING: If this function is called from Rust code *without* either an EH frame or any other way
+    /// to avoid an invalid EH frame, then there this will crash
+    pub fn coroutine_yield(&mut self) {
+        unsafe {
+            coroutine_yield(self)
+        }
+    }
+
+    /// Gets the parent of the current operating fiber, returns `null` if the current fiber is not one of this agent's
+    pub fn get_parent_fiber(&mut self) -> phx::Fiber {
+        unsafe {
+            get_parent_fiber(self)
+        }
+    }
+
+    /// Gets the index of the first coroutine that is not currently in use
+    pub fn get_unused_coroutine_index(&mut self, max: i32) -> i32 {
+        unsafe {
+            get_unused_coroutine_index(self, max)
+        }
+    }
 }
