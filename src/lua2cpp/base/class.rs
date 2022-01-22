@@ -5,7 +5,11 @@ use super::cpp::*;
 #[repr(C)]
 pub struct L2CFighterBase {
     agent_base: lua2cpp::L2CAgentBase,
-    // ...
+    pub global_table: lib::L2CValue,
+    pub line_state: lib::L2CValue,
+    pub vector2_metatable: lib::L2CValue,
+    pub vector3_metatable: lib::L2CValue,
+    pub vector4_metatable: lib::L2CValue
 }
 
 impl L2CFighterBase {
