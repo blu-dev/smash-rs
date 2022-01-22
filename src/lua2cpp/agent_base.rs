@@ -1,3 +1,5 @@
+use std::ops::{Deref, DerefMut};
+
 use crate::*;
 
 type StatusFn = extern "C" fn(*mut L2CAgentBase) -> lib::L2CValueHack;
@@ -29,8 +31,6 @@ extern "C" {
     
     #[link_name = "_ZN7lua2cpp12L2CAgentBase16resume_coroutineEiRi"]
     fn resume_coroutine(this: *mut L2CAgentBase, index: i32, success: *mut i32) -> i32;
-
-    
 }
 
 #[repr(C)]
@@ -75,6 +75,20 @@ pub struct L2CAgentBase {
     yield_via_exception: bool,
     coroutine_release_control: bool,
     padding: [u8; 6]
+}
+
+impl Deref for L2CAgentBase {
+    type Target = lib::L2CAgent;
+
+    fn deref(&self) -> &Self::Target {
+        &self.agent
+    }
+}
+
+impl DerefMut for L2CAgentBase {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.agent
+    }
 }
 
 impl L2CAgentBase {

@@ -1,3 +1,5 @@
+use std::ops::{Deref, DerefMut};
+
 use crate::*;
 
 use super::cpp::*;
@@ -10,6 +12,20 @@ pub struct L2CFighterBase {
     pub vector2_metatable: lib::L2CValue,
     pub vector3_metatable: lib::L2CValue,
     pub vector4_metatable: lib::L2CValue
+}
+
+impl Deref for L2CFighterBase {
+    type Target = lua2cpp::L2CAgentBase;
+
+    fn deref(&self) -> &Self::Target {
+        &self.agent_base
+    }
+}
+
+impl DerefMut for L2CFighterBase {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.agent_base
+    }
 }
 
 impl L2CFighterBase {

@@ -1,3 +1,5 @@
+use std::ops::{Deref, DerefMut};
+
 use crate::*;
 use super::cpp::*;
 
@@ -14,6 +16,20 @@ pub struct L2CFighterCommon {
     pub bayonetta_final_target_info: lib::L2CValue,
     pub final_damage_info:           lib::L2CValue,
     pub rockman_final_target_info:   lib::L2CValue
+}
+
+impl Deref for L2CFighterCommon {
+    type Target = lua2cpp::L2CFighterBase;
+    
+    fn deref(&self) -> &Self::Target {
+        &self.fighter_base
+    }
+}
+
+impl DerefMut for L2CFighterCommon {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.fighter_base
+    }
 }
 
 impl L2CFighterCommon {
