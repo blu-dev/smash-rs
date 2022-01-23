@@ -10,13 +10,13 @@ on:
   workflow_dispatch:
 
 jobs:
-  plugin:
+  tests:
     runs-on: ubuntu-latest
     container: 
       image: jugeeya/cargo-skyline:2.1.0
     steps:
     - uses: actions/checkout@v2
-    - name: Build release NRO
+    - name: Perform size checks
       run: |
         PATH=$PATH:/root/.cargo/bin /root/.cargo/bin/cargo +skyline test --features type_assert
       env:

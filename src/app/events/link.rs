@@ -402,7 +402,7 @@ impl DerefMut for LinkEventMask {
 #[cfg(feature = "type_assert")]
 impl LinkEventMask {
     pub fn assert() {
-        assert_eq!(size_of!(LinkEventMask), 0x34);
+        assert_eq!(size_of!(LinkEventMask), 0x38);
         assert_eq!(offset_of!(LinkEventMask, parent), 0x0);
         assert_eq!(offset_of!(LinkEventMask, depth_stencil), 0x2C);
         assert_eq!(offset_of!(LinkEventMask, scale_z), 0x30);
