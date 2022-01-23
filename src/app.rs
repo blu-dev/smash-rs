@@ -12,6 +12,12 @@ pub mod ai_deprecated;
 pub mod ai_koopag;
 pub mod ai_notify_event;
 pub mod ai_param;
+pub mod ai_random;
+pub mod ai_rule;
+pub mod ai_stage;
+pub mod ai_system;
+pub mod ai_utility;
+pub mod ai_weapon;
 
 mod events;
 
@@ -24,3 +30,6 @@ pub struct BattleObject(u64);
 
 #[repr(C)]
 pub struct BattleObjectModuleAccessor(u64);
+
+#[repr(C)]
+pub struct FighterAIWeapon(u64);

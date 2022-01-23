@@ -1,3 +1,4 @@
+pub mod FighterAI;
 pub mod FighterAIAct;
 pub mod FighterAIStat;
 
@@ -104,6 +105,18 @@ impl FighterAIUniqStat {
 }
 
 #[repr(u32)]
+pub enum FighterAIWeaponType {
+    Weapon = 0x0,
+    Item = 0x1,
+    Stage = 0x2,
+    Fighter = 0x3,
+    Drop = 0x4,
+    Item2 = 0x5,
+    Enemy = 0x6,
+}
+
+
+#[repr(u32)]
 pub enum FighterAIAttackPhase {
     None = 0x0,
     Prepare = 0x1,
@@ -127,5 +140,26 @@ bitflags! {
         const NearFt = 0x100;
         const Roll = 0x200;
         const Passive = 0x400;
+    }
+}
+
+bitflags! {
+    #[repr(C)]
+    pub struct FighterAIWeaponFlag: u16 {
+        const Enable = 0x1;
+        const Accel = 0x2;
+        const FloorSet = 0x4;
+        const OnScreen = 0x8;
+        const Shield = 0x10;
+        const Reflector = 0x20;
+        const Absorber = 0x40;
+        const PutInPocket = 0x80;
+        const Capture = 0x100;
+        const NoAttack = 0x200;
+        const SpeedDamage = 0x400;
+        const Explosion30 = 0x800;
+        const Explosion10 = 0x1000;
+        const Eatable = 0x2000;
+        const NotShot = 0x4000;
     }
 }

@@ -35,7 +35,7 @@ def make_bitflags(type_name: str, repr_type: str, const_values, file: TextIOWrap
     file.write("bitflags! {\n")
     file.write("    #[repr(C)]\n")
     file.write("    #[allow(non_upper_case_globals)]\n")
-    file.write("    struct " + type_name + ": " + repr_type + " {\n")
+    file.write("    pub struct " + type_name + ": " + repr_type + " {\n")
     for name in const_values:
         file.write("        const " + name[0] + " = 0x" + name[1] + ";\n")
     file.write("    }\n}\n")
