@@ -1495,3 +1495,33 @@ impl WeaponShizueFishingrodLinkEventCliff {
         assert_eq!(offset_of!(WeaponShizueFishingrodLinkEventCliff, parent), 0x0);
     }
 }
+
+#[derive(Clone)]
+#[repr(C)]
+pub struct WeaponShizueFishingrodLinkEventCut {
+    parent: LinkEvent,
+    pub cut_joint_id: phx::Hash40,
+}
+
+impl Deref for WeaponShizueFishingrodLinkEventCut {
+    type Target = LinkEvent;
+
+    fn deref(&self) -> &Self::Target {
+        &self.parent
+    }
+}
+
+impl DerefMut for WeaponShizueFishingrodLinkEventCut {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.parent
+    }
+}
+
+#[cfg(feature = "type_assert")]
+impl WeaponShizueFishingrodLinkEventCut {
+    pub fn assert() {
+        assert_eq!(size_of!(WeaponShizueFishingrodLinkEventCut), 0x38);
+        assert_eq!(offset_of!(WeaponShizueFishingrodLinkEventCut, parent), 0x0);
+        assert_eq!(offset_of!(WeaponShizueFishingrodLinkEventCut, cut_joint_id), 0x30);
+    }
+}

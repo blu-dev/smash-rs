@@ -196,6 +196,11 @@ fn weapon_shizue_fishingrod_link_event_cliff() {
 }
 
 #[test]
+fn weapon_shizue_fishingrod_link_event_cut() {
+    app::WeaponShizueFishingrodLinkEventCut::assert();
+}
+
+#[test]
 fn l2c_agent() {
     lib::L2CAgent::assert();
 }
