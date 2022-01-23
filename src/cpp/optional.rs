@@ -1,3 +1,4 @@
+// Based on boost optional
 #[repr(C)]
 pub struct Optional<T> {
     pub tag: bool,

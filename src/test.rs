@@ -141,6 +141,11 @@ fn fighter_ryu_link_event_final_move_target() {
 }
 
 #[test]
+fn fighter_element_link_event_change() {
+    app::FighterElementLinkEventChange::assert();
+}
+
+#[test]
 fn l2c_agent() {
     lib::L2CAgent::assert();
 }
