@@ -66,6 +66,11 @@ fn link_event_yoshi_tamago_damage_effect() {
 }
 
 #[test]
+fn fighter_cloud_link_event_final() {
+    app::FighterCloudLinkEventFinal::assert();
+}
+
+#[test]
 fn l2c_agent() {
     lib::L2CAgent::assert();
 }

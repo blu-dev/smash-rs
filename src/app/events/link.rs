@@ -6,7 +6,7 @@ use crate::*;
 struct LinkEventVTable {
     pub destructor: extern "C" fn(*mut LinkEvent),
     pub deleter: extern "C" fn(*mut LinkEvent),
-    pub get_unknown_value: extern "C" fn(*const LinkEvent) -> u32,
+    pub get_id: extern "C" fn(*const LinkEvent) -> u32,
     pub into_l2ctable: extern "C" fn(*const LinkEvent, *mut lib::L2CTable),
     pub from_l2ctable: extern "C" fn(*mut LinkEvent, *const lib::L2CTable),
     pub into_l2cvalue: extern "C" fn(*const LinkEvent) -> lib::L2CValueHack,
@@ -18,7 +18,7 @@ struct LinkEventVTable {
 #[repr(packed)]
 pub struct LinkEvent {
     vtable: &'static LinkEventVTable,
-    unknown_value: u32,
+    pub id: u32,
     padding: u32,
     pub link_event_kind: phx::Hash40,
     pub receiver_boma: *mut u8, // to become BattleObjectModuleAccessor
@@ -32,7 +32,7 @@ impl Clone for LinkEvent {
     fn clone(&self) -> Self {
         Self {
             vtable: self.vtable,
-            unknown_value: self.unknown_value,
+            id: self.id,
             padding: self.padding,
             link_event_kind: self.link_event_kind,
             receiver_boma: self.receiver_boma,
@@ -45,8 +45,8 @@ impl Clone for LinkEvent {
 }
 
 impl LinkEvent {
-    pub fn get_unknown_value(&self) -> u32 {
-        (self.vtable.get_unknown_value)(self)
+    pub fn get_id(&self) -> u32 {
+        (self.vtable.get_id)(self)
     }
 
     pub fn as_lua(&self) -> lib::L2CValue {
@@ -59,7 +59,7 @@ impl LinkEvent {
     pub fn assert() {
         assert_eq!(size_of!(LinkEvent), 0x2C);
         assert_eq!(offset_of!(LinkEvent, vtable), 0x0);
-        assert_eq!(offset_of!(LinkEvent, unknown_value), 0x8);
+        assert_eq!(offset_of!(LinkEvent, id), 0x8);
         assert_eq!(offset_of!(LinkEvent, link_event_kind), 0x10);
         assert_eq!(offset_of!(LinkEvent, receiver_boma), 0x18);
         assert_eq!(offset_of!(LinkEvent, sender_id), 0x20);
@@ -579,5 +579,50 @@ impl LinkEventYoshiTamagoDamageEffect {
         assert_eq!(size_of!(LinkEventYoshiTamagoDamageEffect), 0x34);
         assert_eq!(offset_of!(LinkEventYoshiTamagoDamageEffect, parent), 0x0);
         assert_eq!(offset_of!(LinkEventYoshiTamagoDamageEffect, damage), 0x30);
+    }
+}
+
+#[derive(Clone)]
+#[repr(C)]
+pub struct FighterCloudLinkEventFinal {
+    parent: LinkEvent,
+    pub motion_kind: phx::Hash40,
+    pub motion_comp_frame: i32,
+    pub req_status: i32,
+    pub task_id: i32,
+    pub offset_x: f32,
+    pub offset_y: f32,
+    pub frame: f32,
+    pub target_pos: phx::Vec2,
+    padding: u64
+}
+
+impl Deref for FighterCloudLinkEventFinal {
+    type Target = LinkEvent;
+
+    fn deref(&self) -> &Self::Target {
+        &self.parent
+    }
+}
+
+impl DerefMut for FighterCloudLinkEventFinal {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.parent
+    }
+}
+
+#[cfg(feature = "type_assert")]
+impl FighterCloudLinkEventFinal {
+    pub fn assert() {
+        assert_eq!(size_of!(FighterCloudLinkEventFinal), 0x60);
+        assert_eq!(offset_of!(FighterCloudLinkEventFinal, parent), 0x0);
+        assert_eq!(offset_of!(FighterCloudLinkEventFinal, motion_kind), 0x30);
+        assert_eq!(offset_of!(FighterCloudLinkEventFinal, motion_comp_frame), 0x38);
+        assert_eq!(offset_of!(FighterCloudLinkEventFinal, req_status), 0x3C);
+        assert_eq!(offset_of!(FighterCloudLinkEventFinal, task_id), 0x40);
+        assert_eq!(offset_of!(FighterCloudLinkEventFinal, offset_x), 0x44);
+        assert_eq!(offset_of!(FighterCloudLinkEventFinal, offset_y), 0x48);
+        assert_eq!(offset_of!(FighterCloudLinkEventFinal, frame), 0x4C);
+        assert_eq!(offset_of!(FighterCloudLinkEventFinal, target_pos), 0x50);
     }
 }
