@@ -50,4 +50,5 @@ pub fn validate() {
 
     lua2cpp::L2CFighterAIBase::assert();
     lua2cpp::L2CFighterAIActionBase::assert();
+    lua2cpp::L2CFighterAIAnalystBase::assert();
 }
