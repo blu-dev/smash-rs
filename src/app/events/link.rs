@@ -1294,3 +1294,37 @@ impl WeaponPickelTrolleyLinkEventGetParam {
         assert_eq!(offset_of!(WeaponPickelTrolleyLinkEventGetParam, catch_time_dec_by_clatter), 0x40);
     }
 }
+
+#[derive(Clone)]
+#[repr(C)]
+pub struct WeaponPickelTrolleyLinkEventRemoveIfDistance {
+    parent: LinkEvent,
+    pub pos_x: f32,
+    pub pos_y: f32,
+    pub distance: f32,
+}
+
+impl Deref for WeaponPickelTrolleyLinkEventRemoveIfDistance {
+    type Target = LinkEvent;
+
+    fn deref(&self) -> &Self::Target {
+        &self.parent
+    }
+}
+
+impl DerefMut for WeaponPickelTrolleyLinkEventRemoveIfDistance {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.parent
+    }
+}
+
+#[cfg(feature = "type_assert")]
+impl WeaponPickelTrolleyLinkEventRemoveIfDistance {
+    pub fn assert() {
+        assert_eq!(size_of!(WeaponPickelTrolleyLinkEventRemoveIfDistance), 0x38);
+        assert_eq!(offset_of!(WeaponPickelTrolleyLinkEventRemoveIfDistance, parent), 0x0);
+        assert_eq!(offset_of!(WeaponPickelTrolleyLinkEventRemoveIfDistance, pos_x), 0x2C);
+        assert_eq!(offset_of!(WeaponPickelTrolleyLinkEventRemoveIfDistance, pos_y), 0x30);
+        assert_eq!(offset_of!(WeaponPickelTrolleyLinkEventRemoveIfDistance, distance), 0x34);
+    }
+}
