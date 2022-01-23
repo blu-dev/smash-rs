@@ -44,6 +44,7 @@ pub fn validate() {
     lib::Rect::assert();
 
     lua2cpp::L2CAgentBase::assert();
+    lua2cpp::L2CFighterAIBase::assert();
     lua2cpp::L2CFighterBase::assert();
     lua2cpp::L2CFighterCommon::assert();
     lua2cpp::L2CWeaponCommon::assert();
