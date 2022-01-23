@@ -65,11 +65,12 @@ pub struct L2CFighterAIModeBase {
     pub action_mode_47: lib::L2CValue, // 0x4c8
     pub action_mode_48: lib::L2CValue, // 0x4d8
     pub action_mode_43: lib::L2CValue, // 0x4e8
+    pub unk_val: lib::L2CValue, // 0x4f8
     pub action_mode_59: lib::L2CValue, // 0x508
     pub action_mode_50: lib::L2CValue, // 0x518
     pub action_mode_12: lib::L2CValue, // 0x528
     pub action_mode_19: lib::L2CValue, // 0x538
-    pub unk_val: lib::L2CValue, // 0x548
+    pub unk_val2: lib::L2CValue, // 0x548
     pub action_mode_4: lib::L2CValue, // 0x558
     pub action_mode_11: lib::L2CValue, // 0x568
     pub action_mode_18: lib::L2CValue, // 0x578
@@ -5475,11 +5476,12 @@ impl L2CFighterAIModeBase {
         assert_eq!(offset_of!(L2CFighterAIModeBase, action_mode_47), 0x4c8);
         assert_eq!(offset_of!(L2CFighterAIModeBase, action_mode_48), 0x4d8);
         assert_eq!(offset_of!(L2CFighterAIModeBase, action_mode_43), 0x4e8);
+        assert_eq!(offset_of!(L2CFighterAIModeBase, unk_val), 0x4f8);
         assert_eq!(offset_of!(L2CFighterAIModeBase, action_mode_59), 0x508);
         assert_eq!(offset_of!(L2CFighterAIModeBase, action_mode_50), 0x518);
         assert_eq!(offset_of!(L2CFighterAIModeBase, action_mode_12), 0x528);
         assert_eq!(offset_of!(L2CFighterAIModeBase, action_mode_19), 0x538);
-        assert_eq!(offset_of!(L2CFighterAIModeBase, unk_val), 0x548);
+        assert_eq!(offset_of!(L2CFighterAIModeBase, unk_val2), 0x548);
         assert_eq!(offset_of!(L2CFighterAIModeBase, action_mode_4), 0x558);
         assert_eq!(offset_of!(L2CFighterAIModeBase, action_mode_11), 0x568);
         assert_eq!(offset_of!(L2CFighterAIModeBase, action_mode_18), 0x578);

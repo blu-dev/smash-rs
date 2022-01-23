@@ -6,6 +6,9 @@ pub mod phx;
 
 pub use lib_impl::lib;
 
+#[cfg(test)]
+mod test;
+
 #[macro_export]
 macro_rules! size_of {
     ($ty:tt) => {

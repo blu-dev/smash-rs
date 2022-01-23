@@ -775,7 +775,7 @@ impl L2CFighterAIActionBase {
 #[cfg(feature = "type_assert")]
 impl L2CFighterAIActionBase {
     pub fn assert() {
-        assert_eq!(size_of!(L2CFighterAIActionBase), 0x658);
+        assert_eq!(size_of!(L2CFighterAIActionBase), 0x6C8);
         assert_eq!(offset_of!(L2CFighterAIActionBase, ai_base), 0x0);
         assert_eq!(offset_of!(L2CFighterAIActionBase, global_table), 0x158);
         assert_eq!(offset_of!(L2CFighterAIActionBase, private_table), 0x168);
@@ -813,7 +813,7 @@ impl L2CFighterAIActionBase {
         assert_eq!(offset_of!(L2CFighterAIActionBase, act_c_g_atk2_f), 0x368);
         assert_eq!(offset_of!(L2CFighterAIActionBase, act_c_g_atk2_u), 0x378);
         assert_eq!(offset_of!(L2CFighterAIActionBase, act_c_g_atk2_d), 0x388);
-        assert_eq!(offset_of!(L2CFighterAIActionBase, act_c_g_dash_attack), 0x388);
+        assert_eq!(offset_of!(L2CFighterAIActionBase, act_c_g_dash_attack), 0x398);
         assert_eq!(offset_of!(L2CFighterAIActionBase, act_c_g_dash_catch), 0x3A8);
         assert_eq!(offset_of!(L2CFighterAIActionBase, act_c_g_turn_catch), 0x3B8);
         assert_eq!(offset_of!(L2CFighterAIActionBase, act_c_a_catch), 0x3C8);
