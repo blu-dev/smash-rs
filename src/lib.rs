@@ -53,6 +53,7 @@ pub fn validate() {
     app::FighterPokemonLinkEventChange::assert();
     app::FighterRidleyLinkEventMotion::assert();
     app::FighterRyuLinkEventFinalDeadDamage::assert();
+    app::FighterRyuLinkEventFinalMoveTarget::assert();
 
     lib::L2CAgent::assert();
     lib::L2CTable::assert();

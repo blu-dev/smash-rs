@@ -585,16 +585,10 @@ impl LinkEventYoshiTamagoDamageEffect {
 #[derive(Clone)]
 #[repr(C)]
 pub struct FighterCloudLinkEventFinal {
-    parent: LinkEvent,
-    pub motion_kind: phx::Hash40,
-    pub motion_comp_frame: i32,
-    pub req_status: i32,
-    pub task_id: i32,
-    pub offset_x: f32,
-    pub offset_y: f32,
-    pub frame: f32,
-    pub target_pos: phx::Vec2,
-    padding: u64
+    parent: LinkEventFinal,
+    padding: u64,
+    pub bezier_param1: f32,
+    pub bezier_param2: f32
 }
 
 impl Deref for FighterCloudLinkEventFinal {
@@ -614,16 +608,10 @@ impl DerefMut for FighterCloudLinkEventFinal {
 #[cfg(feature = "type_assert")]
 impl FighterCloudLinkEventFinal {
     pub fn assert() {
-        assert_eq!(size_of!(FighterCloudLinkEventFinal), 0x60);
+        assert_eq!(size_of!(FighterCloudLinkEventFinal), 0x68);
         assert_eq!(offset_of!(FighterCloudLinkEventFinal, parent), 0x0);
-        assert_eq!(offset_of!(FighterCloudLinkEventFinal, motion_kind), 0x30);
-        assert_eq!(offset_of!(FighterCloudLinkEventFinal, motion_comp_frame), 0x38);
-        assert_eq!(offset_of!(FighterCloudLinkEventFinal, req_status), 0x3C);
-        assert_eq!(offset_of!(FighterCloudLinkEventFinal, task_id), 0x40);
-        assert_eq!(offset_of!(FighterCloudLinkEventFinal, offset_x), 0x44);
-        assert_eq!(offset_of!(FighterCloudLinkEventFinal, offset_y), 0x48);
-        assert_eq!(offset_of!(FighterCloudLinkEventFinal, frame), 0x4C);
-        assert_eq!(offset_of!(FighterCloudLinkEventFinal, target_pos), 0x50);
+        assert_eq!(offset_of!(FighterCloudLinkEventFinal, bezier_param1), 0x60);
+        assert_eq!(offset_of!(FighterCloudLinkEventFinal, bezier_param2), 0x64);
     }
 }
 
@@ -1047,5 +1035,38 @@ impl FighterRyuLinkEventFinalDeadDamage {
     pub fn assert() {
         assert_eq!(size_of!(FighterRyuLinkEventFinalDeadDamage), 0x2C);
         assert_eq!(offset_of!(FighterRyuLinkEventFinalDeadDamage, parent), 0x0);
+    }
+}
+
+#[derive(Clone)]
+#[repr(C)]
+pub struct FighterRyuLinkEventFinalMoveTarget {
+    parent: LinkEventFinal,
+    padding: u64,
+    pub ty: u32,
+    pub speed: f32,
+}
+
+impl Deref for FighterRyuLinkEventFinalMoveTarget {
+    type Target = LinkEvent;
+
+    fn deref(&self) -> &Self::Target {
+        &self.parent
+    }
+}
+
+impl DerefMut for FighterRyuLinkEventFinalMoveTarget {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.parent
+    }
+}
+
+#[cfg(feature = "type_assert")]
+impl FighterRyuLinkEventFinalMoveTarget {
+    pub fn assert() {
+        assert_eq!(size_of!(FighterRyuLinkEventFinalMoveTarget), 0x68);
+        assert_eq!(offset_of!(FighterRyuLinkEventFinalMoveTarget, parent), 0x0);
+        assert_eq!(offset_of!(FighterRyuLinkEventFinalMoveTarget, ty), 0x60);
+        assert_eq!(offset_of!(FighterRyuLinkEventFinalMoveTarget, speed), 0x64);
     }
 }

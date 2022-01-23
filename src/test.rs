@@ -136,6 +136,11 @@ fn fighter_ryu_link_event_final_dead_damage() {
 }
 
 #[test]
+fn fighter_ryu_link_event_final_move_target() {
+    app::FighterRyuLinkEventFinalMoveTarget::assert();
+}
+
+#[test]
 fn l2c_agent() {
     lib::L2CAgent::assert();
 }
