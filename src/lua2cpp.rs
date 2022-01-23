@@ -1,4 +1,5 @@
 mod agent_base;
+mod agent_generated_base;
 mod ai_action_base;
 mod ai_analyst_base;
 mod ai_base;
@@ -12,6 +13,7 @@ mod common;
 mod weapon;
 
 pub use agent_base::*;
+pub use agent_generated_base::*;
 pub use ai_action_base::*;
 pub use ai_analyst_base::*;
 pub use ai_base::*;
