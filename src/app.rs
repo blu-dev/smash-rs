@@ -4,10 +4,9 @@
 mod consts;
 
 
-mod ai;
+pub mod ai;
 mod events;
 
-pub use ai::*;
 pub use consts::*;
 pub use events::*;
 
