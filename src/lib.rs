@@ -47,6 +47,7 @@ pub fn validate() {
     app::FighterPikminLinkEventWeaponOnFlag::assert();
     app::FighterPikminLinkEventWeaponSetFloat::assert();
     app::FighterPikminLinkEventWeaponSetInt::assert();
+    app::FighterPikminLinkEventWeaponSetPowerMulStatus::assert();
 
     lib::L2CAgent::assert();
     lib::L2CTable::assert();

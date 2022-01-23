@@ -106,6 +106,11 @@ fn fighter_pikmin_link_event_weapon_pikmin_set_int() {
 }
 
 #[test]
+fn fighter_pikmin_link_event_weapon_pikmin_set_power_mul_status() {
+    app::FighterPikminLinkEventWeaponSetPowerMulStatus::assert();
+}
+
+#[test]
 fn l2c_agent() {
     lib::L2CAgent::assert();
 }
