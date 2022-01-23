@@ -5,6 +5,9 @@ mod consts;
 
 
 pub mod ai;
+pub mod ai_camera;
+pub mod ai_dangerzone;
+
 mod events;
 
 pub use consts::*;

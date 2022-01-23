@@ -20,7 +20,7 @@ def get_args(sig: str):
 
 def get_name(sig: str):
     start_index = sig.index("fn ") + 3
-    end_index = sig.index("(")
+    end_index = sig.index("(", start_index)
     return sig[start_index:end_index]
 
 if len(sys.argv) != 3:
@@ -35,14 +35,14 @@ in_file.close()
 filtered_lines: List[str] = []
 for line in lines:
     line = line.strip()
-    if not line.startswith("fn"):
+    if not line.startswith("pub(super) fn"):
         continue
     filtered_lines.append(line)
 
 for line in filtered_lines:
     params = get_args(line)
     func_name = get_name(line)
-    func_call = "pub fn" + line.removeprefix("fn")
+    func_call = "pub fn" + line.removeprefix("pub(super) fn")
     func_call = func_call.removesuffix(";") + " {"
     returns_vec = func_call.endswith("-> cpp::simd::Vector2 {") or func_call.endswith("-> cpp::simd::Vector3 {") or func_call.endswith("-> cpp::simd::Vector4 {")
     func_call = func_call.replace("-> cpp::simd::Vector", "-> phx::Vec").replace("*const ", "&").replace("*mut", "&mut").replace("&mut lua_State", "*mut lua_State")
