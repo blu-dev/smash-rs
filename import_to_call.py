@@ -32,12 +32,16 @@ out_file = open(sys.argv[2], 'w')
 
 lines = in_file.readlines()
 in_file.close()
+out_file.write("use crate::*;\n\nmod impl_ {\n    use crate::*;\n\n    extern \"C\" {\n")
 filtered_lines: List[str] = []
 for line in lines:
+    out_file.write("    " + line)
     line = line.strip()
     if not line.startswith("pub(super) fn"):
         continue
     filtered_lines.append(line)
+
+out_file.write("    }\n}\n\n")
 
 for line in filtered_lines:
     params = get_args(line)
