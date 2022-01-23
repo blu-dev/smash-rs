@@ -2,6 +2,7 @@ mod binary_tree;
 mod function;
 mod hashmap;
 mod optional;
+pub mod simd;
 mod string;
 mod vector;
 

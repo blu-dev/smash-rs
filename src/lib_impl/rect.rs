@@ -64,6 +64,28 @@ impl Into<lib::L2CValue> for Rect {
     }
 }
 
+impl From<cpp::simd::Vector4> for Rect {
+    fn from(other: cpp::simd::Vector4) -> Self {
+        Rect {
+            left: other.x,
+            right: other.y,
+            top: other.z,
+            bottom: other.w
+        }
+    }
+}
+
+impl Into<cpp::simd::Vector4> for Rect {
+    fn into(self) -> cpp::simd::Vector4 {
+        cpp::simd::Vector4 {
+            x: self.left,
+            y: self.right,
+            z: self.top,
+            w: self.bottom
+        }
+    }
+}
+
 #[cfg(feature = "type_assert")]
 impl Rect {
     pub fn assert() {

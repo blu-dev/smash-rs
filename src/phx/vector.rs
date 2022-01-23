@@ -66,6 +66,24 @@ impl fmt::Display for Vector2f {
     }
 }
 
+impl From<cpp::simd::Vector2> for Vector2f {
+    fn from(other: cpp::simd::Vector2) -> Self {
+        Self {
+            x: other.x,
+            y: other.y
+        }
+    }
+}
+
+impl Into<cpp::simd::Vector2> for Vector2f {
+    fn into(self) -> cpp::simd::Vector2 {
+        cpp::simd::Vector2 {
+            x: self.x,
+            y: self.y
+        }
+    }
+}
+
 impl Mul<f32> for Vector2f {
     type Output = Vector2f;
 
@@ -206,6 +224,26 @@ impl Into<lib::L2CValue> for Vector3f {
         value["y"] = self.y.into();
         value["z"] = self.z.into();
         value
+    }
+}
+
+impl From<cpp::simd::Vector3> for Vector3f {
+    fn from(other: cpp::simd::Vector3) -> Self {
+        Self {
+            x: other.x,
+            y: other.y,
+            z: other.z
+        }
+    }
+}
+
+impl Into<cpp::simd::Vector3> for Vector3f {
+    fn into(self) -> cpp::simd::Vector3 {
+        cpp::simd::Vector3 {
+            x: self.x,
+            y: self.y,
+            z: self.z
+        }
     }
 }
 
@@ -350,6 +388,28 @@ impl Into<lib::L2CValue> for Vector4f {
         value["z"] = self.z.into();
         value["w"] = self.w.into();
         value
+    }
+}
+
+impl From<cpp::simd::Vector4> for Vector4f {
+    fn from(other: cpp::simd::Vector4) -> Self {
+        Self {
+            x: other.x,
+            y: other.y,
+            z: other.z,
+            w: other.w
+        }
+    }
+}
+
+impl Into<cpp::simd::Vector4> for Vector4f {
+    fn into(self) -> cpp::simd::Vector4 {
+        cpp::simd::Vector4 {
+            x: self.x,
+            y: self.y,
+            z: self.z,
+            w: self.w
+        }
     }
 }
 

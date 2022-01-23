@@ -1,3 +1,6 @@
+#![feature(repr_simd)]
+#![feature(simd_ffi)]
+#![allow(improper_ctypes)] // For simd
 pub mod app;
 pub mod cpp;
 mod lib_impl;
@@ -5,6 +8,9 @@ pub mod lua2cpp;
 pub mod phx;
 
 pub use lib_impl::lib;
+
+#[macro_use]
+extern crate bitflags;
 
 #[cfg(test)]
 mod test;
