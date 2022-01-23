@@ -2,7 +2,11 @@ use std::ops::{Deref, DerefMut};
 
 use crate::*;
 
-type StatusFn = extern "C" fn(*mut L2CAgentBase) -> lib::L2CValueHack;
+#[cfg(not(feature = "expose_hack"))]
+pub(crate) type StatusFn = extern "C" fn(*mut L2CAgentBase) -> lib::L2CValueHack;
+
+#[cfg(feature = "expose_hack")]
+pub type StatusFn = extern "C" fn(*mut L2CAgentBase) -> lib::L2CValueHack;
 
 extern "C" {
     #[link_name = "_ZN7lua2cpp12L2CAgentBase14call_coroutineEiN3phx6Hash40E"]
@@ -31,6 +35,28 @@ extern "C" {
     
     #[link_name = "_ZN7lua2cpp12L2CAgentBase16resume_coroutineEiRi"]
     fn resume_coroutine(this: *mut L2CAgentBase, index: i32, success: *mut i32) -> i32;
+
+    #[link_name = "_ZN7lua2cpp12L2CAgentBase13run_coroutineEiRiN5boost8optionalIPN3phx5FiberEEE"]
+    fn run_coroutine(this: *mut L2CAgentBase, index: i32, success: *mut i32, parent: cpp::Optional<*mut phx::Fiber>) -> i32;
+
+    #[link_name = "_ZN7lua2cpp12L2CAgentBase29set_coroutine_release_controlEb"]
+    fn set_coroutine_release_control(this: *mut L2CAgentBase, coroutine_release_control: bool);
+
+    #[link_name = "_ZN7lua2cpp12L2CAgentBase15start_coroutineEiN3phx6Hash40ERi"]
+    fn start_coroutine(this: *mut L2CAgentBase, index: i32, function_name: phx::Hash40, success: *mut i32) -> i32;
+
+    #[link_name = "_ZN7lua2cpp12L2CAgentBase19sv_copy_status_funcERKN3lib8L2CValueES4_S4_"]
+    fn sv_copy_status_func(this: *mut L2CAgentBase, dst_status_kind: *const lib::L2CValue, src_status_kind: *const lib::L2CValue, condition: *const lib::L2CValue);
+
+    #[link_name = "_ZN7lua2cpp12L2CAgentBase21sv_delete_status_funcERKN3lib8L2CValueES4_"]
+    fn sv_delete_status_func(this: *mut L2CAgentBase, status_kind: *const lib::L2CValue, condition: *const lib::L2CValue);
+
+    #[link_name = "_ZN7lua2cpp12L2CAgentBase18sv_get_status_funcERKN3lib8L2CValueES4_"]
+    fn sv_get_status_func(this: *mut L2CAgentBase, status_kind: *const lib::L2CValue, condition: *const lib::L2CValue) -> lib::L2CValueHack;
+
+    #[cfg_attr(not(feature = "expose_hack"), allow(dead_code))]
+    #[link_name = "_ZN7lua2cpp12L2CAgentBase18sv_set_status_funcERKN3lib8L2CValueES4_Pv"]
+    fn sv_set_status_func(this: *mut L2CAgentBase, status_kind: *const lib::L2CValue, condition: *const lib::L2CValue, func: StatusFn);
 }
 
 #[repr(C)]
@@ -137,6 +163,84 @@ impl L2CAgentBase {
     pub fn get_unused_coroutine_index(&mut self, max: i32) -> i32 {
         unsafe {
             get_unused_coroutine_index(self, max)
+        }
+    }
+
+    pub fn is_coroutine_release_control(&mut self) -> bool {
+        unsafe {
+            is_coroutine_release_control(self)
+        }
+    }
+
+    /// Sets the capacity of the status data array
+    pub fn reserve_status_data_array(&mut self, length: u32) {
+        unsafe {
+            reserve_status_data_array(self, length)
+        }
+    }
+
+    /// Resumes the coroutine on the given index
+    pub fn resume_coroutine(&mut self, index: i32, success: &mut i32) -> i32 {
+        unsafe {
+            resume_coroutine(self, index, success)
+        }
+    }
+
+    /// Runs a coroutine on the given index, with an optional parent argument
+    pub fn run_coroutine(&mut self, index: i32, success: &mut i32, parent: Option<*mut phx::Fiber>) -> i32 {
+        unsafe {
+            run_coroutine(self, index, success, parent.into())
+        }
+    }
+
+    /// Sets the coroutine release control
+    pub fn set_coroutine_release_control(&mut self, coroutine_release_control: bool) {
+        unsafe {
+            set_coroutine_release_control(self, coroutine_release_control)
+        }
+    }
+
+    /// Starts the coroutine on the given index with the given function name
+    pub fn start_coroutine(&mut self, index: i32, func_name: phx::Hash40, success: &mut i32) -> i32 {
+        unsafe {
+            start_coroutine(self, index, func_name, success)
+        }
+    }
+
+    /// Copies the status function specified to the other status kind
+    pub fn sv_copy_status_func(&mut self, dst_status_kind: &lib::L2CValue, src_status_kind: &lib::L2CValue, condition: &lib::L2CValue) {
+        unsafe {
+            sv_copy_status_func(self, dst_status_kind, src_status_kind, condition)
+        }
+    }
+
+    /// Deletes the status function specified
+    pub fn sv_delete_status_func(&mut self, status_kind: &lib::L2CValue, condition: &lib::L2CValue) {
+        unsafe {
+            sv_delete_status_func(self, status_kind, condition)
+        }
+    }
+
+    /// Get the status function specified
+    pub fn sv_get_status_func(&mut self, status_kind: &lib::L2CValue, condition: &lib::L2CValue) -> lib::L2CValue {
+        unsafe {
+            sv_get_status_func(self, status_kind, condition).into()
+        }
+    }
+
+    /// Set the status function specified
+    #[cfg(feature = "expose_hack")]
+    pub fn sv_set_status_func(&mut self, status_kind: &lib::L2CValue, condition: &lib::L2CValue, func: StatusFn) {
+        unsafe {
+            sv_set_status_func(self, status_kind, condition, func)
+        }
+    }
+
+    #[cfg(not(feature = "expose_hack"))]
+    #[allow(dead_code)]
+    pub(crate) fn sv_set_status_func(&mut self, status_kind: &lib::L2CValue, condition: &lib::L2CValue, func: StatusFn) {
+        unsafe {
+            sv_set_status_func(self, status_kind, condition, func)
         }
     }
 }

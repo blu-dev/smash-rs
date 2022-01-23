@@ -1,7 +1,6 @@
 use std::{ops::{Index, IndexMut}, mem::MaybeUninit};
 
 use crate::*;
-use skyline::libc::c_void;
 
 extern "C" {
     #[link_name = "\u{1}_ZN3lib8L2CTableC1Ei"]
