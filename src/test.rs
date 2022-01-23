@@ -91,6 +91,11 @@ fn fighter_pikmin_link_event_weapon_pikmin_constraint() {
 }
 
 #[test]
+fn fighter_pikmin_link_event_weapon_pikmin_on_flag() {
+    app::FighterPikminLinkEventWeaponOnFlag::assert();
+}
+
+#[test]
 fn l2c_agent() {
     lib::L2CAgent::assert();
 }
