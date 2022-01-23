@@ -176,6 +176,11 @@ fn weapon_pickel_trolley_link_event_remove_by_generation() {
 }
 
 #[test]
+fn weapon_pickel_trolley_link_event_turn_torch_on() {
+    app::WeaponPickelTrolleyLinkEventTurnTorchOn::assert();
+}
+
+#[test]
 fn l2c_agent() {
     lib::L2CAgent::assert();
 }

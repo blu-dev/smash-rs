@@ -1362,3 +1362,33 @@ impl WeaponPickelTrolleyLinkEventRemoveRailByGeneration {
         assert_eq!(offset_of!(WeaponPickelTrolleyLinkEventRemoveRailByGeneration, result), 0x34);
     }
 }
+
+#[derive(Clone)]
+#[repr(C)]
+pub struct WeaponPickelTrolleyLinkEventTurnTorchOn {
+    parent: LinkEvent,
+    pub target_generation: i32,
+}
+
+impl Deref for WeaponPickelTrolleyLinkEventTurnTorchOn {
+    type Target = LinkEvent;
+
+    fn deref(&self) -> &Self::Target {
+        &self.parent
+    }
+}
+
+impl DerefMut for WeaponPickelTrolleyLinkEventTurnTorchOn {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.parent
+    }
+}
+
+#[cfg(feature = "type_assert")]
+impl WeaponPickelTrolleyLinkEventTurnTorchOn {
+    pub fn assert() {
+        assert_eq!(size_of!(WeaponPickelTrolleyLinkEventTurnTorchOn), 0x30);
+        assert_eq!(offset_of!(WeaponPickelTrolleyLinkEventTurnTorchOn, parent), 0x0);
+        assert_eq!(offset_of!(WeaponPickelTrolleyLinkEventTurnTorchOn, target_generation), 0x2C);
+    }
+}
