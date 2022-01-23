@@ -1254,3 +1254,43 @@ impl WeaponPickelTrolleyLinkEventDestroyed {
         assert_eq!(offset_of!(WeaponPickelTrolleyLinkEventDestroyed, speed_y), 0x30);
     }
 }
+
+#[derive(Clone)]
+#[repr(C)]
+pub struct WeaponPickelTrolleyLinkEventGetParam {
+    parent: LinkEvent,
+    pub catch_time: f32,
+    pub catch_time_add_by_damage: f32,
+    pub catch_time_decrease: f32,
+    pub catch_time_decrease_by_one_pattern: f32,
+    pub catch_time_min_by_one_pattern: f32,
+    pub catch_time_dec_by_clatter: f32
+}
+
+impl Deref for WeaponPickelTrolleyLinkEventGetParam {
+    type Target = LinkEvent;
+
+    fn deref(&self) -> &Self::Target {
+        &self.parent
+    }
+}
+
+impl DerefMut for WeaponPickelTrolleyLinkEventGetParam {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.parent
+    }
+}
+
+#[cfg(feature = "type_assert")]
+impl WeaponPickelTrolleyLinkEventGetParam {
+    pub fn assert() {
+        assert_eq!(size_of!(WeaponPickelTrolleyLinkEventGetParam), 0x44);
+        assert_eq!(offset_of!(WeaponPickelTrolleyLinkEventGetParam, parent), 0x0);
+        assert_eq!(offset_of!(WeaponPickelTrolleyLinkEventGetParam, catch_time), 0x2C);
+        assert_eq!(offset_of!(WeaponPickelTrolleyLinkEventGetParam, catch_time_add_by_damage), 0x30);
+        assert_eq!(offset_of!(WeaponPickelTrolleyLinkEventGetParam, catch_time_decrease), 0x34);
+        assert_eq!(offset_of!(WeaponPickelTrolleyLinkEventGetParam, catch_time_decrease_by_one_pattern), 0x38);
+        assert_eq!(offset_of!(WeaponPickelTrolleyLinkEventGetParam, catch_time_min_by_one_pattern), 0x3C);
+        assert_eq!(offset_of!(WeaponPickelTrolleyLinkEventGetParam, catch_time_dec_by_clatter), 0x40);
+    }
+}

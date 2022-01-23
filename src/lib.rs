@@ -58,6 +58,7 @@ pub fn validate() {
     app::WeaponPickelTrolleyLinkEventConfirmMaterial::assert();
     app::WeaponPickelTrolleyLinkEventConsumeMaterial::assert();
     app::WeaponPickelTrolleyLinkEventDestroyed::assert();
+    app::WeaponPickelTrolleyLinkEventGetParam::assert();
 
     lib::L2CAgent::assert();
     lib::L2CTable::assert();
