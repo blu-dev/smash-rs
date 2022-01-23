@@ -11,3 +11,4 @@ pub mod ai_stage;
 pub mod ai_system;
 pub mod ai_utility;
 pub mod ai_weapon;
+pub mod analyst;

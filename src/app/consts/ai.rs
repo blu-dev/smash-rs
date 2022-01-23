@@ -1,5 +1,6 @@
 pub mod FighterAI;
 pub mod FighterAIAct;
+pub mod FighterAIAnalyst;
 pub mod FighterAIStat;
 
 #[repr(u8)]
