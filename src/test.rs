@@ -186,6 +186,11 @@ fn weapon_robot_hominglaser_link_event_burst() {
 }
 
 #[test]
+fn weapon_robot_hominglaser_link_event_search() {
+    app::WeaponRobotHominglaserLinkEventSearch::assert();
+}
+
+#[test]
 fn l2c_agent() {
     lib::L2CAgent::assert();
 }

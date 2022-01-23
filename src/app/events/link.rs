@@ -1422,3 +1422,33 @@ impl WeaponRobotHominglaserLinkEventBurst {
         assert_eq!(offset_of!(WeaponRobotHominglaserLinkEventBurst, index), 0x2C);
     }
 }
+
+#[derive(Clone)]
+#[repr(C)]
+pub struct WeaponRobotHominglaserLinkEventSearch {
+    parent: LinkEvent,
+    pub index: i32,
+}
+
+impl Deref for WeaponRobotHominglaserLinkEventSearch {
+    type Target = LinkEvent;
+
+    fn deref(&self) -> &Self::Target {
+        &self.parent
+    }
+}
+
+impl DerefMut for WeaponRobotHominglaserLinkEventSearch {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.parent
+    }
+}
+
+#[cfg(feature = "type_assert")]
+impl WeaponRobotHominglaserLinkEventSearch {
+    pub fn assert() {
+        assert_eq!(size_of!(WeaponRobotHominglaserLinkEventSearch), 0x30);
+        assert_eq!(offset_of!(WeaponRobotHominglaserLinkEventSearch, parent), 0x0);
+        assert_eq!(offset_of!(WeaponRobotHominglaserLinkEventSearch, index), 0x2C);
+    }
+}
