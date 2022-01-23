@@ -56,4 +56,5 @@ pub fn validate() {
     lua2cpp::L2CFighterAnimcmdEffectCommon::assert();
     lua2cpp::L2CFighterAnimcmdExpressionCommon::assert();
     lua2cpp::L2CFighterAnimcmdGameCommon::assert();
+    lua2cpp::L2CFighterAnimcmdSoundCommon::assert();
 }
