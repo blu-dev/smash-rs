@@ -126,6 +126,11 @@ fn fighter_pokemon_link_event_change() {
 }
 
 #[test]
+fn fighter_ridley_link_event_motion() {
+    app::FighterRidleyLinkEventMotion::assert();
+}
+
+#[test]
 fn l2c_agent() {
     lib::L2CAgent::assert();
 }

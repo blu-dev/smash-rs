@@ -51,6 +51,7 @@ pub fn validate() {
     app::FighterPikminLinkEventWeaponSyncLR::assert();
     app::FighterPikminLinkEventWeaponSyncPos::assert();
     app::FighterPokemonLinkEventChange::assert();
+    app::FighterRidleyLinkEventMotion::assert();
 
     lib::L2CAgent::assert();
     lib::L2CTable::assert();

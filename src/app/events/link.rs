@@ -976,3 +976,33 @@ impl FighterPokemonLinkEventChange {
         assert_eq!(offset_of!(FighterPokemonLinkEventChange, object_id), 0x2C);
     }
 }
+
+#[derive(Clone)]
+#[repr(C)]
+pub struct FighterRidleyLinkEventMotion {
+    parent: LinkEvent,
+    pub motion_kind: phx::Hash40,
+}
+
+impl Deref for FighterRidleyLinkEventMotion {
+    type Target = LinkEvent;
+
+    fn deref(&self) -> &Self::Target {
+        &self.parent
+    }
+}
+
+impl DerefMut for FighterRidleyLinkEventMotion {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.parent
+    }
+}
+
+#[cfg(feature = "type_assert")]
+impl FighterRidleyLinkEventMotion {
+    pub fn assert() {
+        assert_eq!(size_of!(FighterRidleyLinkEventMotion), 0x38);
+        assert_eq!(offset_of!(FighterRidleyLinkEventMotion, parent), 0x0);
+        assert_eq!(offset_of!(FighterRidleyLinkEventMotion, motion_kind), 0x30);
+    }
+}
