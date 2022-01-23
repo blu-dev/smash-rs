@@ -7,6 +7,7 @@ mod consts;
 pub mod ai;
 pub mod ai_camera;
 pub mod ai_dangerzone;
+pub mod ai_debug;
 
 mod events;
 

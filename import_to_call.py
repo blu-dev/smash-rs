@@ -3,8 +3,8 @@ import sys
 from typing import List
 
 def get_args(sig: str):
-    start_index = sig.index("(") + 1
-    end_index = sig.index(")")
+    start_index = sig.index("(", sig.index("fn ") + 3) + 1
+    end_index = sig.index(")", start_index)
     arg_list = sig[start_index:end_index]
     out_args: List[str] = []
     arg_count = arg_list.count(": ")
