@@ -1525,3 +1525,39 @@ impl WeaponShizueFishingrodLinkEventCut {
         assert_eq!(offset_of!(WeaponShizueFishingrodLinkEventCut, cut_joint_id), 0x30);
     }
 }
+
+#[derive(Clone)]
+#[repr(C)]
+pub struct WeaponShizueFishingrodLinkEventReel {
+    parent: LinkEvent,
+    pub reel_speed: f32,
+    pub pull_speed: f32,
+    pub status_kind: i32,
+    pub is_hook: bool
+}
+
+impl Deref for WeaponShizueFishingrodLinkEventReel {
+    type Target = LinkEvent;
+
+    fn deref(&self) -> &Self::Target {
+        &self.parent
+    }
+}
+
+impl DerefMut for WeaponShizueFishingrodLinkEventReel {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.parent
+    }
+}
+
+#[cfg(feature = "type_assert")]
+impl WeaponShizueFishingrodLinkEventReel {
+    pub fn assert() {
+        assert_eq!(size_of!(WeaponShizueFishingrodLinkEventReel), 0x3C);
+        assert_eq!(offset_of!(WeaponShizueFishingrodLinkEventReel, parent), 0x0);
+        assert_eq!(offset_of!(WeaponShizueFishingrodLinkEventReel, reel_speed), 0x2C);
+        assert_eq!(offset_of!(WeaponShizueFishingrodLinkEventReel, pull_speed), 0x30);
+        assert_eq!(offset_of!(WeaponShizueFishingrodLinkEventReel, status_kind), 0x34);
+        assert_eq!(offset_of!(WeaponShizueFishingrodLinkEventReel, is_hook), 0x38);
+    }
+}

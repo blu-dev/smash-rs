@@ -66,6 +66,7 @@ pub fn validate() {
     app::WeaponRobotHominglaserLinkEventSearch::assert();
     app::WeaponShizueFishingrodLinkEventCliff::assert();
     app::WeaponShizueFishingrodLinkEventCut::assert();
+    app::WeaponShizueFishingrodLinkEventReel::assert();
 
     lib::L2CAgent::assert();
     lib::L2CTable::assert();
