@@ -626,3 +626,38 @@ impl FighterCloudLinkEventFinal {
         assert_eq!(offset_of!(FighterCloudLinkEventFinal, target_pos), 0x50);
     }
 }
+
+#[derive(Clone)]
+#[repr(C)]
+pub struct FighterInklingLinkEventPaint {
+    parent: LinkEvent,
+    padding: u32,
+    pub pos: phx::Vec3,
+    padding2: u32,
+    pub half_length: phx::Vec2,
+    padding3: u64,
+}
+
+impl Deref for FighterInklingLinkEventPaint {
+    type Target = LinkEvent;
+
+    fn deref(&self) -> &Self::Target {
+        &self.parent
+    }
+}
+
+impl DerefMut for FighterInklingLinkEventPaint {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.parent
+    }
+}
+
+#[cfg(feature = "type_assert")]
+impl FighterInklingLinkEventPaint {
+    pub fn assert() {
+        assert_eq!(size_of!(FighterInklingLinkEventPaint), 0x50);
+        assert_eq!(offset_of!(FighterInklingLinkEventPaint, parent), 0x0);
+        assert_eq!(offset_of!(FighterInklingLinkEventPaint, pos), 0x30);
+        assert_eq!(offset_of!(FighterInklingLinkEventPaint, half_length), 0x40);
+    }
+}

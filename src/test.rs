@@ -71,6 +71,11 @@ fn fighter_cloud_link_event_final() {
 }
 
 #[test]
+fn fighter_inkling_link_event_paint() {
+    app::FighterInklingLinkEventPaint::assert();
+}
+
+#[test]
 fn l2c_agent() {
     lib::L2CAgent::assert();
 }
