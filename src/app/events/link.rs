@@ -884,3 +884,33 @@ impl FighterPikminLinkEventWeaponSetPowerMulStatus {
         assert_eq!(offset_of!(FighterPikminLinkEventWeaponSetPowerMulStatus, power_mul_status), 0x2C);
     }
 }
+
+#[derive(Clone)]
+#[repr(C)]
+pub struct FighterPikminLinkEventWeaponSyncLR {
+    parent: LinkEvent,
+    pub lr: f32,
+}
+
+impl Deref for FighterPikminLinkEventWeaponSyncLR {
+    type Target = LinkEvent;
+
+    fn deref(&self) -> &Self::Target {
+        &self.parent
+    }
+}
+
+impl DerefMut for FighterPikminLinkEventWeaponSyncLR {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.parent
+    }
+}
+
+#[cfg(feature = "type_assert")]
+impl FighterPikminLinkEventWeaponSyncLR {
+    pub fn assert() {
+        assert_eq!(size_of!(FighterPikminLinkEventWeaponSyncLR), 0x30);
+        assert_eq!(offset_of!(FighterPikminLinkEventWeaponSyncLR, parent), 0x0);
+        assert_eq!(offset_of!(FighterPikminLinkEventWeaponSyncLR, lr), 0x2C);
+    }
+}
