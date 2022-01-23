@@ -76,6 +76,11 @@ fn fighter_inkling_link_event_paint() {
 }
 
 #[test]
+fn fighter_pikmin_link_event_weapon_pikmin_change_motion() {
+    app::FighterPikminLinkEventWeaponPikminChangeMotion::assert();
+}
+
+#[test]
 fn l2c_agent() {
     lib::L2CAgent::assert();
 }

@@ -40,6 +40,8 @@ pub fn validate() {
     app::LinkEventTouchItem::assert();
     app::LinkEventYoshiTamagoDamageEffect::assert();
     app::FighterCloudLinkEventFinal::assert();
+    app::FighterInklingLinkEventPaint::assert();
+    app::FighterPikminLinkEventWeaponPikminChangeMotion::assert();
 
     lib::L2CAgent::assert();
     lib::L2CTable::assert();
