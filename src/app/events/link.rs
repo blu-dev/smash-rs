@@ -914,3 +914,35 @@ impl FighterPikminLinkEventWeaponSyncLR {
         assert_eq!(offset_of!(FighterPikminLinkEventWeaponSyncLR, lr), 0x2C);
     }
 }
+
+#[derive(Clone)]
+#[repr(C)]
+pub struct FighterPikminLinkEventWeaponSyncPos {
+    parent: LinkEvent,
+    pub pos_x: f32,
+    pub pos_y: f32,
+}
+
+impl Deref for FighterPikminLinkEventWeaponSyncPos {
+    type Target = LinkEvent;
+
+    fn deref(&self) -> &Self::Target {
+        &self.parent
+    }
+}
+
+impl DerefMut for FighterPikminLinkEventWeaponSyncPos {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.parent
+    }
+}
+
+#[cfg(feature = "type_assert")]
+impl FighterPikminLinkEventWeaponSyncPos {
+    pub fn assert() {
+        assert_eq!(size_of!(FighterPikminLinkEventWeaponSyncPos), 0x34);
+        assert_eq!(offset_of!(FighterPikminLinkEventWeaponSyncPos, parent), 0x0);
+        assert_eq!(offset_of!(FighterPikminLinkEventWeaponSyncPos, pos_x), 0x2C);
+        assert_eq!(offset_of!(FighterPikminLinkEventWeaponSyncPos, pos_y), 0x30);
+    }
+}
