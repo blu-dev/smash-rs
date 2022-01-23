@@ -42,6 +42,7 @@ pub fn validate() {
     app::FighterCloudLinkEventFinal::assert();
     app::FighterInklingLinkEventPaint::assert();
     app::FighterPikminLinkEventWeaponPikminChangeMotion::assert();
+    app::FighterPikminLinkEventWeaponPikminChangeStatus::assert();
 
     lib::L2CAgent::assert();
     lib::L2CTable::assert();

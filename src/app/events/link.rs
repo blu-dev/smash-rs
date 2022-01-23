@@ -698,3 +698,33 @@ impl FighterPikminLinkEventWeaponPikminChangeMotion {
         assert_eq!(offset_of!(FighterPikminLinkEventWeaponPikminChangeMotion, is_loop), 0x40);
     }
 }
+
+#[derive(Clone)]
+#[repr(C)]
+pub struct FighterPikminLinkEventWeaponPikminChangeStatus {
+    parent: LinkEvent,
+    pub status_kind: i32
+}
+
+impl Deref for FighterPikminLinkEventWeaponPikminChangeStatus {
+    type Target = LinkEvent;
+
+    fn deref(&self) -> &Self::Target {
+        &self.parent
+    }
+}
+
+impl DerefMut for FighterPikminLinkEventWeaponPikminChangeStatus {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.parent
+    }
+}
+
+#[cfg(feature = "type_assert")]
+impl FighterPikminLinkEventWeaponPikminChangeStatus {
+    pub fn assert() {
+        assert_eq!(size_of!(FighterPikminLinkEventWeaponPikminChangeStatus), 0x30);
+        assert_eq!(offset_of!(FighterPikminLinkEventWeaponPikminChangeStatus, parent), 0x0);
+        assert_eq!(offset_of!(FighterPikminLinkEventWeaponPikminChangeStatus, status_kind), 0x2C);
+    }
+}

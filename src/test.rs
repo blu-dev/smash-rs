@@ -81,6 +81,11 @@ fn fighter_pikmin_link_event_weapon_pikmin_change_motion() {
 }
 
 #[test]
+fn fighter_pikmin_link_event_weapon_pikmin_change_status() {
+    app::FighterPikminLinkEventWeaponPikminChangeStatus::assert();
+}
+
+#[test]
 fn l2c_agent() {
     lib::L2CAgent::assert();
 }
