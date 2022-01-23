@@ -62,6 +62,7 @@ pub fn validate() {
     app::WeaponPickelTrolleyLinkEventRemoveIfDistance::assert();
     app::WeaponPickelTrolleyLinkEventRemoveRailByGeneration::assert();
     app::WeaponPickelTrolleyLinkEventTurnTorchOn::assert();
+    app::WeaponRobotHominglaserLinkEventBurst::assert();
 
     lib::L2CAgent::assert();
     lib::L2CTable::assert();

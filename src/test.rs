@@ -181,6 +181,11 @@ fn weapon_pickel_trolley_link_event_turn_torch_on() {
 }
 
 #[test]
+fn weapon_robot_hominglaser_link_event_burst() {
+    app::WeaponRobotHominglaserLinkEventBurst::assert();
+}
+
+#[test]
 fn l2c_agent() {
     lib::L2CAgent::assert();
 }
