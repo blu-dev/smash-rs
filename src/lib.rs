@@ -57,6 +57,7 @@ pub fn validate() {
     app::FighterElementLinkEventChange::assert();
     app::WeaponPickelTrolleyLinkEventConfirmMaterial::assert();
     app::WeaponPickelTrolleyLinkEventConsumeMaterial::assert();
+    app::WeaponPickelTrolleyLinkEventDestroyed::assert();
 
     lib::L2CAgent::assert();
     lib::L2CTable::assert();

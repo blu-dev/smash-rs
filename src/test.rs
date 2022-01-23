@@ -156,6 +156,11 @@ fn weapon_pickel_trolley_link_event_consume_material() {
 }
 
 #[test]
+fn weapon_pickel_trolley_link_event_destroyed() {
+    app::WeaponPickelTrolleyLinkEventDestroyed::assert();
+}
+
+#[test]
 fn l2c_agent() {
     lib::L2CAgent::assert();
 }

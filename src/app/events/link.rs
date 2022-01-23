@@ -1222,3 +1222,35 @@ impl WeaponPickelTrolleyLinkEventConsumeMaterial {
         assert_eq!(offset_of!(WeaponPickelTrolleyLinkEventConsumeMaterial, parent), 0x0);
     }
 }
+
+#[derive(Clone)]
+#[repr(C)]
+pub struct WeaponPickelTrolleyLinkEventDestroyed {
+    parent: LinkEvent,
+    pub speed_x_mul: f32,
+    pub speed_y: f32,
+}
+
+impl Deref for WeaponPickelTrolleyLinkEventDestroyed {
+    type Target = LinkEvent;
+
+    fn deref(&self) -> &Self::Target {
+        &self.parent
+    }
+}
+
+impl DerefMut for WeaponPickelTrolleyLinkEventDestroyed {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.parent
+    }
+}
+
+#[cfg(feature = "type_assert")]
+impl WeaponPickelTrolleyLinkEventDestroyed {
+    pub fn assert() {
+        assert_eq!(size_of!(WeaponPickelTrolleyLinkEventDestroyed), 0x34);
+        assert_eq!(offset_of!(WeaponPickelTrolleyLinkEventDestroyed, parent), 0x0);
+        assert_eq!(offset_of!(WeaponPickelTrolleyLinkEventDestroyed, speed_x_mul), 0x2C);
+        assert_eq!(offset_of!(WeaponPickelTrolleyLinkEventDestroyed, speed_y), 0x30);
+    }
+}
