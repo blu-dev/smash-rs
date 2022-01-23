@@ -131,6 +131,11 @@ fn fighter_ridley_link_event_motion() {
 }
 
 #[test]
+fn fighter_ryu_link_event_final_dead_damage() {
+    app::FighterRyuLinkEventFinalDeadDamage::assert();
+}
+
+#[test]
 fn l2c_agent() {
     lib::L2CAgent::assert();
 }

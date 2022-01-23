@@ -21,7 +21,7 @@ pub struct LinkEvent {
     pub id: u32,
     padding: u32,
     pub link_event_kind: phx::Hash40,
-    pub receiver_boma: *mut u8, // to become BattleObjectModuleAccessor
+    pub receiver_boma: *mut app::BattleObjectModuleAccessor,
     pub sender_id: u32,
     pub no: u32,
     pub result: bool,
@@ -133,8 +133,8 @@ impl LinkEventCapture {
     }
 }
 
-#[repr(packed)]
 #[repr(C)]
+#[repr(packed)]
 pub struct LinkEventCaptureItem {
     parent: LinkEvent,
     pub lr: f32,
@@ -1004,5 +1004,48 @@ impl FighterRidleyLinkEventMotion {
         assert_eq!(size_of!(FighterRidleyLinkEventMotion), 0x38);
         assert_eq!(offset_of!(FighterRidleyLinkEventMotion, parent), 0x0);
         assert_eq!(offset_of!(FighterRidleyLinkEventMotion, motion_kind), 0x30);
+    }
+}
+
+#[derive(Clone)]
+#[repr(C)]
+pub struct FighterRyuLinkEventFinalDeadDamage {
+    parent: LinkEvent,
+}
+
+impl Deref for FighterRyuLinkEventFinalDeadDamage {
+    type Target = LinkEvent;
+
+    fn deref(&self) -> &Self::Target {
+        &self.parent
+    }
+}
+
+impl DerefMut for FighterRyuLinkEventFinalDeadDamage {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.parent
+    }
+}
+
+// bools pack tighter and rust isn't perfect
+impl FighterRyuLinkEventFinalDeadDamage {
+    pub fn is_dead_damage(&self) -> bool {
+        self.padding3[0] != 0
+    }
+
+    pub fn set_is_dead_damage(&mut self, is_dead_damage: bool) {
+        if is_dead_damage {
+            self.padding3[0] = 1;
+        } else {
+            self.padding3[0] = 0;
+        }
+    }
+}
+
+#[cfg(feature = "type_assert")]
+impl FighterRyuLinkEventFinalDeadDamage {
+    pub fn assert() {
+        assert_eq!(size_of!(FighterRyuLinkEventFinalDeadDamage), 0x2C);
+        assert_eq!(offset_of!(FighterRyuLinkEventFinalDeadDamage, parent), 0x0);
     }
 }
