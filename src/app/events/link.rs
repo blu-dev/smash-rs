@@ -790,3 +790,35 @@ impl FighterPikminLinkEventWeaponOnFlag {
         assert_eq!(offset_of!(FighterPikminLinkEventWeaponOnFlag, value_id), 0x2C);
     }
 }
+
+#[derive(Clone)]
+#[repr(C)]
+pub struct FighterPikminLinkEventWeaponSetFloat {
+    parent: LinkEvent,
+    pub work_value: f32,
+    pub work_id: i32,
+}
+
+impl Deref for FighterPikminLinkEventWeaponSetFloat {
+    type Target = LinkEvent;
+
+    fn deref(&self) -> &Self::Target {
+        &self.parent
+    }
+}
+
+impl DerefMut for FighterPikminLinkEventWeaponSetFloat {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.parent
+    }
+}
+
+#[cfg(feature = "type_assert")]
+impl FighterPikminLinkEventWeaponSetFloat {
+    pub fn assert() {
+        assert_eq!(size_of!(FighterPikminLinkEventWeaponSetFloat), 0x34);
+        assert_eq!(offset_of!(FighterPikminLinkEventWeaponSetFloat, parent), 0x0);
+        assert_eq!(offset_of!(FighterPikminLinkEventWeaponSetFloat, work_value), 0x2C);
+        assert_eq!(offset_of!(FighterPikminLinkEventWeaponSetFloat, work_id), 0x30);
+    }
+}

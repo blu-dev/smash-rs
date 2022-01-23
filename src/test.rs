@@ -96,6 +96,11 @@ fn fighter_pikmin_link_event_weapon_pikmin_on_flag() {
 }
 
 #[test]
+fn fighter_pikmin_link_event_weapon_pikmin_set_float() {
+    app::FighterPikminLinkEventWeaponSetFloat::assert();
+}
+
+#[test]
 fn l2c_agent() {
     lib::L2CAgent::assert();
 }
