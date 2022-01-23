@@ -1100,3 +1100,70 @@ impl FighterElementLinkEventChange {
         assert_eq!(offset_of!(FighterElementLinkEventChange, object_id), 0x2C);
     }
 }
+
+#[derive(Clone)]
+#[repr(C)]
+pub struct WeaponPickelTrolleyLinkEventConfirmMaterial {
+    parent: LinkEvent,
+}
+
+impl Deref for WeaponPickelTrolleyLinkEventConfirmMaterial {
+    type Target = LinkEvent;
+
+    fn deref(&self) -> &Self::Target {
+        &self.parent
+    }
+}
+
+impl DerefMut for WeaponPickelTrolleyLinkEventConfirmMaterial {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.parent
+    }
+}
+
+// bools pack tighter and rust isn't perfect
+impl WeaponPickelTrolleyLinkEventConfirmMaterial {
+    pub fn is_powered(&self) -> bool {
+        self.padding3[0] != 0
+    }
+
+    pub fn is_rail_free(&self) -> bool {
+        self.padding3[1] != 0
+    }
+
+    pub fn succeeded(&self) -> bool {
+        self.padding3[2] != 0
+    }
+
+    pub fn set_is_powered(&mut self, is_powered: bool) {
+        if is_powered {
+            self.padding3[0] = 1;
+        } else {
+            self.padding3[0] = 0;
+        }
+    }
+
+    pub fn set_is_rail_free(&mut self, is_rail_free: bool) {
+        if is_rail_free {
+            self.padding3[1] = 1;
+        } else {
+            self.padding3[1] = 0;
+        }
+    }
+
+    pub fn set_succeeded(&mut self, succeeded: bool) {
+        if succeeded {
+            self.padding3[2] = 1;
+        } else {
+            self.padding3[2] = 0;
+        }
+    }
+}
+
+#[cfg(feature = "type_assert")]
+impl WeaponPickelTrolleyLinkEventConfirmMaterial {
+    pub fn assert() {
+        assert_eq!(size_of!(WeaponPickelTrolleyLinkEventConfirmMaterial), 0x2C);
+        assert_eq!(offset_of!(WeaponPickelTrolleyLinkEventConfirmMaterial, parent), 0x0);
+    }
+}

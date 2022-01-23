@@ -55,6 +55,7 @@ pub fn validate() {
     app::FighterRyuLinkEventFinalDeadDamage::assert();
     app::FighterRyuLinkEventFinalMoveTarget::assert();
     app::FighterElementLinkEventChange::assert();
+    app::WeaponPickelTrolleyLinkEventConfirmMaterial::assert();
 
     lib::L2CAgent::assert();
     lib::L2CTable::assert();

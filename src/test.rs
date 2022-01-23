@@ -146,6 +146,11 @@ fn fighter_element_link_event_change() {
 }
 
 #[test]
+fn weapon_pickel_trolley_link_event_confirm_material() {
+    app::WeaponPickelTrolleyLinkEventConfirmMaterial::assert();
+}
+
+#[test]
 fn l2c_agent() {
     lib::L2CAgent::assert();
 }
