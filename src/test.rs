@@ -171,6 +171,11 @@ fn weapon_pickel_trolley_link_event_remove_if_distance() {
 }
 
 #[test]
+fn weapon_pickel_trolley_link_event_remove_by_generation() {
+    app::WeaponPickelTrolleyLinkEventRemoveRailByGeneration::assert();
+}
+
+#[test]
 fn l2c_agent() {
     lib::L2CAgent::assert();
 }
