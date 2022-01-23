@@ -1452,3 +1452,46 @@ impl WeaponRobotHominglaserLinkEventSearch {
         assert_eq!(offset_of!(WeaponRobotHominglaserLinkEventSearch, index), 0x2C);
     }
 }
+
+#[derive(Clone)]
+#[repr(C)]
+pub struct WeaponShizueFishingrodLinkEventCliff {
+    parent: LinkEvent,
+}
+
+impl Deref for WeaponShizueFishingrodLinkEventCliff {
+    type Target = LinkEvent;
+
+    fn deref(&self) -> &Self::Target {
+        &self.parent
+    }
+}
+
+impl DerefMut for WeaponShizueFishingrodLinkEventCliff {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.parent
+    }
+}
+
+// bools pack tighter and rust isn't perfect
+impl WeaponShizueFishingrodLinkEventCliff {
+    pub fn found(&self) -> bool {
+        self.padding3[0] != 0
+    }
+
+    pub fn set_found(&mut self, found: bool) {
+        if found {
+            self.padding3[0] = 1;
+        } else {
+            self.padding3[0] = 0;
+        }
+    }
+}
+
+#[cfg(feature = "type_assert")]
+impl WeaponShizueFishingrodLinkEventCliff {
+    pub fn assert() {
+        assert_eq!(size_of!(WeaponShizueFishingrodLinkEventCliff), 0x2C);
+        assert_eq!(offset_of!(WeaponShizueFishingrodLinkEventCliff, parent), 0x0);
+    }
+}

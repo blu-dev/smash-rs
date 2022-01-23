@@ -191,6 +191,11 @@ fn weapon_robot_hominglaser_link_event_search() {
 }
 
 #[test]
+fn weapon_shizue_fishingrod_link_event_cliff() {
+    app::WeaponShizueFishingrodLinkEventCliff::assert();
+}
+
+#[test]
 fn l2c_agent() {
     lib::L2CAgent::assert();
 }
