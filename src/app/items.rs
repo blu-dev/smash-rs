@@ -1,3 +1,4 @@
+pub mod akira;
 pub mod andross;
 pub mod androssshot;
 pub mod backshield;
@@ -6,3 +7,4 @@ pub mod beetle;
 pub mod blackball;
 pub mod bomberman;
 pub mod bombermanbomb;
+pub mod boomerang;
