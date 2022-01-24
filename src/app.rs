@@ -6,12 +6,14 @@ mod consts;
 
 pub mod ai;
 mod ai_extras;
+mod bosses;
 mod events;
 mod items;
 mod modules;
 
 
 pub use ai_extras::*;
+pub use bosses::*;
 pub use consts::*;
 pub use events::*;
 pub use items::*;
