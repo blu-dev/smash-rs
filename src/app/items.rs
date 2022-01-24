@@ -5,3 +5,4 @@ pub mod baitocrane;
 pub mod beetle;
 pub mod blackball;
 pub mod bomberman;
+pub mod bombermanbomb;
