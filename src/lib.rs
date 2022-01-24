@@ -75,6 +75,9 @@ pub fn validate() {
     app::WeaponShizueFishingrodLinkEventReel::assert();
     app::WeaponShizueFishingrodLinkEventShoot::assert();
 
+    app::AttackAbsoluteData::assert();
+    app::AttackData::assert();
+
     lib::L2CAgent::assert();
     lib::L2CTable::assert();
     lib::L2CValue::assert();

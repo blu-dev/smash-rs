@@ -211,6 +211,16 @@ fn weapon_shizue_fishingrod_link_event_shoot() {
 }
 
 #[test]
+fn attack_data() {
+    app::AttackData::assert();
+}
+
+#[test]
+fn attack_absolute_data() {
+    app::AttackAbsoluteData::assert();
+}
+
+#[test]
 fn l2c_agent() {
     lib::L2CAgent::assert();
 }
