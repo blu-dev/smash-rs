@@ -4,9 +4,10 @@
 mod consts;
 
 
-pub mod ai;
 mod ai_extras;
+pub mod ai;
 mod bosses;
+pub mod camera;
 mod events;
 mod items;
 mod modules;
