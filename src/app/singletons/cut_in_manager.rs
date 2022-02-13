@@ -4,6 +4,9 @@ mod impl_ {
     use crate::*;
 
     extern "C" {
+        #[link_name = "_ZN3lib9SingletonIN3app19FighterCutInManagerEE9instance_E"]
+        pub(super) static INSTANCE: *mut app::FighterCutInManager;
+
         #[link_name = "_ZN3app19FighterCutInManager13is_one_on_oneEv"]
         pub(super) fn is_one_on_one() -> bool;
     
@@ -178,6 +181,26 @@ impl FighterCutInManager {
     pub fn set_throw_finish_zoom_rate(&mut self, rate: f32) {
         unsafe {
             impl_::set_throw_finish_zoom_rate(self, rate)
+        }
+    }
+
+    pub fn instance() -> Option<&'static Self> {
+        unsafe {
+            if impl_::INSTANCE.is_null() {
+                None
+            } else {
+                Some(&*impl_::INSTANCE)
+            }
+        }
+    }
+
+    pub fn instance_mut() -> Option<&'static mut Self> {
+        unsafe {
+            if impl_::INSTANCE.is_null() {
+                None
+            } else {
+                Some(&mut *impl_::INSTANCE)
+            }
         }
     }
 }
