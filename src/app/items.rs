@@ -17,3 +17,10 @@ pub mod cyborg;
 #[allow(non_snake_case)]
 pub mod daisydaikon;
 pub mod devil;
+#[allow(non_snake_case)]
+pub mod doll;
+pub mod dragoonset;
+pub mod dragoonsight;
+pub mod driver;
+#[allow(non_snake_case)]
+pub mod explosionbomb;

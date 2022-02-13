@@ -36,7 +36,8 @@ pub struct DamageInfo {
     pub owner_object_id: u32,
     pub shake_scale: f32,
     pub catch_absolute: bool,
-    pub no_dead_damage_fly_effect: bool
+    pub no_dead_damage_fly_effect: bool,
+    padding4: [u8; 0x22]
 }
 
 #[cfg(feature = "type_assert")]

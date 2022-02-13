@@ -84,6 +84,7 @@ pub fn validate() {
 
     app::AttackAbsoluteData::assert();
     app::AttackData::assert();
+    app::DamageInfo::assert();
 
     lib::L2CAgent::assert();
     lib::L2CTable::assert();

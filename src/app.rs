@@ -10,6 +10,7 @@ mod bosses;
 pub mod camera;
 pub mod debug;
 mod events;
+pub mod fighter;
 mod items;
 mod modules;
 

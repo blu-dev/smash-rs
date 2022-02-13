@@ -221,6 +221,11 @@ fn attack_absolute_data() {
 }
 
 #[test]
+fn damage_info() {
+    app::DamageInfo::assert();
+}
+
+#[test]
 fn l2c_agent() {
     lib::L2CAgent::assert();
 }
