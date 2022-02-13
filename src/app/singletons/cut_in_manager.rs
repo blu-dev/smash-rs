@@ -42,6 +42,10 @@ mod impl_ {
 
         #[link_name = "_ZN3app8lua_bind52FighterCutInManager__set_throw_finish_zoom_rate_implEPNS_19FighterCutInManagerEf"]
         pub(super) fn set_throw_finish_zoom_rate(this: *mut app::FighterCutInManager, rate: f32);
+
+        // Related to FighterPitBCutInTransactorFinal below
+        #[link_name = "_ZN3app31FighterPitBCutInTransactorFinal8instanceEv"]
+        pub(super) fn instance() -> *mut app::FighterPitBCutInTransactorFinal;
     }
 }
 
@@ -212,6 +216,35 @@ impl FighterCutInManager {
                 None
             } else {
                 Some(&mut *impl_::INSTANCE)
+            }
+        }
+    }
+}
+
+// I don't really have a better place to put this because it's not worth one line
+#[repr(C)]
+pub struct FighterPitBCutInTransactorFinal {
+    vtable: &'static CutInTransactorVTable,
+    // ...
+}
+
+impl FighterPitBCutInTransactorFinal {
+    pub fn instance() -> Option<&'static Self> {
+        unsafe {
+            if impl_::instance().is_null() {
+                None
+            } else {
+                Some(&*impl_::instance())
+            }
+        }
+    }
+
+    pub fn instance_mut() -> Option<&'static mut Self> {
+        unsafe {
+            if impl_::instance().is_null() {
+                None
+            } else {
+                Some(&mut *impl_::instance())
             }
         }
     }
