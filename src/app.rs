@@ -13,6 +13,7 @@ mod events;
 pub mod fighter;
 mod items;
 mod modules;
+mod singletons;
 
 
 pub use ai_extras::*;
@@ -21,6 +22,7 @@ pub use consts::*;
 pub use events::*;
 pub use items::*;
 pub use modules::*;
+pub use singletons::*;
 
 // Temporary
 #[repr(C)]
