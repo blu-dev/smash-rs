@@ -1,8 +1,4 @@
-use crate::*;
-
 mod impl_ {
-    use crate::*;
-
     extern "C" {
         #[link_name = "_ZN3app11daisydaikon32DAISY_DAISYDAIKON_DAIKON_1_POWEREv"]
         pub(super) fn DAISY_DAISYDAIKON_DAIKON_1_POWER() -> f32;

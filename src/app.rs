@@ -8,6 +8,7 @@ mod ai_extras;
 pub mod ai;
 mod bosses;
 pub mod camera;
+pub mod debug;
 mod events;
 mod items;
 mod modules;

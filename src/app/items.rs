@@ -14,4 +14,6 @@ pub mod chicken;
 pub mod clubshot;
 pub mod curryshot;
 pub mod cyborg;
+#[allow(non_snake_case)]
 pub mod daisydaikon;
+pub mod devil;

@@ -22,6 +22,13 @@ macro_rules! size_of {
     }
 }
 
+#[macro_export]
+macro_rules! c_str {
+    ($s:expr) => {
+        [$s, "\0"].concat().as_bytes().as_ptr()
+    }
+}
+
 #[cfg(feature = "type_assert")]
 #[macro_use]
 extern crate memoffset;
