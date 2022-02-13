@@ -153,22 +153,34 @@ impl FighterCutInManager {
     pub fn request_start(
         &mut self,
         module_accessor: &mut app::BattleObjectModuleAccessor,
-        transactor: Box<dyn CutInTransactor>,
+        transactor: Option<Box<dyn CutInTransactor>>,
         ty: app::CutInType,
-        data: &CutInData,
+        data: Option<&CutInData>,
         priority: app::CutInPriority
     )
     {
-        let mut transactor = CutInTransactorImpl::new(transactor);
+        let transactor = transactor.map(|x| CutInTransactorImpl::new(x));
         unsafe {
-            impl_::request_start(
-                self,
-                module_accessor,
-                &mut transactor,
-                ty,
-                data,
-                priority
-            );
+            let data_ptr = data.map_or_else(|| std::ptr::null(), |x| x as *const CutInData);
+            if let Some(mut transactor) = transactor {
+                impl_::request_start(
+                    self,
+                    module_accessor,
+                    &mut transactor,
+                    ty,
+                    data_ptr,
+                    priority
+                );
+            } else {
+                impl_::request_start(
+                    self,
+                    module_accessor,
+                    std::ptr::null_mut(),
+                    ty,
+                    data_ptr,
+                    priority
+                );
+            }
         }
     }
 
