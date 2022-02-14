@@ -14,7 +14,7 @@ pub mod fighter;
 mod items;
 mod modules;
 mod singletons;
-
+mod specializers;
 
 pub use ai_extras::*;
 pub use bosses::*;
@@ -23,6 +23,7 @@ pub use events::*;
 pub use items::*;
 pub use modules::*;
 pub use singletons::*;
+pub use specializers::*;
 
 // Temporary
 #[repr(C)]
