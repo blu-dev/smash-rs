@@ -52,7 +52,7 @@ pub struct AttackData {
     padding2: f32,
     pub power: f32,
     pub size: f32,
-    pub angle: f32, // vector
+    pub angle: i32, // vector
     pub r_eff: i32,
     pub r_fix: i32,
     pub r_add: i32,
