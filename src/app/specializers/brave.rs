@@ -14,7 +14,7 @@ mod impl_ {
         pub(super) fn alloc_log_group(module_accessor: *mut app::BattleObjectModuleAccessor, group: i32);
     
         #[link_name = "_ZN3app24FighterSpecializer_Brave17call_final_moduleERNS_7FighterEi"]
-        pub(super) fn call_final_module(fighter: *mut app::Fighter, call_arg: i32);
+        pub(super) fn call_final_module(fighter: *mut app::Fighter, call_arg: app::FighterBraveFinalModuleCall);
     
         #[link_name = "_ZN3app24FighterSpecializer_Brave17check_flying_ceilERNS_26BattleObjectModuleAccessorEfff"]
         pub(super) fn check_flying_ceil(module_accessor: *mut app::BattleObjectModuleAccessor, sting_down_int: f32, angle_min: f32, angle_max: f32) -> bool;
@@ -95,7 +95,7 @@ pub fn alloc_log_group(module_accessor: &mut app::BattleObjectModuleAccessor, gr
     }
 }
 
-pub fn call_final_module(fighter: &mut app::Fighter, call_arg: i32) {
+pub fn call_final_module(fighter: &mut app::Fighter, call_arg: app::FighterBraveFinalModuleCall) {
     unsafe {
         impl_::call_final_module(fighter, call_arg)
     }

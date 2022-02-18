@@ -1,1 +1,11 @@
 pub mod brave;
+pub mod buddy;
+pub mod cloud;
+pub mod dedede;
+pub mod demon;
+pub mod diddy;
+pub mod dolly;
+pub mod donkey;
+pub mod edge;
+pub mod eflame;
+pub mod elight;
