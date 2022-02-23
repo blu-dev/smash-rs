@@ -3,7 +3,7 @@ use std::ops::{Deref, DerefMut};
 use crate::*;
 
 #[repr(C)]
-struct LinkEventVTable {
+pub(crate) struct BasicEventVTable {
     pub destructor: extern "C" fn(*mut LinkEvent),
     pub deleter: extern "C" fn(*mut LinkEvent),
     pub get_id: extern "C" fn(*const LinkEvent) -> u32,
@@ -14,10 +14,62 @@ struct LinkEventVTable {
     pub load_l2cvalue: extern "C" fn(*const LinkEvent, *mut lib::L2CValue)
 }
 
+impl std::fmt::Debug for BasicEventVTable {
+    fn fmt(&self, _: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        Ok(()) // just don't format lol
+    }
+}
+
+pub(crate) static BASIC_EVENT_DEFAULT_VTABLE: BasicEventVTable = BasicEventVTable {
+    destructor: BasicEventVTable::destructor,
+    deleter: BasicEventVTable::deleter,
+    get_id: BasicEventVTable::get_id,
+    into_l2ctable: BasicEventVTable::into_l2ctable,
+    from_l2ctable: BasicEventVTable::from_l2ctable,
+    into_l2cvalue: BasicEventVTable::into_l2cvalue,
+    make_l2cvalue: BasicEventVTable::make_l2cvalue,
+    load_l2cvalue: BasicEventVTable::load_l2cvalue,
+};
+
+impl BasicEventVTable {
+    pub extern "C" fn destructor(_: *mut LinkEvent) {
+        unimplemented!()
+    }
+
+    pub extern "C" fn deleter(_: *mut LinkEvent) {
+        unimplemented!()
+    }
+
+    pub extern "C" fn get_id(_: *const LinkEvent) -> u32 {
+        unimplemented!()
+    }
+
+    pub extern "C" fn into_l2ctable(_: *const LinkEvent, _: *mut lib::L2CTable) {
+        unimplemented!()
+    }
+
+    pub extern "C" fn from_l2ctable(_: *mut LinkEvent, _: *const lib::L2CTable) {
+        unimplemented!()
+    }
+
+    pub extern "C" fn into_l2cvalue(_: *const LinkEvent) -> lib::L2CValueHack {
+        unimplemented!()
+    }
+
+    pub extern "C" fn make_l2cvalue(_: *const LinkEvent, _: lib::L2CValueHack) -> lib::L2CValueHack {
+        unimplemented!()
+    }
+
+    pub extern "C" fn load_l2cvalue(_: *const LinkEvent, _: *mut lib::L2CValue) {
+        unimplemented!()
+    }
+
+}
+
 #[repr(C)]
 #[repr(packed)]
 pub struct LinkEvent {
-    vtable: &'static LinkEventVTable,
+    vtable: &'static BasicEventVTable,
     pub id: u32,
     padding: u32,
     pub link_event_kind: phx::Hash40,
