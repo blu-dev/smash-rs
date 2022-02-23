@@ -9,6 +9,8 @@ pub mod phx;
 
 pub use lib_impl::lib;
 
+pub(crate) use repr_weak::repr_weak;
+
 #[macro_use]
 extern crate bitflags;
 

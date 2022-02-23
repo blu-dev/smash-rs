@@ -70,3 +70,5 @@ pub struct ItemModuleAccessor {
 
 #[repr(C)]
 pub struct FighterAIWeapon(u64);
+
+pub type FighterEntryId = u8;
