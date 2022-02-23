@@ -1,5 +1,7 @@
 /target
 Cargo.lock
+/repr_weak/target
+/repr_weak/Cargo.lock
 
 out.rs
 in.rs
