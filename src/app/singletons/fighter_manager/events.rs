@@ -5,6 +5,7 @@ use std::ops::{Deref, DerefMut};
 #[repr(u32)]
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Copy, Clone)]
 pub enum FighterEventID {
+    ChangeTagVisibility = 0xF,
     UIDamageUpdate = 0x11,
     JackUpdateRebelGauge = 0x58
 }
@@ -53,6 +54,24 @@ macro_rules! impl_event {
 
 #[repr(C)]
 #[derive(Debug)]
+pub struct ChangeTagVisibilityEvent {
+    base: FighterEvent,
+    pub is_visible: bool,
+    pub should_fade: bool
+}
+
+impl ChangeTagVisibilityEvent {
+    pub fn new(entry_id: app::FighterEntryID, is_visible: bool, should_fade: bool) -> Self {
+        Self {
+            base: FighterEvent::new(FighterEventID::ChangeTagVisibility, entry_id),
+            is_visible,
+            should_fade
+        }
+    }
+}
+
+#[repr(C)]
+#[derive(Debug)]
 pub struct UIDamageUpdateEvent {
     base: FighterEvent,
     pub total_damage: f32,
@@ -96,5 +115,5 @@ impl JackUpdateRebelGaugeEvent {
 impl_event!(
     (JackUpdateRebelGaugeEvent, JackUpdateRebelGauge)
     (UIDamageUpdateEvent, UIDamageUpdate)
-
+    (ChangeTagVisibilityEvent, ChangeTagVisibility)
 );
