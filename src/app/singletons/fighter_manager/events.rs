@@ -5,7 +5,8 @@ use std::ops::{Deref, DerefMut};
 #[repr(u32)]
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Copy, Clone)]
 pub enum FighterEventID {
-    JackUpdateRebelGuage = 0x58
+    UIDamageUpdate = 0x11,
+    JackUpdateRebelGauge = 0x58
 }
 
 macro_rules! impl_event {
@@ -43,27 +44,57 @@ macro_rules! impl_event {
             }
         }
     };
-    ($(($name:tt, $id:tt)),*) => {
+    ($(($name:tt, $id:tt))*) => {
         $(
-            impl_as_ref_event!($name)
+            impl_event!($name, $id);
         )*
     }
 }
 
 #[repr(C)]
 #[derive(Debug)]
-pub struct JackUpdateRebelGuageEvent {
+pub struct UIDamageUpdateEvent {
+    base: FighterEvent,
+    pub total_damage: f32,
+    pub change_in_damage: f32,
+    pub is_increase: bool,
+    pub is_decrease: bool
+}
+
+impl UIDamageUpdateEvent {
+    pub fn new(entry_id: app::FighterEntryID, total_damage: f32, change_in_damage: f32, is_damage: bool, is_heal: bool) -> Self {
+        Self {
+            base: FighterEvent::new(FighterEventID::UIDamageUpdate, entry_id),
+            total_damage,
+            change_in_damage,
+            is_increase: is_damage,
+            is_decrease: is_heal
+        }
+    }
+
+    pub fn is_absolute(&self) -> bool {
+        !self.is_increase && !self.is_decrease
+    }
+}
+
+#[repr(C)]
+#[derive(Debug)]
+pub struct JackUpdateRebelGaugeEvent {
     base: FighterEvent,
     pub ratio: f32
 }
 
-impl JackUpdateRebelGuageEvent {
-    pub fn new(ratio: f32, entry_id: app::FighterEntryID) -> Self {
+impl JackUpdateRebelGaugeEvent {
+    pub fn new(entry_id: app::FighterEntryID, ratio: f32) -> Self {
         Self {
-            base: FighterEvent::new(FighterEventID::JackUpdateRebelGuage, entry_id),
+            base: FighterEvent::new(FighterEventID::JackUpdateRebelGauge, entry_id),
             ratio
         }
     }
 }
 
-impl_event!(JackUpdateRebelGuageEvent, JackUpdateRebelGuage);
+impl_event!(
+    (JackUpdateRebelGaugeEvent, JackUpdateRebelGauge)
+    (UIDamageUpdateEvent, UIDamageUpdate)
+
+);

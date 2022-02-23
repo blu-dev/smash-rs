@@ -521,6 +521,20 @@ impl FighterEvent {
         }
     }
 
+    pub fn get_event_id(&self) -> FighterEventID {
+        self.event_id
+    }
+
+    pub fn get_raw_event_id(&self) -> u32 {
+        unsafe {
+            *(&self.event_id as *const FighterEventID as *const u32)
+        }
+    }
+
+    pub fn get_entry_id(&self) -> app::FighterEntryID {
+        self.entry_id
+    }
+
     /// Create a fighter event
     pub(crate) fn new(id: FighterEventID, entry_id: app::FighterEntryID) -> Self {
         Self {
@@ -675,7 +689,7 @@ impl FighterManager {
     /// * `data` - The user data to attach to the event listener
     /// # Returns
     /// Whether or not it was able to add the event listener
-    pub fn add_event_with_user_data(&self, event_id: FighterEventID, handler: OnFighterEventFn, data: *mut u8) -> bool {
+    pub fn add_event_listener_with_user_data(&self, event_id: FighterEventID, handler: OnFighterEventFn, data: *mut u8) -> bool {
         let lists = unsafe {
             (*self.event_manager).get_event_listener_lists_mut()
         };
@@ -685,6 +699,76 @@ impl FighterManager {
             true
         } else {
             false
+        }
+    }
+
+    /// Adds an event listener
+    /// # Arguments
+    /// * `event_id` - The ID of the event to listen on, without a strong type requirement
+    /// * `handler` - The handler of the event
+    /// # Returns
+    /// Whether or not it was able to add the event listener
+    pub fn add_event_listener_raw_id(&self, event_id: u32, handler: OnFighterEventFn) -> bool {
+        let lists = unsafe {
+            (*self.event_manager).get_event_listener_lists_mut()
+        };
+
+        if let Some(list) = lists.get_mut(event_id as usize) {
+            list.add_to_back(Box::leak(Box::new(FighterEventListener::new(handler))));
+            true
+        } else {
+            false
+        }
+    }
+
+    /// Adds an event listener
+    /// # Arguments
+    /// * `event_id` - The ID of the event to listen on, without a strong type requirement
+    /// * `handler` - The handler of the event
+    /// * `data` - The user data to attach to the event listener
+    /// # Returns
+    /// Whether or not it was able to add the event listener
+    pub fn add_event_listener_with_user_data_raw_id(&self, event_id: u32, handler: OnFighterEventFn, data: *mut u8) -> bool {
+        let lists = unsafe {
+            (*self.event_manager).get_event_listener_lists_mut()
+        };
+
+        if let Some(list) = lists.get_mut(event_id as usize) {
+            list.add_to_back(Box::leak(Box::new(FighterEventListener::new_with_user_data(handler, data))));
+            true
+        } else {
+            false
+        }
+    }
+
+    /// Adds an event listener to all possible events
+    /// # Arguments
+    /// * `handler` - The handler of the event
+    /// # Returns
+    /// Whether or not it was able to add the event listener
+    pub fn add_global_event_listener(&self, handler: OnFighterEventFn) {
+        let lists = unsafe {
+            (*self.event_manager).get_event_listener_lists_mut()
+        };
+
+        for list in lists.iter_mut() {
+            list.add_to_back(Box::leak(Box::new(FighterEventListener::new_with_user_data(handler, std::ptr::null_mut()))));
+        }
+    }
+
+    /// Adds an event listener to all possible events
+    /// # Arguments
+    /// * `handler` - The handler of the event
+    /// * `data` - The user data to attach to the event listener
+    /// # Returns
+    /// Whether or not it was able to add the event listener
+    pub fn add_global_event_listener_with_user_data(&self, handler: OnFighterEventFn, user_data: *mut u8) {
+        let lists = unsafe {
+            (*self.event_manager).get_event_listener_lists_mut()
+        };
+
+        for list in lists.iter_mut() {
+            list.add_to_back(Box::leak(Box::new(FighterEventListener::new_with_user_data(handler, user_data))));
         }
     }
 }
