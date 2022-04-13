@@ -127,6 +127,9 @@ pub(crate) struct CancelModuleVTable {
     /// ### Notes
     /// Unlike [`CancelModule::enable_cancel`], this method will not disable [`app::transition_terms::LANDING`], [`app::transition_terms::LANDING_LIGHT`]
     /// or [`app::transition_terms::CONT_SQUAT] after switching the transition term groups, likely because the status kind has not changed yet.
+    /// 
+    /// ### Notes
+    /// This method is not exported by the main executable, its name is assumed
     pub re_enable_cancel: extern "C" fn(this: &mut CancelModule),
 
     /// Disables all transition term groups for all situation kinds and blocks cancelling for the rest of the status
@@ -134,6 +137,9 @@ pub(crate) struct CancelModuleVTable {
     /// ### Behavior (Fighter Implementation)
     /// Disables the transition term groups for **all** situation kinds (does not check the current one) and sets a flag which
     /// will only be unset upon a status change.
+    /// 
+    /// ### Notes
+    /// This method is not exported by the main executable, its name is taken from an MSC command constant
     pub unable_cancel_status: extern "C" fn(this: &mut CancelModule),
 
     /// Disables all transition term groups for all situation kinds 
@@ -141,6 +147,9 @@ pub(crate) struct CancelModuleVTable {
     /// ### Behavior (Fighter Implementation)
     /// The behavior for this method is identical to [`CancelModule::unable_cancel_status`], except it does not set the flag
     /// which blocks cancelling until the next status
+    /// 
+    /// ### Notes
+    /// This method is not exported by the main executable, its name is taken from an MSC command constant
     pub unable_cancel: extern "C" fn(this: &mut CancelModule)
 }
 
@@ -165,12 +174,19 @@ impl CancelModuleVTable {
     }   
 }
 
+/// A utility for prematurely exiting states/animations
+/// 
+/// `CancelModule` is a very simple module that supports only a handful of operations. It's main goal
+/// is to manage whether or not a fighter is able to cancel their current animation/status by enabling
+/// and disabling various [transition groups](app::TransitionGroup) depending on the fighter's
+/// [situation kind](app::SituationKind).
 #[repr(C)]
 pub struct CancelModule {
     vtable: &'static CancelModuleVTable,
     owner: *mut app::BattleObjectModuleAccessor,
 }
 
+/// The fighter implementation of [`CancelModule`](app::CancelModule)
 #[repr(C)]
 #[virtual_implementor(CancelModule)]
 pub struct FighterCancelModuleImpl {

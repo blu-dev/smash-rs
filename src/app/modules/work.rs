@@ -1323,6 +1323,7 @@ impl WorkModule {
     }
 }
 
+/// The fighter implementation of [`WorkModule`](app::WorkModule)
 #[repr(C)]
 #[virtual_implementor(WorkModule)]
 pub struct FighterWorkModuleImpl {
