@@ -497,6 +497,7 @@ impl FighterManager {
 // None of the names here were found in game but we figured they'd probably match the scheme
 
 /// The basic fighter event struct for any event sent through the event manager.
+///
 /// This struct allows for downcasting based off of event IDs.
 /// 
 /// The event's data should be read only, as modifying any of the contents could lead to improper downcasting

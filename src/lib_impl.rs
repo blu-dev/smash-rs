@@ -1,5 +1,6 @@
 mod agent;
 mod inner_function;
+mod msc;
 mod rect;
 mod table;
 mod utility;
@@ -14,6 +15,7 @@ pub mod lib {
 
     pub use agent::*;
     pub use inner_function::*;
+    pub use msc::*;
     pub use rect::*;
     pub use table::*;
     pub use value::*;

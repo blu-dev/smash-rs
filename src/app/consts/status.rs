@@ -1,5 +1,19 @@
 use crate::*;
 
+#[repr(i32)]
+#[derive(Debug, Copy, Clone)]
+pub enum SituationKind {
+    None      = -0x1,
+    Ground    =  0x0,
+    Cliff     =  0x1,
+    Air       =  0x2,
+    Water     =  0x3,
+    Restraint =  0x4,
+    Outfield  =  0x5,
+    Ladder    =  0x6,
+    Odd       =  0x7,
+}
+
 #[repr_weak(i32)]
 pub enum FighterStatusKind {
     None                        = -0x1,

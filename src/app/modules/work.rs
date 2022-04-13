@@ -449,9 +449,9 @@ impl Index<usize> for TransitionGroup {
 pub struct WorkModuleVTable {
     destructor: extern "C" fn(this: &mut WorkModule),
     deleter: extern "C" fn(this: &mut WorkModule),
-    unk_0: extern "C" fn(this: &WorkModule) -> u32,
-    unk_1: extern "C" fn(this: &WorkModule) -> (u64, u32),
-    unk_2: extern "C" fn(this: &WorkModule) -> (u64, u32),
+    is_implemented: extern "C" fn(this: &WorkModule) -> bool,
+    handle_int_msc_cmd: extern "C" fn(this: &mut WorkModule, command: &lib::MscCommand) -> lib::TValue,
+    handle_float_msc_cmd: extern "C" fn(this: &mut WorkModule, command: &lib::MscCommand) -> lib::TValue,
 
     /// Initializes the module by copying the provided arrays/transition information and initializing the memory
     /// ### Arguments
@@ -465,11 +465,11 @@ pub struct WorkModuleVTable {
     /// Finalizes the module by removing references to everything passed in during initialization
     pub finalize: extern "C" fn(this: &mut WorkModule),
 
-    /// Installs the event listeners on to the [`app::FighterManager`]'s entry for the owner
-    pub install_event_listeners: extern "C" fn(this: &mut WorkModule),
+    /// Starts the module by clearing all of the work storage and attaching required event listeners
+    pub start_module: extern "C" fn(this: &mut WorkModule),
 
-    /// Removes the event listeners from the [`app::FighterManager`]'s entry for the owner
-    pub finalize_event_listeners: extern "C" fn(this: &mut WorkModule),
+    /// Ends the module by clearing all of the work storage and removing its event listeners
+    pub end_module: extern "C" fn(this: &mut WorkModule),
 
     /// Calculates all params set to be calculated at runtime, including, but not limited to, params like `jump_initial_speed_y`, `jump_initial_accel_y`, etc.
     /// 
