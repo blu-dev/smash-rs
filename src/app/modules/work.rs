@@ -1234,7 +1234,7 @@ impl WorkModuleVTable {
         assert_eq!(offset_of!(WorkModuleVTable, get_param_float_impl),                       0x268);
         assert_eq!(offset_of!(WorkModuleVTable, get_param_float),                            0x270);
         assert_eq!(offset_of!(WorkModuleVTable, set_customize_no),                           0x278);
-        assert_eq!(offset_of!(WorkModuleVTable, realculate_params),                          0x280);
+        assert_eq!(offset_of!(WorkModuleVTable, recalculate_params),                         0x280);
     }
 }
 
