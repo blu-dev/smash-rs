@@ -316,6 +316,11 @@ fn l2c_fighter_animcmd_sound_common() {
 }
 
 #[test]
+fn work_module() {
+    app::WorkModuleVTable::assert();
+}
+
+#[test]
 fn general() {
     validate();
 }

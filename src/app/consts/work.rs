@@ -1,3 +1,12 @@
+#[allow(dead_code)]
+pub mod transition_groups;
+
+#[allow(dead_code)]
+pub mod transition_terms;
+
+#[allow(dead_code)]
+pub mod work_ids;
+
 #[repr(u32)]
 pub enum BossCommonParamFloat {
     HpMin = 0x0,

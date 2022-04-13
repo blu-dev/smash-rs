@@ -1,5 +1,5 @@
 [package]
-name = "repr_weak"
+name = "smash_macro"
 version = "0.1.0"
 edition = "2018"
 

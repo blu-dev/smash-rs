@@ -1,5 +1,9 @@
 #![feature(repr_simd)]
 #![feature(simd_ffi)]
+#![feature(const_panic)] // for compile time checks
+#![feature(const_trait_impl)]
+
+#![allow(incomplete_features)]
 #![allow(improper_ctypes)] // For simd
 pub mod app;
 pub mod cpp;
@@ -9,7 +13,7 @@ pub mod phx;
 
 pub use lib_impl::lib;
 
-pub(crate) use repr_weak::repr_weak;
+pub(crate) use smash_macro::*;
 
 #[macro_use]
 extern crate bitflags;
@@ -83,6 +87,7 @@ pub fn validate() {
     app::WeaponShizueFishingrodLinkEventCut::assert();
     app::WeaponShizueFishingrodLinkEventReel::assert();
     app::WeaponShizueFishingrodLinkEventShoot::assert();
+    app::WorkModuleVTable::assert();
 
     app::AttackAbsoluteData::assert();
     app::AttackData::assert();
