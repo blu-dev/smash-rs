@@ -321,6 +321,11 @@ fn work_module() {
 }
 
 #[test]
+fn fighter_work_module_impl() {
+    app::FighterWorkModuleImpl::assert();
+}
+
+#[test]
 fn general() {
     validate();
 }

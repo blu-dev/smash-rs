@@ -698,7 +698,7 @@ pub struct WorkModuleVTable {
     /// 
     /// ### Notes
     /// The implementation does not check that this ID is for an integer, it only checks the [`WorkKind`] and the index
-    count_down_ints: extern "C" fn(this: &mut WorkModule, ids: *const WorkId, count: u32, floor: i32),
+    count_down_ints_impl: extern "C" fn(this: &mut WorkModule, ids: *const WorkId, count: u32, floor: i32),
 
     /// Gets the specified flag from the module's internal storage
     /// ### Arguments
@@ -723,7 +723,7 @@ pub struct WorkModuleVTable {
     /// 
     /// ### Notes
     /// The implementation does not check that these IDs are for flags, it only checks the [`WorkKind`] and the indices
-    on_flags: extern "C" fn(this: &mut WorkModule, ids: *const WorkId, count: u32),
+    on_flags_impl: extern "C" fn(this: &mut WorkModule, ids: *const WorkId, count: u32),
 
     /// Sets the specified flag to false
     /// ### Arguments
@@ -740,7 +740,7 @@ pub struct WorkModuleVTable {
     /// 
     /// ### Notes
     /// The implementation does not check that these IDs are for flags, it only checks the [`WorkKind`] and the indices
-    off_flags: extern "C" fn(this: &mut WorkModule, ids: *const WorkId, count: u32),
+    off_flags_impl: extern "C" fn(this: &mut WorkModule, ids: *const WorkId, count: u32),
 
     /// Sets the specified flag in the module's internal storage
     /// ### Arguments
@@ -1186,12 +1186,12 @@ impl WorkModuleVTable {
         assert_eq!(offset_of!(WorkModuleVTable, mul_int),                                    0x0E8);
         assert_eq!(offset_of!(WorkModuleVTable, div_int),                                    0x0F0);
         assert_eq!(offset_of!(WorkModuleVTable, count_down_int),                             0x0F8);
-        assert_eq!(offset_of!(WorkModuleVTable, count_down_ints),                            0x100);
+        assert_eq!(offset_of!(WorkModuleVTable, count_down_ints_impl),                       0x100);
         assert_eq!(offset_of!(WorkModuleVTable, is_flag),                                    0x108);
         assert_eq!(offset_of!(WorkModuleVTable, on_flag),                                    0x110);
-        assert_eq!(offset_of!(WorkModuleVTable, on_flags),                                   0x118);
+        assert_eq!(offset_of!(WorkModuleVTable, on_flags_impl),                              0x118);
         assert_eq!(offset_of!(WorkModuleVTable, off_flag),                                   0x120);
-        assert_eq!(offset_of!(WorkModuleVTable, off_flags),                                  0x128);
+        assert_eq!(offset_of!(WorkModuleVTable, off_flags_impl),                             0x128);
         assert_eq!(offset_of!(WorkModuleVTable, set_flag),                                   0x130);
         assert_eq!(offset_of!(WorkModuleVTable, turn_off_flag),                              0x138);
         assert_eq!(offset_of!(WorkModuleVTable, enable_transition_term_group),               0x140);
@@ -1241,4 +1241,103 @@ impl WorkModuleVTable {
 #[repr(C)]
 pub struct WorkModule {
     vtable: &'static WorkModuleVTable
+}
+
+impl WorkModule {
+    /// Sets the specified floats in the module's internal storage
+    /// ### Arguments
+    /// * `value` - The new value of the variables
+    /// * `ids` - The [`WorkId`]s to set the value of
+    /// 
+    /// ### Notes
+    /// The implementation does not check that these IDs are for floats, it only checks the [`WorkKind`]s and the indices
+    pub fn set_floats(&mut self, value: f32, ids: impl AsRef<[WorkId]>) {
+        let ids = ids.as_ref();
+        self.set_floats_impl(value, ids.as_ptr(), ids.len() as u32)
+    }
+
+    /// Sets the specified 32-bit integers in the module's internal storage
+    /// ### Arguments
+    /// * `value` - The new value of the variables
+    /// * `ids` - The [`WorkId`]s to set the value of
+    /// 
+    /// ### Notes
+    /// The implementation does not check that these IDs are for integers, it only checks the [`WorkKind`]s and the indices
+    pub fn set_ints(&mut self, value: i32, ids: impl AsRef<[WorkId]>) {
+        let ids = ids.as_ref();
+        self.set_ints_impl(value, ids.as_ptr(), ids.len() as u32)
+    }
+
+    /// Counts down the specified 32-bit integer until it is equal to the specified minimum
+    /// ### Arguments
+    /// * `ids` - The [`WorkId`]s to count down
+    /// * `floor` - The value to count down to
+    /// 
+    /// ### Behavior
+    /// For each value, the module will fetch the specified value and then check if it is greater than `floor`. If it is,
+    /// then it decrements the value, doing nothing if the value was already less than or equal to `floor`.
+    /// 
+    /// Unlike `count_down_int`, this call does not return anything.
+    /// 
+    /// ### Notes
+    /// The implementation does not check that this ID is for an integer, it only checks the [`WorkKind`] and the index
+    pub fn count_down_ints(&mut self, ids: impl AsRef<[WorkId]>, floor: i32) {
+        let ids = ids.as_ref();
+        self.count_down_ints_impl(ids.as_ptr(), ids.len() as u32, floor)
+    }
+
+    /// Sets the specified flags to true
+    /// ### Arguments
+    /// * `ids` - The [`WorkId`]s to turn on
+    /// 
+    /// ### Notes
+    /// The implementation does not check that these IDs are for flags, it only checks the [`WorkKind`] and the indices
+    pub fn on_flags(&mut self, ids: impl AsRef<[WorkId]>) {
+        let ids = ids.as_ref();
+        self.on_flags_impl(ids.as_ptr(), ids.len() as u32)
+    }
+
+    /// Sets the specified flags to false
+    /// ### Arguments
+    /// * `ids` - The [`WorkId`]s to turn off
+    /// * `count` - The number of provided IDs
+    /// 
+    /// ### Notes
+    /// The implementation does not check that these IDs are for flags, it only checks the [`WorkKind`] and the indices
+    pub fn off_flags(&mut self, ids: impl AsRef<[WorkId]>) {
+        let ids = ids.as_ref();
+        self.off_flags_impl(ids.as_ptr(), ids.len() as u32)
+    }
+}
+
+#[repr(C)]
+#[virtual_implementor(WorkModule)]
+pub struct FighterWorkModuleImpl {
+    parent: WorkModule,
+    owner: *mut app::BattleObjectModuleAccessor,
+    work_array_info: WorkArrayInfo,
+    transition_term_info: TransitionTermInfo,
+    transition_groups: *const *const TransitionGroup, // technically this is a pointer to (*const TransitionGroup, usize) but the size is never checked
+    param_object: u64,
+    fighter_kind: app::FighterKind,
+    entry_id: app::FighterEntryID,
+    _x48: u64,
+    fighter_info: *mut app::FighterInformation,
+    // more
+}
+
+#[cfg(feature = "type_assert")]
+impl FighterWorkModuleImpl {
+    pub fn assert() {
+        assert_eq!(offset_of!(FighterWorkModuleImpl, parent), 0x0);
+        assert_eq!(offset_of!(FighterWorkModuleImpl, owner), 0x8);
+        assert_eq!(offset_of!(FighterWorkModuleImpl, work_array_info), 0x10);
+        assert_eq!(offset_of!(FighterWorkModuleImpl, transition_term_info), 0x20);
+        assert_eq!(offset_of!(FighterWorkModuleImpl, transition_groups), 0x30);
+        assert_eq!(offset_of!(FighterWorkModuleImpl, param_object), 0x38);
+        assert_eq!(offset_of!(FighterWorkModuleImpl, fighter_kind), 0x40);
+        assert_eq!(offset_of!(FighterWorkModuleImpl, entry_id), 0x44);
+        assert_eq!(offset_of!(FighterWorkModuleImpl, _x48), 0x48);
+        assert_eq!(offset_of!(FighterWorkModuleImpl, fighter_info), 0x50);
+    }
 }

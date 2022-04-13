@@ -137,3 +137,29 @@ pub fn vtable_impl(attr: TokenStream, item: TokenStream) -> TokenStream {
         }
     ).into()
 }
+
+#[proc_macro_attribute]
+pub fn virtual_implementor(attr: TokenStream, item: TokenStream) -> TokenStream {
+    let ty_name = parse_macro_input!(attr as syn::Ident);
+    let item = parse_macro_input!(item as syn::ItemStruct);
+
+    let item_name = &item.ident;
+
+    quote::quote!(
+        #item
+
+        impl std::ops::Deref for #item_name {
+            type Target = #ty_name;
+
+            fn deref(&self) -> &Self::Target {
+                &self.parent
+            }
+        } 
+
+        impl std::ops::DerefMut for #item_name {
+            fn deref_mut(&mut self) -> &mut Self::Target {
+                &mut self.parent
+            }
+        }
+    ).into()
+}
