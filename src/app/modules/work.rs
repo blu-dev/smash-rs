@@ -1147,7 +1147,7 @@ pub(crate) struct WorkModuleVTable {
     /// getting struck by lightning
     /// * This function sends an event with ID `0x31`
     /// * This function is not exported by the main executable, the name is assumed
-    pub realculate_params: extern "C" fn(this: &mut WorkModule, _unused: u64, is_abnormal: bool)
+    pub recalculate_params: extern "C" fn(this: &mut WorkModule, _unused: u64, is_abnormal: bool)
 }
 
 #[cfg(feature = "type_assert")]
@@ -1234,7 +1234,7 @@ impl WorkModuleVTable {
         assert_eq!(offset_of!(WorkModuleVTable, get_param_float_impl),                       0x268);
         assert_eq!(offset_of!(WorkModuleVTable, get_param_float),                            0x270);
         assert_eq!(offset_of!(WorkModuleVTable, set_customize_no),                           0x278);
-        assert_eq!(offset_of!(WorkModuleVTable, realculate_params),                          0x280);
+        assert_eq!(offset_of!(WorkModuleVTable, recalculate_params),                         0x280);
     }
 }
 
