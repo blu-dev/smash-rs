@@ -326,6 +326,16 @@ fn fighter_work_module_impl() {
 }
 
 #[test]
+fn cancel_module() {
+    app::CancelModuleVTable::assert();
+}
+
+#[test]
+fn fighter_cancel_module_impl() {
+    app::FighterCancelModuleImpl::assert();
+}
+
+#[test]
 fn general() {
     validate();
 }

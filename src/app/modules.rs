@@ -44,10 +44,8 @@ struct ModuleVTable {
 /// For example, all that is exported by the main executable for [`CancelModule`] is [`CancelModule::is_enable_cancel`]
 /// and [`CancelModule::enable_cancel`]. You can access two more methods through the use of the following MSC commands
 /// via `app::sv_module_access::cancel`:
-/// ```
-/// MA_MSC_CMD_CANCEL_UNABLE_CANCEL        -> CancelModule::unable_cancel
-/// MA_MSC_CMD_CANCEL_UNABLE_CANCEL_STATUS -> CancelModule::unable_cancel_status
-/// ```
+/// * `MA_MSC_CMD_CANCEL_UNABLE_CANCEL`        -> [`CancelModule::unable_cancel`]
+/// * `MA_MSC_CMD_CANCEL_UNABLE_CANCEL_STATUS` -> [`CancelModule::unable_cancel_status`]
 /// 
 /// In addition to the three operations specified above, every module also has the following methods:
 /// * `initialize` - Called when the object is created/constructed
@@ -60,5 +58,5 @@ struct ModuleVTable {
 /// These are usually the first methods in the Module's vtable immediately following the required implementations.
 #[repr(C)]
 pub struct Module {
-    parent: &'static ModuleVTable
+    vtable: &'static ModuleVTable
 }

@@ -446,7 +446,7 @@ impl Index<usize> for TransitionGroup {
 
 #[repr(C)]
 #[vtable_impl(WorkModule)]
-pub struct WorkModuleVTable {
+pub(crate) struct WorkModuleVTable {
     destructor: extern "C" fn(this: &mut WorkModule),
     deleter: extern "C" fn(this: &mut WorkModule),
     is_implemented: extern "C" fn(this: &WorkModule) -> bool,
@@ -1156,13 +1156,13 @@ impl WorkModuleVTable {
         assert_eq!(size_of!(WorkModuleVTable), 0x288);
         assert_eq!(offset_of!(WorkModuleVTable, destructor),                                 0x000);
         assert_eq!(offset_of!(WorkModuleVTable, deleter),                                    0x008);
-        assert_eq!(offset_of!(WorkModuleVTable, unk_0),                                      0x010);
-        assert_eq!(offset_of!(WorkModuleVTable, unk_1),                                      0x018);
-        assert_eq!(offset_of!(WorkModuleVTable, unk_2),                                      0x020);
+        assert_eq!(offset_of!(WorkModuleVTable, is_implemented),                             0x010);
+        assert_eq!(offset_of!(WorkModuleVTable, handle_int_msc_cmd),                         0x018);
+        assert_eq!(offset_of!(WorkModuleVTable, handle_float_msc_cmd),                       0x020);
         assert_eq!(offset_of!(WorkModuleVTable, initialize),                                 0x028);
         assert_eq!(offset_of!(WorkModuleVTable, finalize),                                   0x030);
-        assert_eq!(offset_of!(WorkModuleVTable, install_event_listeners),                    0x038);
-        assert_eq!(offset_of!(WorkModuleVTable, finalize_event_listeners),                   0x040);
+        assert_eq!(offset_of!(WorkModuleVTable, start_module),                               0x038);
+        assert_eq!(offset_of!(WorkModuleVTable, end_module),                                 0x040);
         assert_eq!(offset_of!(WorkModuleVTable, calc_params),                                0x048);
         assert_eq!(offset_of!(WorkModuleVTable, set_transition_term_info),                   0x050);
         assert_eq!(offset_of!(WorkModuleVTable, get_float),                                  0x058);
@@ -1240,7 +1240,8 @@ impl WorkModuleVTable {
 
 #[repr(C)]
 pub struct WorkModule {
-    vtable: &'static WorkModuleVTable
+    vtable: &'static WorkModuleVTable,
+    owner: *mut app::BattleObjectModuleAccessor,
 }
 
 impl WorkModule {
@@ -1314,7 +1315,6 @@ impl WorkModule {
 #[virtual_implementor(WorkModule)]
 pub struct FighterWorkModuleImpl {
     parent: WorkModule,
-    owner: *mut app::BattleObjectModuleAccessor,
     work_array_info: WorkArrayInfo,
     transition_term_info: TransitionTermInfo,
     transition_groups: *const *const TransitionGroup, // technically this is a pointer to (*const TransitionGroup, usize) but the size is never checked
@@ -1330,7 +1330,6 @@ pub struct FighterWorkModuleImpl {
 impl FighterWorkModuleImpl {
     pub fn assert() {
         assert_eq!(offset_of!(FighterWorkModuleImpl, parent), 0x0);
-        assert_eq!(offset_of!(FighterWorkModuleImpl, owner), 0x8);
         assert_eq!(offset_of!(FighterWorkModuleImpl, work_array_info), 0x10);
         assert_eq!(offset_of!(FighterWorkModuleImpl, transition_term_info), 0x20);
         assert_eq!(offset_of!(FighterWorkModuleImpl, transition_groups), 0x30);

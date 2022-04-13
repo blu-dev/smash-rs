@@ -1,7 +1,7 @@
 use crate::*;
 
 #[repr(i32)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum SituationKind {
     None      = -0x1,
     Ground    =  0x0,
