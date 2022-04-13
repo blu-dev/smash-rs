@@ -1238,6 +1238,18 @@ impl WorkModuleVTable {
     }
 }
 
+/// A method to store agent/game state across multiple users
+/// 
+/// `WorkModule` is one of Ultimate's modules, and it's primary purpose is store and retrieve
+/// variables/information that are related to an object's state. It does this in two main ways:
+/// 1. Getting and setting mutable variables using [`WorkModule::get_int`], [`WorkModule::get_float`],
+/// [`WorkModule::get_int64`], [`WorkModule::is_flag`], and their `set` alternatives.
+/// 2. Getting (mostly) read-only data via param accessing functions [`WorkModule::get_param_int`] along
+/// with `float` and `int64` (usually a hash) alternatives.
+/// 
+/// `WorkModule` is the most effective way to share this information, as the amount of storage required
+/// will vary depending on the user. It can be accessed between multiple different users as it is tied
+/// to an owning [`app::BattleObjectModuleAccessor`]
 #[repr(C)]
 pub struct WorkModule {
     vtable: &'static WorkModuleVTable,
