@@ -18,6 +18,5 @@ thiserror = "1.0.30"
 [features]
 default = ["type_assert"]
 type_assert = ["memoffset"]
-sanity_check = []
 extras = [] # This feature is for exposing extra information based on research, not symbols
 expose_hack = []

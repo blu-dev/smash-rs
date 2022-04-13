@@ -80,7 +80,6 @@ impl From<u8> for WorkType {
 pub struct WorkId(u32);
 
 impl WorkId {
-    #[cfg(feature = "sanity_check")]
     pub(crate) const fn from_parts(ty: WorkType, kind: WorkKind, index: u32) -> Self {
         if ty == WorkType::None {
             panic!("WorkType cannot be None");
@@ -89,14 +88,6 @@ impl WorkId {
             panic!("WorkKind cannot be None");
         }
 
-        let ty = (ty as u8 as u32) << 0x1C;
-        let kind = (kind as u8 as u32) << 0x18;
-        let index = index & 0x00FF_FFFF;
-        Self(ty | kind | index)
-    }
-
-    #[cfg(not(feature = "sanity_check"))]
-    pub(crate) const fn from_parts(ty: WorkType, kind: WorkKind, index: u32) -> Self {
         let ty = (ty as u8 as u32) << 0x1C;
         let kind = (kind as u8 as u32) << 0x18;
         let index = index & 0x00FF_FFFF;
