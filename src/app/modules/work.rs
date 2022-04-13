@@ -1147,7 +1147,7 @@ pub struct WorkModuleVTable {
     /// getting struck by lightning
     /// * This function sends an event with ID `0x31`
     /// * This function is not exported by the main executable, the name is assumed
-    pub realculate_params: extern "C" fn(this: &mut WorkModule, _unused: u64, is_abnormal: bool)
+    pub recalculate_params: extern "C" fn(this: &mut WorkModule, _unused: u64, is_abnormal: bool)
 }
 
 #[cfg(feature = "type_assert")]
