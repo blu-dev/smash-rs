@@ -460,16 +460,16 @@ pub(crate) struct WorkModuleVTable {
     /// * `transition_groups` - The transition groups the module should use. This must be valid for the lifetime of the module.
     /// * `param_object` - The structure holding on to the parameter information this object should reference. This field can be `null`
     /// * `agent_kind` - What kind of agent owns this module
-    pub initialize: extern "C" fn(this: &mut WorkModule, array_info: &WorkArrayInfo, transition_term_info: &TransitionTermInfo, transition_groups: *const TransitionGroup, param_object: u64, agent_kind: u32),
+    initialize: extern "C" fn(this: &mut WorkModule, array_info: &WorkArrayInfo, transition_term_info: &TransitionTermInfo, transition_groups: *const TransitionGroup, param_object: u64, agent_kind: u32),
 
     /// Finalizes the module by removing references to everything passed in during initialization
-    pub finalize: extern "C" fn(this: &mut WorkModule),
+    finalize: extern "C" fn(this: &mut WorkModule),
 
     /// Starts the module by clearing all of the work storage and attaching required event listeners
-    pub start_module: extern "C" fn(this: &mut WorkModule),
+    start_module: extern "C" fn(this: &mut WorkModule),
 
     /// Ends the module by clearing all of the work storage and removing its event listeners
-    pub end_module: extern "C" fn(this: &mut WorkModule),
+    end_module: extern "C" fn(this: &mut WorkModule),
 
     /// Calculates all params set to be calculated at runtime, including, but not limited to, params like `jump_initial_speed_y`, `jump_initial_accel_y`, etc.
     /// 
