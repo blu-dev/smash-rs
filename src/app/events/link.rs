@@ -3,73 +3,9 @@ use std::ops::{Deref, DerefMut};
 use crate::*;
 
 #[repr(C)]
-pub(crate) struct BasicEventVTable {
-    pub destructor: extern "C" fn(*mut LinkEvent),
-    pub deleter: extern "C" fn(*mut LinkEvent),
-    pub get_id: extern "C" fn(*const LinkEvent) -> u32,
-    pub into_l2ctable: extern "C" fn(*const LinkEvent, *mut lib::L2CTable),
-    pub from_l2ctable: extern "C" fn(*mut LinkEvent, *const lib::L2CTable),
-    pub into_l2cvalue: extern "C" fn(*const LinkEvent) -> lib::L2CValueHack,
-    pub make_l2cvalue: extern "C" fn(*const LinkEvent, lib::L2CValueHack) -> lib::L2CValueHack,
-    pub load_l2cvalue: extern "C" fn(*const LinkEvent, *mut lib::L2CValue)
-}
-
-impl std::fmt::Debug for BasicEventVTable {
-    fn fmt(&self, _: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        Ok(()) // just don't format lol
-    }
-}
-
-pub(crate) static BASIC_EVENT_DEFAULT_VTABLE: BasicEventVTable = BasicEventVTable {
-    destructor: BasicEventVTable::destructor,
-    deleter: BasicEventVTable::deleter,
-    get_id: BasicEventVTable::get_id,
-    into_l2ctable: BasicEventVTable::into_l2ctable,
-    from_l2ctable: BasicEventVTable::from_l2ctable,
-    into_l2cvalue: BasicEventVTable::into_l2cvalue,
-    make_l2cvalue: BasicEventVTable::make_l2cvalue,
-    load_l2cvalue: BasicEventVTable::load_l2cvalue,
-};
-
-impl BasicEventVTable {
-    pub extern "C" fn destructor(_: *mut LinkEvent) {
-        unimplemented!()
-    }
-
-    pub extern "C" fn deleter(_: *mut LinkEvent) {
-        unimplemented!()
-    }
-
-    pub extern "C" fn get_id(_: *const LinkEvent) -> u32 {
-        unimplemented!()
-    }
-
-    pub extern "C" fn into_l2ctable(_: *const LinkEvent, _: *mut lib::L2CTable) {
-        unimplemented!()
-    }
-
-    pub extern "C" fn from_l2ctable(_: *mut LinkEvent, _: *const lib::L2CTable) {
-        unimplemented!()
-    }
-
-    pub extern "C" fn into_l2cvalue(_: *const LinkEvent) -> lib::L2CValueHack {
-        unimplemented!()
-    }
-
-    pub extern "C" fn make_l2cvalue(_: *const LinkEvent, _: lib::L2CValueHack) -> lib::L2CValueHack {
-        unimplemented!()
-    }
-
-    pub extern "C" fn load_l2cvalue(_: *const LinkEvent, _: *mut lib::L2CValue) {
-        unimplemented!()
-    }
-
-}
-
-#[repr(C)]
 #[repr(packed)]
 pub struct LinkEvent {
-    vtable: &'static BasicEventVTable,
+    vtable: &'static lib::BasicEventVTable,
     pub id: u32,
     padding: u32,
     pub link_event_kind: phx::Hash40,
@@ -98,7 +34,7 @@ impl Clone for LinkEvent {
 
 impl LinkEvent {
     pub fn get_id(&self) -> u32 {
-        (self.vtable.get_id)(self)
+        (self.vtable.get_id)(self as *const Self as *const lib::BasicEvent)
     }
 
     pub fn as_lua(&self) -> lib::L2CValue {
@@ -122,13 +58,13 @@ impl LinkEvent {
 
 impl Into<lib::L2CValue> for &LinkEvent {
     fn into(self) -> lib::L2CValue {
-        (self.vtable.into_l2cvalue)(self).into()
+        (self.vtable.into_l2cvalue)(self as *const LinkEvent as *const lib::BasicEvent).into()
     }
 }
 
 impl Drop for LinkEvent {
     fn drop(&mut self) {
-        (self.vtable.destructor)(self)
+        (self.vtable.destructor)(self as *mut Self as *mut lib::BasicEvent)
     }
 }
 

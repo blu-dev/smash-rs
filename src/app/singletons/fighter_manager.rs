@@ -504,7 +504,7 @@ impl FighterManager {
 #[repr(C)]
 #[derive(Debug)]
 pub struct FighterEvent {
-    vtable: &'static app::BasicEventVTable,
+    vtable: &'static lib::BasicEventVTable,
     event_id: FighterEventID,
     entry_id: app::FighterEntryID
 }
@@ -539,7 +539,7 @@ impl FighterEvent {
     /// Create a fighter event
     pub(crate) fn new(id: FighterEventID, entry_id: app::FighterEntryID) -> Self {
         Self {
-            vtable: &app::BASIC_EVENT_DEFAULT_VTABLE,
+            vtable: &lib::BASIC_EVENT_DEFAULT_VTABLE,
             event_id: id,
             entry_id: entry_id
         }

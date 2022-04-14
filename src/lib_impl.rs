@@ -1,4 +1,5 @@
 mod agent;
+mod event;
 mod inner_function;
 mod msc;
 mod rect;
@@ -14,6 +15,7 @@ pub mod lib {
     }
 
     pub use agent::*;
+    pub use event::*;
     pub use inner_function::*;
     pub use msc::*;
     pub use rect::*;
