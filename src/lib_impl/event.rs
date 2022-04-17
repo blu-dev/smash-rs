@@ -112,21 +112,23 @@ pub(crate) struct EventListener {
 pub(crate) struct EventManager {
     pub event_count: u32,
     padding: u32,
-    pub event_listener_lists: *mut cpp::LinkedList<*mut EventListener>
+    pub event_listener_lists: [*mut cpp::LinkedList<*mut EventListener>; 2],
+    pub active_users: usize,
+    some_flag: bool
     // pub list_begin: *mut EventList,
     // ...
 }
 
 impl EventManager {
-    pub fn get_event_listener_lists(&self) -> &[cpp::LinkedList<*mut EventListener>] {
+    pub fn get_event_listener_lists(&self, index: usize) -> &[cpp::LinkedList<*mut EventListener>] {
         unsafe {
-            std::slice::from_raw_parts(self.event_listener_lists, self.event_count as usize)
+            std::slice::from_raw_parts(self.event_listener_lists[index], self.event_count as usize)
         }
     }
 
-    pub fn get_event_listener_lists_mut(&mut self) -> &mut [cpp::LinkedList<*mut EventListener>] {
+    pub fn get_event_listener_lists_mut(&mut self, index: usize) -> &mut [cpp::LinkedList<*mut EventListener>] {
         unsafe {
-            std::slice::from_raw_parts_mut(self.event_listener_lists, self.event_count as usize)
+            std::slice::from_raw_parts_mut(self.event_listener_lists[index], self.event_count as usize)
         }
     }
 }

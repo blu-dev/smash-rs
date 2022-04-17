@@ -449,7 +449,20 @@ impl Index<usize> for TransitionGroup {
 pub(crate) struct WorkModuleVTable {
     destructor: extern "C" fn(this: &mut WorkModule),
     deleter: extern "C" fn(this: &mut WorkModule),
-    is_implemented: extern "C" fn(this: &WorkModule) -> bool,
+
+    /// Checks if this module is implemented
+    /// 
+    /// ### Returns
+    /// * `true` - The module is **not** implemented
+    /// * `false` - The module **is** implemented
+    /// 
+    /// ### Notes
+    /// If the module is not implemented, there should be no attempt to
+    /// either of the following:
+    /// * Get the [owner module accessor](app::BattleObjectModuleAccessor) from it
+    /// * Cast it to any object's implementation and read fields
+    pub is_virtual : extern "C" fn(this: &WorkModule) -> bool,
+    
     handle_int_msc_cmd: extern "C" fn(this: &mut WorkModule, command: &lib::MscCommand) -> lib::TValue,
     handle_float_msc_cmd: extern "C" fn(this: &mut WorkModule, command: &lib::MscCommand) -> lib::TValue,
 
@@ -1156,7 +1169,7 @@ impl WorkModuleVTable {
         assert_eq!(size_of!(WorkModuleVTable), 0x288);
         assert_eq!(offset_of!(WorkModuleVTable, destructor),                                 0x000);
         assert_eq!(offset_of!(WorkModuleVTable, deleter),                                    0x008);
-        assert_eq!(offset_of!(WorkModuleVTable, is_implemented),                             0x010);
+        assert_eq!(offset_of!(WorkModuleVTable, is_virtual),                                 0x010);
         assert_eq!(offset_of!(WorkModuleVTable, handle_int_msc_cmd),                         0x018);
         assert_eq!(offset_of!(WorkModuleVTable, handle_float_msc_cmd),                       0x020);
         assert_eq!(offset_of!(WorkModuleVTable, initialize),                                 0x028);

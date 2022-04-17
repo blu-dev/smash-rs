@@ -13,6 +13,7 @@ mod events;
 pub mod fighter;
 mod items;
 mod modules;
+mod module_accessors;
 mod singletons;
 mod specializers;
 
@@ -22,6 +23,7 @@ pub use consts::*;
 pub use events::*;
 pub use items::*;
 pub use modules::*;
+pub use module_accessors::*;
 pub use singletons::*;
 pub use specializers::*;
 
@@ -48,23 +50,14 @@ pub struct Item {
 }
 
 #[repr(C)]
-pub struct BattleObjectModuleAccessor(u64);
-
-#[repr(C)]
-pub struct FighterModuleAccessor {
-    parent: BattleObjectModuleAccessor,
+pub struct Gimmick {
+    parent: BattleObject,
     // ...
 }
 
 #[repr(C)]
-pub struct WeaponModuleAccessor {
-    parent: BattleObjectModuleAccessor,
-    // ...
-}
-
-#[repr(C)]
-pub struct ItemModuleAccessor {
-    parent: BattleObjectModuleAccessor,
+pub struct Enemy {
+    parent: BattleObject,
     // ...
 }
 

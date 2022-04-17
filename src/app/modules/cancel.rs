@@ -61,7 +61,21 @@ impl SituationTransitionSetInfo {
 pub(crate) struct CancelModuleVTable {
     destructor: extern "C" fn(this: &mut CancelModule),
     deleter: extern "C" fn(this: &mut CancelModule),
-    is_implemented: extern "C" fn(this: &mut CancelModule) -> bool,
+    
+    /// Checks if this module is implemented
+    /// 
+    /// ### Returns
+    /// * `true` - The module is **not** implemented
+    /// * `false` - The module **is** implemented
+    /// 
+    /// ### Notes
+    /// If the module is not implemented, there should be no attempt to
+    /// either of the following:
+    /// * Get the [owner module accessor](app::BattleObjectModuleAccessor) from it
+    /// * Cast it to any object's implementation and read fields
+    pub is_virtual: extern "C" fn(this: &CancelModule) -> bool,
+    
+    
     handle_int_msc_command: extern "C" fn(this: &mut CancelModule, command: &lib::MscCommand) -> lib::TValue,
     handle_float_msc_command: extern "C" fn(this: &mut CancelModule, command: &lib::MscCommand) -> lib::TValue,
 
@@ -159,7 +173,7 @@ impl CancelModuleVTable {
         assert_eq!(size_of!(CancelModuleVTable), 0x70);
         assert_eq!(offset_of!(CancelModuleVTable, destructor),               0x0);
         assert_eq!(offset_of!(CancelModuleVTable, deleter),                  0x8);
-        assert_eq!(offset_of!(CancelModuleVTable, is_implemented),           0x10);
+        assert_eq!(offset_of!(CancelModuleVTable, is_virtual),               0x10);
         assert_eq!(offset_of!(CancelModuleVTable, handle_int_msc_command),   0x18);
         assert_eq!(offset_of!(CancelModuleVTable, handle_float_msc_command), 0x20);
         assert_eq!(offset_of!(CancelModuleVTable, initialize),               0x28);
