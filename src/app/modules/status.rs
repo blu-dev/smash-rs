@@ -23,6 +23,8 @@ impl StatusChange {
 pub(crate) struct StatusModuleVTable {
     #[offset = 0x0]
     destructor: extern "C" fn(this: &mut StatusModule),
+
+    #[offset = 0x8]
     deleter: extern "C" fn(this: &mut StatusModule),
 
     /// Checks if this module is implemented
@@ -36,9 +38,13 @@ pub(crate) struct StatusModuleVTable {
     /// either of the following:
     /// * Get the [owner module accessor](app::BattleObjectModuleAccessor) from it
     /// * Cast it to any object's implementation and read fields
+    #[offset = 0x10]
     pub is_virtual: extern "C" fn(this: &StatusModule) -> bool,
 
+    #[offset = 0x18]
     handle_int_msc_command: extern "C" fn(this: &mut StatusModule, command: &lib::MscCommand) -> lib::TValue,
+
+    #[offset = 0x20]
     handle_float_msc_command: extern "C" fn(this: &mut StatusModule, command: &lib::MscCommand) -> lib::TValue,
 
     /// Initializes the module
@@ -53,6 +59,7 @@ pub(crate) struct StatusModuleVTable {
     /// enough space for a 32-bit integer.
     /// * Even though the const generic field for the size on the `prev_status_kinds` parameter is `1`, the size of the vector depends on the caller (the
     /// generic field is used to specify how much space is taken by the array)
+    #[offset = 0x28]
     initialize: extern "C" fn(
         this: &mut StatusModule,
         prev_status_kinds: *mut cpp::FixedVec<i32, 1>,
@@ -65,6 +72,7 @@ pub(crate) struct StatusModuleVTable {
     /// 
     /// ### Behavior (Fighter, Weapon, and Item)
     /// This zeros out all pointers in the status script array
+    #[offset = 0x30]
     finalize: extern "C" fn(this: &mut StatusModule),
 
     /// Starts the module
@@ -75,6 +83,7 @@ pub(crate) struct StatusModuleVTable {
     /// without clearing the control buffer.
     /// 2. Initializes all flags and status request values to non-impactful values
     /// 3. [Clears all transition terms](app::WorkModule::clear_transition_term_forbid)
+    #[offset = 0x38]
     start_module: extern "C" fn(this: &mut StatusModule),
 
     /// Ends the module
@@ -82,6 +91,7 @@ pub(crate) struct StatusModuleVTable {
     /// ### Behavior (Fighter, Weapon, and Items)
     /// Clears the previous status kind queue, sets current status kind to [`app::StatusKind::None`],
     /// and sets the current situation kind to [`app::SituationKind::Outfield`]
+    #[offset = 0x40]
     end_module: extern "C" fn(this: &mut StatusModule),
 
     /// Attempts to change the current status
@@ -103,6 +113,7 @@ pub(crate) struct StatusModuleVTable {
     /// 
     /// If it is neither in a status or being called from collision detection, it will then attempt to change the status script. Changing
     /// the status script will fail if the object is currently in hitstop and the status does not permit changing out of hitstop.
+    #[offset = 0x48]
     pub change_status_request: extern "C" fn(this: &mut StatusModule, status_kind: i32, clear_command: bool) -> bool,
 
     /// Queues a status change for after the current script is not executing
@@ -110,6 +121,7 @@ pub(crate) struct StatusModuleVTable {
     /// ### Arguments
     /// * `status_kind` - The status kind to transition to
     /// * `clear_command` - Whether to clear the `ControlModule` buffer
+    #[offset = 0x50]
     pub change_status_request_from_script: extern "C" fn(this: &mut StatusModule, status_kind: i32, clear_command: bool),
 
     /// Deletes the queued status change, set by either [`StatusModule::change_status_request`] or [`StatusModule::change_status_request_from_script`]
@@ -117,12 +129,14 @@ pub(crate) struct StatusModuleVTable {
     /// ### Notes
     /// This does not delete the `clear_command` flag which is also set by those functions, however that flag will get reset again by
     /// a new status queue regardless.
+    #[offset = 0x58]
     pub delete_status_request_from_script: extern "C" fn(this: &mut StatusModule),
 
     /// Gets the currently queued status change, set by either [`StatusModule::change_status_request`] or [`StatusModule::change_status_request_from_script`]
     /// 
     /// ### Returns
     /// Will return the currently queued status kind, returning -1 if there is nothing queued
+    #[offset = 0x60]
     pub status_kind_que_from_script: extern "C" fn(this: &StatusModule) -> i32,
 
     /// Runs the main status script from the lua agents
@@ -134,24 +148,28 @@ pub(crate) struct StatusModuleVTable {
     /// 
     /// If there is a requested status change via [`StatusModule::change_status_request`] or [`StatusModule::change_status_request_from_script`]
     /// it will be transitioned to after the lua status functions have terminated
+    #[offset = 0x68]
     pub run_lua_status: extern "C" fn(this: &mut StatusModule),
 
     /// Enables running the lua status script system
     /// 
     /// ### Notes
     /// Enabling the lua status system does not matter if the overall status system is disabled
+    #[offset = 0x70]
     pub enable_lua_status: extern "C" fn(this: &mut StatusModule),
 
     /// Runs the line system script from the C++ status script set.
     /// 
     /// ### Notes
     /// This is similar to the `exec` status script functions.
+    #[offset = 0x78]
     pub call_cpp_line_system: extern "C" fn(this: &mut StatusModule),
 
     /// Runs the hitstop line system script from the C++ status script set.
     /// 
     /// ### Notes
     /// This is similar to the `exec_stop` status script functions.
+    #[offset = 0x80]
     pub call_cpp_line_system_stop: extern "C" fn(this: &mut StatusModule),
 
     /// Runs the line system status scripts from the lua status system
@@ -159,6 +177,7 @@ pub(crate) struct StatusModuleVTable {
     /// ### Notes
     /// This will call the `exec` status script if the object is not currently
     /// in hitstop, else it will call the `exec_stop` status script.
+    #[offset = 0x88]
     pub call_lua_line_system: extern "C" fn(this: &mut StatusModule),
 
     /// Calls the 8th added line script
@@ -166,6 +185,7 @@ pub(crate) struct StatusModuleVTable {
     /// ### Notes
     /// While this function is generic across all agents, it's behavior varies per
     /// object/category
+    #[offset = 0x90]
     call_added_line_7: extern "C" fn(this: &mut StatusModule),
 
     /// Calls the 1st added line script
@@ -173,8 +193,13 @@ pub(crate) struct StatusModuleVTable {
     /// ### Notes
     /// While this function is generic across all agents, it's behavior varies per
     /// object/category
+    #[offset = 0x98]
     call_added_line_0: extern "C" fn(this: &mut StatusModule),
+    
+    #[offset = 0xA0]
     pub call_cpp_line_fix_pos2: extern "C" fn(this: &mut StatusModule),
+    
+    #[offset = 0xA8]
     pub call_cpp_line_fix_pos: extern "C" fn(this: &mut StatusModule),
 
     /// Calls the 1st added line script
@@ -182,6 +207,7 @@ pub(crate) struct StatusModuleVTable {
     /// ### Notes
     /// While this function is generic across all agents, it's behavior varies per
     /// object/category
+    #[offset = 0xB0]
     call_added_line_6: extern "C" fn(this: &mut StatusModule),
 
     /// Calls the 2nd added line script
@@ -189,6 +215,7 @@ pub(crate) struct StatusModuleVTable {
     /// ### Notes
     /// While this function is generic across all agents, it's behavior varies per
     /// object/category
+    #[offset = 0xB8]
     call_added_line_1: extern "C" fn(this: &mut StatusModule),
 
     /// Calls the 3rd added line script
@@ -196,6 +223,7 @@ pub(crate) struct StatusModuleVTable {
     /// ### Notes
     /// While this function is generic across all agents, it's behavior varies per
     /// object/category
+    #[offset = 0xC0]
     call_added_line_2: extern "C" fn(this: &mut StatusModule),
 
     /// Calls the 4th added line script
@@ -203,6 +231,7 @@ pub(crate) struct StatusModuleVTable {
     /// ### Notes
     /// While this function is generic across all agents, it's behavior varies per
     /// object/category
+    #[offset = 0xC8]
     call_added_line_3: extern "C" fn(this: &mut StatusModule),
 
     /// Calls the 5th added line script
@@ -210,6 +239,7 @@ pub(crate) struct StatusModuleVTable {
     /// ### Notes
     /// While this function is generic across all agents, it's behavior varies per
     /// object/category
+    #[offset = 0xD0]
     call_added_line_4: extern "C" fn(this: &mut StatusModule),
 
     /// Calls the 6th added line script
@@ -217,6 +247,7 @@ pub(crate) struct StatusModuleVTable {
     /// ### Notes
     /// While this function is generic across all agents, it's behavior varies per
     /// object/category
+    #[offset = 0xD8]
     call_added_line_5: extern "C" fn(this: &mut StatusModule),
 
     /// Calls the 1st reserved script from the C++ status script set
@@ -224,6 +255,7 @@ pub(crate) struct StatusModuleVTable {
     /// ### Notes
     /// While this function is generic across all agents, it's behavior varies per
     /// object/category
+    #[offset = 0xE0]
     call_reserved_0: extern "C" fn(this: &mut StatusModule),
 
     /// Calls the 1st reserved script from the C++ status script set
@@ -231,6 +263,7 @@ pub(crate) struct StatusModuleVTable {
     /// ### Notes
     /// While this function is generic across all agents, it's behavior varies per
     /// object/category
+    #[offset = 0xE8]
     call_reserved_1: extern "C" fn(this: &mut StatusModule),
 
     /// Calls the 2nd reserved script from the C++ status script set
@@ -238,6 +271,7 @@ pub(crate) struct StatusModuleVTable {
     /// ### Notes
     /// While this function is generic across all agents, it's behavior varies per
     /// object/category
+    #[offset = 0xF0]
     call_reserved_2: extern "C" fn(this: &mut StatusModule),
 
     /// Calls the 3rd reserved script from the C++ status script set
@@ -245,6 +279,7 @@ pub(crate) struct StatusModuleVTable {
     /// ### Notes
     /// While this function is generic across all agents, it's behavior varies per
     /// object/category
+    #[offset = 0xF8]
     call_reserved_3: extern "C" fn(this: &mut StatusModule),
 
     /// Calls the 4th reserved script from the C++ status script set
@@ -252,6 +287,7 @@ pub(crate) struct StatusModuleVTable {
     /// ### Notes
     /// While this function is generic across all agents, it's behavior varies per
     /// object/category
+    #[offset = 0x100]
     call_reserved_4: extern "C" fn(this: &mut StatusModule),
 
     /// Calls the 5th reserved script from the C++ status script set
@@ -259,12 +295,15 @@ pub(crate) struct StatusModuleVTable {
     /// ### Notes
     /// While this function is generic across all agents, it's behavior varies per
     /// object/category
+    #[offset = 0x108]
     call_reserved_5: extern "C" fn(this: &mut StatusModule),
 
     /// Gets the current status kind
+    #[offset = 0x110]
     pub status_kind: extern "C" fn(this: &StatusModule) -> i32,
 
     /// Gets the next status kind
+    #[offset = 0x118]
     pub status_kind_next: extern "C" fn(this: &StatusModule) -> i32,
 
     /// Sets the interrupting status kind
@@ -274,12 +313,15 @@ pub(crate) struct StatusModuleVTable {
     /// this function and returning `1` is the standard way to designate a different
     /// target status than the one that is currently being transitioned to. For example,
     /// autoturn characters will use this to change their shift from turn to backwalk
+    #[offset = 0x120]
     pub set_status_kind_interrupt: extern "C" fn(this: &mut StatusModule, status_kind: i32),
 
     /// Gets the interrupting status kind
+    #[offset = 0x128]
     pub status_kind_interrupt: extern "C" fn(this: &StatusModule) -> i32,
 
     /// Clears the flag designating that this object has updated
+    #[offset = 0x130]
     pub clear_update_flag: extern "C" fn(this: &mut StatusModule),
 
     /// Acquires the flag designating that this object has updated.
@@ -291,12 +333,14 @@ pub(crate) struct StatusModuleVTable {
     /// ### Notes
     /// This function is mostly assumed in what it's purpose is, however when it is called by the owning
     /// object, it usually checks if the flag is non-zero and then performs some updates on other modules.
+    #[offset = 0x138]
     pub update: extern "C" fn(this: &mut StatusModule) -> bool,
 
     /// Checks if the object is currently in the process of changing statuses
     /// 
     /// ### Notes
     /// This function will return true on the first execution of the main status/exec status scripts
+    #[offset = 0x140]
     pub is_changing: extern "C" fn(this: &StatusModule) -> bool,
 
     /// Gets the `index`-th previous status kind
@@ -308,12 +352,14 @@ pub(crate) struct StatusModuleVTable {
     /// * There is a [fixed-length vector](cpp::FixedVec) that maintains the list of previous status kinds. Any request
     /// for a status kind that is greater than the current length will return an invalid status kind
     /// * All previous status kinds are cleared by [`StatusModule::change_status_force_and_clear`]
+    #[offset = 0x148]
     pub prev_status_kind: extern "C" fn(this: &StatusModule, index: i32) -> i32,
 
     /// Gets the status C++ status script set from the specified status kind
     /// 
     /// ### Arguments
     /// * `status_kind` - The status kind to get the status scripts for
+    #[offset = 0x150]
     pub get_status_script: extern "C" fn(this: &StatusModule, status_kind: i32) -> *const skyline::libc::c_void,
 
     /// Attempts to immediately change the current status, ignoring whether or not
@@ -328,6 +374,7 @@ pub(crate) struct StatusModuleVTable {
     /// * `true` - The status was successfully changed
     /// * `false` - The status was unable to be changed (likely because the status transition info prevents
     /// it from changing during hitstop)
+    #[offset = 0x158]
     pub change_status_force: extern "C" fn(this: &mut StatusModule, status_kind: i32, clear_command: bool) -> bool,
 
     /// Clears all previous status kinds and calls [`StatusModule::change_status_force`]
@@ -344,12 +391,15 @@ pub(crate) struct StatusModuleVTable {
     /// * Unlike the alternative status changing methods, this one does not provide an option to 
     /// clear the `ControlModule` buffer. It does not clear the buffer
     /// * The previous status kinds are cleared even if the status change is not performed successfully
+    #[offset = 0x160]
     pub change_status_force_and_clear: extern "C" fn(this: &mut StatusModule, status_kind: i32) -> bool,
 
     /// Gets the current situation kind
+    #[offset = 0x168]
     pub situation_kind: extern "C" fn(this: &StatusModule) -> app::SituationKind,
 
     /// Gets the previous situation kind
+    #[offset = 0x170]
     pub prev_situation_kind: extern "C" fn(this: &StatusModule) -> app::SituationKind,
 
     /// Sets the current situation kind
@@ -357,6 +407,7 @@ pub(crate) struct StatusModuleVTable {
     /// ### Arguments
     /// * `situation_kind` - The situation kind to change to
     /// * `keep` - Whether or not this situation kind should be updated while in this status
+    #[offset = 0x178]
     pub set_situation_kind: extern "C" fn(this: &mut StatusModule, situation_kind: app::SituationKind, keep: bool),
 
     /// Sets the ground check kinds for the current status (can be changed later)
@@ -368,6 +419,7 @@ pub(crate) struct StatusModuleVTable {
     /// ### Notes
     /// These are set by [`StatusModule::init_settings`] and are likely checked as part of the status change
     /// event which is sent to other modules
+    #[offset = 0x180]
     pub set_ground_check_kinds: extern "C" fn(this: &mut StatusModule, correct: i32, cliff_check: i32),
 
     /// Sets whether or not to keep the situation kind if it is [`app::SituationKind::Air`]
@@ -379,6 +431,7 @@ pub(crate) struct StatusModuleVTable {
     /// This function has the same functionality as the `keep` flag in [`StatusModule::set_situation_kind`]
     /// but only when the situation kind is [`app::SituationKind::Air`]. This means that 
     /// the status can transition into an aerial situation kind but not out of it
+    #[offset = 0x188]
     pub set_keep_situation_air: extern "C" fn(this: &mut StatusModule, keep: bool),
 
     /// Sets the agent status user data
@@ -388,6 +441,7 @@ pub(crate) struct StatusModuleVTable {
     /// 
     /// ### Notes
     /// This is caled internally by [`FighterStatusModuleImpl::set_fighter_status_data`]
+    #[offset = 0x190]
     set_agent_status_data: extern "C" fn(this: &mut StatusModule, status_data: *mut skyline::libc::c_void),
 
     /// Sets the previous agent status user data
@@ -397,6 +451,7 @@ pub(crate) struct StatusModuleVTable {
     /// 
     /// ### Notes
     /// This is caled internally by [`FighterStatusModuleImpl::set_fighter_status_data`]
+    #[offset = 0x198]
     set_prev_agent_status_data: extern "C" fn(this: &mut StatusModule, status_data: *mut skyline::libc::c_void),
 
     /// Sets the current status's kinetic type
@@ -406,6 +461,7 @@ pub(crate) struct StatusModuleVTable {
     /// 
     /// ### Notes
     /// This is called internally by [`StatusModule::init_settings`]
+    #[offset = 0x1A0]
     pub set_kinetic_type: extern "C" fn(this: &mut StatusModule, kinetic_type: i32),
 
     /// Sets the current status's succeeds bits
@@ -415,6 +471,7 @@ pub(crate) struct StatusModuleVTable {
     /// 
     /// ### Notes
     /// This is called internally by [`StatusModule::init_settings`]
+    #[offset = 0x1A8]
     pub set_succeeds_bits: extern "C" fn(this: &mut StatusModule, succeeds_bits: u32),
 
     /// Sets the current object's permanent succeeds bits, which are typically OR'd together with the succeeds bits
@@ -422,6 +479,7 @@ pub(crate) struct StatusModuleVTable {
     /// 
     /// ### Arguments
     /// * `succeeds_bits` - The succeeds bits
+    #[offset = 0x1B0]
     pub set_permanent_succeeds_bits: extern "C" fn(this: &mut StatusModule, succeeds_bits: u32),
 
     /// Updates the current status's situation kind based on their current state/location
@@ -431,6 +489,7 @@ pub(crate) struct StatusModuleVTable {
     /// then this function does nothing. If the current situation kind is [`app::SituationKind::Air`] and the (keep aerial
     /// situation flag was set to true)[StatusModule::set_keep_situation_air] and the object is not in hitstop,
     /// this function does nothing.
+    #[offset = 0x1B8]
     pub update_situation_kind: extern "C" fn(this: &mut StatusModule),
 
     /// Sets the C++ status script set for the specified status kind
@@ -442,6 +501,7 @@ pub(crate) struct StatusModuleVTable {
     /// ### Notes
     /// Unlike the [lua alternative](lua2cpp::L2CAgentBase::sv_set_status_func), the caller must replace the entire
     /// status script set, not just a singular function.
+    #[offset = 0x1C0]
     set_status_script: extern "C" fn(this: &mut StatusModule, status_kind: i32, status_script: *const skyline::libc::c_void),
 
     /// Initializes the settings for the current status
@@ -456,6 +516,7 @@ pub(crate) struct StatusModuleVTable {
     /// * `keep_int` - Bitmask of ints to keep, passed to [work module](app::WorkModule::clear_status)
     /// * `keep_float` - Bitmask of floats to keep, passed to [work module](app::WorkModule::clear_status)
     /// * `succeeds_bits` - Bitmask of things to keep if the status transition is successful
+    #[offset = 0x1C8]
     pub init_settings: extern "C" fn(
         this: &mut StatusModule,
         situation_kind: app::SituationKind,
@@ -475,18 +536,22 @@ pub(crate) struct StatusModuleVTable {
     /// * `keep_float` - Bitmask of status floats to keep
     /// * `keep_int` - Bitmask of status ints to keep
     /// * `keep_flag` - Bitmask of status flags to keep
+    #[offset = 0x1D0]
     pub set_work_keep_info: extern "C" fn(this: &mut StatusModule, keep_float: i32, keep_int: i32, keep_flag: i32),
 
     /// Sets whether or not the status module should execute status scripts
     /// 
     /// ### Arguments
     /// * `disable` - Whether or not to disable the module
+    #[offset = 0x1D8]
     pub set_disable: extern "C" fn(this: &mut StatusModule, disable: bool),
 
     /// Checks whether or not status execution is disabled
+    #[offset = 0x1E0]
     pub is_disabled: extern "C" fn(this: &StatusModule) -> bool,
 
     /// Checks whether or not the status is currently ending
+    #[offset = 0x1E8]
     pub is_status_ending: extern "C" fn(this: &StatusModule) -> bool,
 
     /// Ends the current status and starts the next status
@@ -508,6 +573,7 @@ pub(crate) struct StatusModuleVTable {
     /// At this point the function will call the (pre and init statuses from lua)[app::LuaModule::call_line_status_shift] (which in turn
     /// are expected to [initialize the status settings](StatusKind::init_settings)). If an interrupting status was set, it will
     /// recall the pre/init statuses one more time, after which it calls the `main`, `exec`/`exec_stop`, and `status` scripts.
+    #[offset = 0x1F0]
     pub change_status: extern "C" fn(this: &mut StatusModule, status_kind: i32)
 }
 
