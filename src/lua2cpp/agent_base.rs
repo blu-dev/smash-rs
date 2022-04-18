@@ -2,10 +2,6 @@ use std::ops::{Deref, DerefMut};
 
 use crate::*;
 
-#[cfg(not(feature = "expose_hack"))]
-pub(crate) type StatusFn = extern "C" fn(*mut L2CAgentBase) -> lib::L2CValueHack;
-
-#[cfg(feature = "expose_hack")]
 pub type StatusFn = extern "C" fn(*mut L2CAgentBase) -> lib::L2CValueHack;
 
 extern "C" {
@@ -54,7 +50,6 @@ extern "C" {
     #[link_name = "_ZN7lua2cpp12L2CAgentBase18sv_get_status_funcERKN3lib8L2CValueES4_"]
     fn sv_get_status_func(this: *mut L2CAgentBase, status_kind: *const lib::L2CValue, condition: *const lib::L2CValue) -> lib::L2CValueHack;
 
-    #[cfg_attr(not(feature = "expose_hack"), allow(dead_code))]
     #[link_name = "_ZN7lua2cpp12L2CAgentBase18sv_set_status_funcERKN3lib8L2CValueES4_Pv"]
     fn sv_set_status_func(this: *mut L2CAgentBase, status_kind: *const lib::L2CValue, condition: *const lib::L2CValue, func: StatusFn);
 }
@@ -229,16 +224,7 @@ impl L2CAgentBase {
     }
 
     /// Set the status function specified
-    #[cfg(feature = "expose_hack")]
     pub fn sv_set_status_func(&mut self, status_kind: &lib::L2CValue, condition: &lib::L2CValue, func: StatusFn) {
-        unsafe {
-            sv_set_status_func(self, status_kind, condition, func)
-        }
-    }
-
-    #[cfg(not(feature = "expose_hack"))]
-    #[allow(dead_code)]
-    pub(crate) fn sv_set_status_func(&mut self, status_kind: &lib::L2CValue, condition: &lib::L2CValue, func: StatusFn) {
         unsafe {
             sv_set_status_func(self, status_kind, condition, func)
         }

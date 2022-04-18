@@ -1,5 +1,5 @@
 use proc_macro::{TokenStream};
-use syn::{parse_macro_input, token::*, spanned::Spanned};
+use syn::{parse_macro_input, token::*, spanned::Spanned, parse::Parse};
 use quote::ToTokens;
 
 #[proc_macro_attribute]
@@ -91,7 +91,16 @@ fn bare_fn_to_fn(attrs: &Vec<syn::Attribute>, name: &syn::Ident, public: &syn::V
         arg_names.push(&arg.name.as_ref().unwrap().0);
     }
 
-    let attrs = attrs.iter();
+    let attrs = attrs.iter().filter_map(|attr| {
+        if TypeAssertAttributes::parse_attr(attr, "size").is_ok()
+            || TypeAssertAttributes::parse_attr(attr, "off").is_ok()
+            || TypeAssertAttributes::parse_attr(attr, "offset").is_ok()
+        {
+            None
+        } else {
+            Some(attr)
+        }
+    });
 
     Ok(syn::parse_quote!{
         #(#attrs)*
@@ -159,6 +168,117 @@ pub fn virtual_implementor(attr: TokenStream, item: TokenStream) -> TokenStream 
         impl std::ops::DerefMut for #item_name {
             fn deref_mut(&mut self) -> &mut Self::Target {
                 &mut self.parent
+            }
+        }
+    ).into()
+}
+
+struct TypeAssertAttributes(syn::LitInt);
+
+impl TypeAssertAttributes {
+    fn parse_attr(attr: &syn::Attribute, name: &str) -> syn::Result<Self> {
+        match attr.path.segments.last() {
+            Some(seg) if seg.ident.to_string() == name => {},
+            _ => return Err(syn::Error::new(attr.path.span(), "Type assert attribute requires 'ta' ident"))
+        }
+
+        syn::parse(attr.tokens.to_token_stream().into())
+    }
+}
+
+impl Parse for TypeAssertAttributes {
+    fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
+        let _: syn::Token![=] = input.parse()?;
+
+        input.parse().map(|int| Self(int))
+    }
+}
+
+#[proc_macro_derive(TypeAssert, attributes(size, off, offset))]
+pub fn derive_type_assertion(item: TokenStream) -> TokenStream {
+    let item_struct = parse_macro_input!(item as syn::ItemStruct);
+
+    let mut size = None;
+
+    for attr in item_struct.attrs.iter() {
+        if let Ok(attr) = TypeAssertAttributes::parse_attr(attr, "size") {
+            size = Some(attr.0);
+            break;
+        }
+    }
+
+    let size = match size {
+        Some(int) => int,
+        None => return syn::Error::new(item_struct.ident.span(), "TypeAssert structure must have 'ta' attribute to specify the size").into_compile_error().into()
+    };
+
+    let fields: Vec<(&syn::Ident, syn::LitInt)> = item_struct.fields.iter().filter_map(|field| {
+        if field.ident.is_none() {
+            return None;
+        }
+
+        let mut attributes = field.attrs.iter();
+
+        loop {
+            match attributes.next() {
+                Some(attr) => {
+                    match TypeAssertAttributes::parse_attr(attr, "off") {
+                        Ok(attr) => break Some((field.ident.as_ref().unwrap(), attr.0)),
+                        _ => match TypeAssertAttributes::parse_attr(attr, "offset") {
+                            Ok(attr) => break Some((field.ident.as_ref().unwrap(), attr.0)),
+                            _ => {}
+                        }
+                    }
+                },
+                None => break None
+            }
+        }
+    }).collect();
+    let ty_ident = &item_struct.ident;
+
+    let exprs = fields
+        .into_iter()
+        .map(|(ident, val)| {
+            syn::parse_quote!{ 
+                assert_eq!(
+                    offset_of!(#ty_ident, #ident),
+                    #val,
+                    "The offset of {}.{} must be {:#x}, but it is {:#x}",
+                    stringify!(#ty_ident),
+                    stringify!(#ident),
+                    #val,
+                    offset_of!(#ty_ident, #ident)
+                );
+            }
+        })
+        .collect::<Vec<syn::Stmt>>()
+        .into_iter();
+
+    let test_mod_name = quote::format_ident!("{}_tests", ty_ident);
+
+    quote::quote!(
+        #[cfg(feature = "type_assert")]
+        impl #ty_ident {
+            pub fn assert(is_size_assert: bool) {
+                if is_size_assert {
+                    assert_eq!(size_of!(#ty_ident), #size, "The size of {} must be {:#x}, but it is {:#x}", stringify!(#ty_ident), #size, size_of!(#ty_ident));
+                    return;
+                }
+                #(
+                    #exprs
+                )*
+            }
+        }
+
+        #[cfg(feature = "type_assert")]
+        #[allow(non_snake_case)]
+        mod #test_mod_name {
+            use super::*;
+
+            #[test]
+            pub fn check_size_field_bounds() {
+                #ty_ident::assert(false);
+                #ty_ident::assert(true);
             }
         }
     ).into()

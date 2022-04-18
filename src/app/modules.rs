@@ -4,12 +4,14 @@ mod attack;
 mod cancel;
 mod damage;
 mod item;
+mod status;
 mod work;
 
 pub use attack::*;
 pub use cancel::*;
 pub use damage::*;
 pub use item::*;
+pub use status::*;
 pub use work::*;
 
 #[repr(C)]

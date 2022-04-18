@@ -463,8 +463,8 @@ pub(crate) struct WorkModuleVTable {
     /// * Cast it to any object's implementation and read fields
     pub is_virtual : extern "C" fn(this: &WorkModule) -> bool,
     
-    handle_int_msc_cmd: extern "C" fn(this: &mut WorkModule, command: &lib::MscCommand) -> lib::TValue,
-    handle_float_msc_cmd: extern "C" fn(this: &mut WorkModule, command: &lib::MscCommand) -> lib::TValue,
+    handle_int_msc_command: extern "C" fn(this: &mut WorkModule, command: &lib::MscCommand) -> lib::TValue,
+    handle_float_msc_command: extern "C" fn(this: &mut WorkModule, command: &lib::MscCommand) -> lib::TValue,
 
     /// Initializes the module by copying the provided arrays/transition information and initializing the memory
     /// ### Arguments
@@ -1170,8 +1170,8 @@ impl WorkModuleVTable {
         assert_eq!(offset_of!(WorkModuleVTable, destructor),                                 0x000);
         assert_eq!(offset_of!(WorkModuleVTable, deleter),                                    0x008);
         assert_eq!(offset_of!(WorkModuleVTable, is_virtual),                                 0x010);
-        assert_eq!(offset_of!(WorkModuleVTable, handle_int_msc_cmd),                         0x018);
-        assert_eq!(offset_of!(WorkModuleVTable, handle_float_msc_cmd),                       0x020);
+        assert_eq!(offset_of!(WorkModuleVTable, handle_int_msc_command),                     0x018);
+        assert_eq!(offset_of!(WorkModuleVTable, handle_float_msc_command),                   0x020);
         assert_eq!(offset_of!(WorkModuleVTable, initialize),                                 0x028);
         assert_eq!(offset_of!(WorkModuleVTable, finalize),                                   0x030);
         assert_eq!(offset_of!(WorkModuleVTable, start_module),                               0x038);

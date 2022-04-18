@@ -148,15 +148,6 @@ extern "C" {
     fn to_string(v: *const L2CValue) -> lib::L2CValueHack;
 }
 
-// This enforces a return-on-stack policy for all L2CValues
-#[cfg(not(feature = "expose_hack"))]
-#[repr(C)]
-pub(crate) struct L2CValueHack {
-    value: L2CValue,
-    extra_space: [u8; 0x10]
-}
-
-#[cfg(feature = "expose_hack")]
 #[repr(C)]
 pub struct L2CValueHack {
     value: L2CValue,
