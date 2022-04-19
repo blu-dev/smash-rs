@@ -10,13 +10,14 @@ extern "C" {
     fn store_l2c_table(rect: *const Rect) -> lib::L2CValueHack;
 }
 
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq, TypeAssert)]
 #[repr(C)]
+#[size = 0x10]
 pub struct Rect {
-    pub left: f32,
-    pub right: f32,
-    pub top: f32,
-    pub bottom: f32
+    #[offset = 0x0] pub left: f32,
+    #[offset = 0x4] pub right: f32,
+    #[offset = 0x8] pub top: f32,
+    #[offset = 0xC] pub bottom: f32
 }
 
 impl Rect {
@@ -83,16 +84,5 @@ impl Into<cpp::simd::Vector4> for Rect {
             z: self.top,
             w: self.bottom
         }
-    }
-}
-
-#[cfg(feature = "type_assert")]
-impl Rect {
-    pub fn assert() {
-        assert_eq!(size_of!(Rect), 0x10);
-        assert_eq!(offset_of!(Rect, left),   0x0);
-        assert_eq!(offset_of!(Rect, right),  0x4);
-        assert_eq!(offset_of!(Rect, top),    0x8);
-        assert_eq!(offset_of!(Rect, bottom), 0xC);
     }
 }

@@ -12,13 +12,15 @@ extern "C" {
 }
 
 #[repr(C)]
+#[derive(TypeAssert)]
+#[size = 0x48]
 pub struct L2CTable {
-    ref_count: u32,
+    #[offset = 0x00] ref_count: u32,
     padding: u32,
-    array: cpp::Vector<lib::L2CValue>,
-    map: cpp::Tree<phx::Hash40, lib::L2CValue>,
-    agent: *mut lib::L2CAgent,
-    metatable: *mut L2CTable
+    #[offset = 0x08] array: cpp::Vector<lib::L2CValue>,
+    #[offset = 0x20] map: cpp::Tree<phx::Hash40, lib::L2CValue>,
+    #[offset = 0x38] agent: *mut lib::L2CAgent,
+    #[offset = 0x400] metatable: *mut L2CTable
 }
 
 impl L2CTable {
@@ -122,17 +124,5 @@ impl Index<phx::Hash40> for L2CTable {
 impl IndexMut<phx::Hash40> for L2CTable {
     fn index_mut(&mut self, index: phx::Hash40) -> &mut Self::Output {
         &mut self.map[index]
-    }
-}
-
-#[cfg(feature = "type_assert")]
-impl L2CTable {
-    pub fn assert() {
-        assert_eq!(size_of!(L2CTable), 0x48);
-        assert_eq!(offset_of!(L2CTable, ref_count), 0x0);
-        assert_eq!(offset_of!(L2CTable, array), 0x8);
-        assert_eq!(offset_of!(L2CTable, map), 0x20);
-        assert_eq!(offset_of!(L2CTable, agent), 0x38);
-        assert_eq!(offset_of!(L2CTable, metatable), 0x40);
     }
 }

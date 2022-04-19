@@ -8,7 +8,7 @@ use app::*;
 pub struct ModuleAccessor {
     event_manager:                                   lib::EventManager,
     posture_module:                                  *mut Module,
-    status_module:                                   *mut Module,
+    status_module:                                   *mut StatusModule,
     control_module:                                  *mut Module,
     work_module:                                     *mut WorkModule,
     ground_module:                                   *mut Module,

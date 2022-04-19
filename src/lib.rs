@@ -18,9 +18,6 @@ pub(crate) use smash_macro::*;
 #[macro_use]
 extern crate bitflags;
 
-#[cfg(test)]
-mod test;
-
 #[macro_export]
 macro_rules! size_of {
     ($ty:tt) => {
@@ -102,11 +99,8 @@ pub fn validate() {
     app::AttackData::assert();
     app::DamageInfo::assert();
 
-    lib::L2CAgent::assert();
-    lib::L2CTable::assert();
     lib::L2CValue::assert();
     lib::L2CValueHack::assert();
-    lib::Rect::assert();
 
     lua2cpp::L2CAgentBase::assert();
     lua2cpp::L2CAgentGeneratedBase::assert();

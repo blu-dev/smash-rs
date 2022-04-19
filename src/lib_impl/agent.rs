@@ -107,12 +107,14 @@ extern "C" {
 pub type LuaBindFn = extern "C" fn(*mut lib::L2CValue, *const lib::utility::Variadic);
 
 #[repr(C)]
+#[derive(TypeAssert)]
+#[size = 0x48]
 pub struct L2CAgent {
-    vtable: *const *const c_void,
-    pub lua_state: *mut lua_State,
-    function_map: cpp::HashMap<phx::Hash40, LuaBindFn>,
-    pub battle_object: *mut c_void, // to become BattleObject
-    pub module_accessor: *mut c_void, // to become BattleObjectModuleAccessor
+    #[offset = 0x00] vtable: *const *const c_void,
+    #[offset = 0x08] pub lua_state: *mut lua_State,
+    #[offset = 0x10] function_map: cpp::HashMap<phx::Hash40, LuaBindFn>,
+    #[offset = 0x38] pub battle_object: *mut c_void, // to become BattleObject
+    #[offset = 0x40] pub module_accessor: *mut c_void, // to become BattleObjectModuleAccessor
 }
 
 impl L2CAgent {
@@ -315,17 +317,5 @@ impl Drop for L2CAgent {
         unsafe {
             dtor(self);
         }
-    }
-}
-
-#[cfg(feature = "type_assert")]
-impl L2CAgent {
-    pub fn assert() {
-        assert_eq!(size_of!(L2CAgent),                     0x48);
-        assert_eq!(offset_of!(L2CAgent, vtable),           0x0);
-        assert_eq!(offset_of!(L2CAgent, lua_state),        0x8);
-        assert_eq!(offset_of!(L2CAgent, function_map),     0x10);
-        assert_eq!(offset_of!(L2CAgent, battle_object),    0x38);
-        assert_eq!(offset_of!(L2CAgent, module_accessor), 0x40);
     }
 }
