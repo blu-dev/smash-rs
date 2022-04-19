@@ -1,6 +1,8 @@
 mod agent;
+mod animcmd;
 mod event;
 mod inner_function;
+mod lua;
 mod msc;
 mod rect;
 mod table;
@@ -15,8 +17,10 @@ pub mod lib {
     }
 
     pub use agent::*;
+    pub use animcmd::*;
     pub use event::*;
     pub use inner_function::*;
+    pub use lua::*;
     pub use msc::*;
     pub use rect::*;
     pub use table::*;
