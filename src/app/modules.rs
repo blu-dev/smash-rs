@@ -5,6 +5,7 @@ mod cancel;
 mod damage;
 mod item;
 mod lua;
+mod motion_animcmd;
 mod status;
 mod work;
 
@@ -13,6 +14,7 @@ pub use cancel::*;
 pub use damage::*;
 pub use item::*;
 pub use lua::*;
+pub use motion_animcmd::*;
 pub use status::*;
 pub use work::*;
 
