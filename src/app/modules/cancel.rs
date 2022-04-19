@@ -58,8 +58,13 @@ impl SituationTransitionSetInfo {
 
 #[repr(C)]
 #[vtable_impl(CancelModule)]
+#[derive(TypeAssert)]
+#[size = 0x70]
 pub(crate) struct CancelModuleVTable {
+    #[offset = 0x0]
     destructor: extern "C" fn(this: &mut CancelModule),
+
+    #[offset = 0x8]
     deleter: extern "C" fn(this: &mut CancelModule),
     
     /// Checks if this module is implemented
@@ -73,23 +78,30 @@ pub(crate) struct CancelModuleVTable {
     /// either of the following:
     /// * Get the [owner module accessor](app::BattleObjectModuleAccessor) from it
     /// * Cast it to any object's implementation and read fields
+    #[offset = 0x10]
     pub is_virtual: extern "C" fn(this: &CancelModule) -> bool,
     
-    
+    #[offset = 0x18]
     handle_int_msc_command: extern "C" fn(this: &mut CancelModule, command: &lib::MscCommand) -> lib::TValue,
+
+    #[offset = 0x20]
     handle_float_msc_command: extern "C" fn(this: &mut CancelModule, command: &lib::MscCommand) -> lib::TValue,
 
     /// This method is blank and does not do anything
+    #[offset = 0x28]
     initialize: extern "C" fn(this: &mut CancelModule),
 
     /// Despite the initialization not doing anything, this method will
     /// attempt to remove some event listeners
+    #[offset = 0x30]
     finalize: extern "C" fn(this: &mut CancelModule),
 
     /// This method is blank and does not do anything
+    #[offset = 0x38]
     start_module: extern "C" fn(this: &mut CancelModule),
 
     /// This method is blank and does not do anything
+    #[offset = 0x40]
     end_module: extern "C" fn(this: &mut CancelModule),
 
     /// Checks if the fighter's cancel groups have been enabled
@@ -109,6 +121,7 @@ pub(crate) struct CancelModuleVTable {
     /// ### Notes
     /// This function can be `true` while also not having canceling be enabled if something else disables
     /// the transition term groups manually
+    #[offset = 0x48]
     pub is_enable_cancel: extern "C" fn(this: &CancelModule) -> bool,
 
     /// Conditionally enables the fighter to cancel their current action
@@ -127,6 +140,7 @@ pub(crate) struct CancelModuleVTable {
     /// * If you are performing an aerial, then [`app::transition_terms::LANDING`] and [`app::transition_terms::LANDING_LIGHT`]
     /// are disabled.
     /// * If you are performing down tilt, then [`app::transition_terms::CONT_SQUAT`] is disabled.
+    #[offset = 0x50]
     pub enable_cancel: extern "C" fn(this: &mut CancelModule),
 
     /// Re-enables cancelling if your situation kind has changed.
@@ -144,6 +158,7 @@ pub(crate) struct CancelModuleVTable {
     /// 
     /// ### Notes
     /// This method is not exported by the main executable, its name is assumed
+    #[offset = 0x58]
     pub re_enable_cancel: extern "C" fn(this: &mut CancelModule),
 
     /// Disables all transition term groups for all situation kinds and blocks cancelling for the rest of the status
@@ -154,6 +169,7 @@ pub(crate) struct CancelModuleVTable {
     /// 
     /// ### Notes
     /// This method is not exported by the main executable, its name is taken from an MSC command constant
+    #[offset = 0x60]
     pub unable_cancel_status: extern "C" fn(this: &mut CancelModule),
 
     /// Disables all transition term groups for all situation kinds 
@@ -164,28 +180,8 @@ pub(crate) struct CancelModuleVTable {
     /// 
     /// ### Notes
     /// This method is not exported by the main executable, its name is taken from an MSC command constant
+    #[offset = 0x68]
     pub unable_cancel: extern "C" fn(this: &mut CancelModule)
-}
-
-#[cfg(feature = "type_assert")]
-impl CancelModuleVTable {
-    pub fn assert() {
-        assert_eq!(size_of!(CancelModuleVTable), 0x70);
-        assert_eq!(offset_of!(CancelModuleVTable, destructor),               0x0);
-        assert_eq!(offset_of!(CancelModuleVTable, deleter),                  0x8);
-        assert_eq!(offset_of!(CancelModuleVTable, is_virtual),               0x10);
-        assert_eq!(offset_of!(CancelModuleVTable, handle_int_msc_command),   0x18);
-        assert_eq!(offset_of!(CancelModuleVTable, handle_float_msc_command), 0x20);
-        assert_eq!(offset_of!(CancelModuleVTable, initialize),               0x28);
-        assert_eq!(offset_of!(CancelModuleVTable, finalize),                 0x30);
-        assert_eq!(offset_of!(CancelModuleVTable, start_module),             0x38);
-        assert_eq!(offset_of!(CancelModuleVTable, end_module),               0x40);
-        assert_eq!(offset_of!(CancelModuleVTable, is_enable_cancel),         0x48);
-        assert_eq!(offset_of!(CancelModuleVTable, enable_cancel),            0x50);
-        assert_eq!(offset_of!(CancelModuleVTable, re_enable_cancel),         0x58);
-        assert_eq!(offset_of!(CancelModuleVTable, unable_cancel_status),     0x60);
-        assert_eq!(offset_of!(CancelModuleVTable, unable_cancel),           0x68);
-    }   
 }
 
 /// A utility for prematurely exiting states/animations
@@ -203,23 +199,14 @@ pub struct CancelModule {
 /// The fighter implementation of [`CancelModule`](app::CancelModule)
 #[repr(C)]
 #[virtual_implementor(CancelModule)]
+#[derive(TypeAssert)]
+#[size = 0x20]
 pub struct FighterCancelModuleImpl {
-    parent: CancelModule,
-    transition_groups: *const SituationTransitionSetInfo,
-    current_transition_set: app::SituationKind,
-    has_canceled: bool,
-    is_cancel_blocked: bool
-}
-
-#[cfg(feature = "type_assert")]
-impl FighterCancelModuleImpl {
-    pub fn assert() {
-        assert_eq!(offset_of!(FighterCancelModuleImpl, parent), 0x0);
-        assert_eq!(offset_of!(FighterCancelModuleImpl, transition_groups), 0x10);
-        assert_eq!(offset_of!(FighterCancelModuleImpl, current_transition_set), 0x18);
-        assert_eq!(offset_of!(FighterCancelModuleImpl, has_canceled), 0x1C);
-        assert_eq!(offset_of!(FighterCancelModuleImpl, is_cancel_blocked), 0x1D);
-    }
+    #[offset = 0x00] parent: CancelModule,
+    #[offset = 0x10] transition_groups: *const SituationTransitionSetInfo,
+    #[offset = 0x18] current_transition_set: app::SituationKind,
+    #[offset = 0x1C] has_canceled: bool,
+    #[offset = 0x1D] is_cancel_blocked: bool
 }
 
 impl FighterCancelModuleImpl {

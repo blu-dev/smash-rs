@@ -20,7 +20,7 @@ pub struct L2CTable {
     #[offset = 0x08] array: cpp::Vector<lib::L2CValue>,
     #[offset = 0x20] map: cpp::Tree<phx::Hash40, lib::L2CValue>,
     #[offset = 0x38] agent: *mut lib::L2CAgent,
-    #[offset = 0x400] metatable: *mut L2CTable
+    #[offset = 0x40] metatable: *mut L2CTable
 }
 
 impl L2CTable {

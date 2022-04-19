@@ -17,7 +17,7 @@ use crate::*;
 /// These commands will get sent off to the respective handler in these structures.
 #[repr(C)]
 #[derive(TypeAssert)]
-#[size = 0xC]
+#[size = 0x10]
 pub struct MscCommand {
     #[offset = 0x0] payload: *mut MscCommandPayload,
     #[offset = 0x8] output_count: u32
@@ -46,7 +46,7 @@ impl MscCommand {
 /// This type is similar to the [`lib::L2CValue`], however it isn't used in any exported APIs by the executable(s).
 #[repr(C)]
 #[derive(TypeAssert)]
-#[size = 0xC]
+#[size = 0x10]
 pub struct TValue {
     #[offset = 0x0] data: u64,
     #[offset = 0x8] tag_type: u32

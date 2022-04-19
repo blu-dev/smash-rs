@@ -2,8 +2,8 @@ use crate::*;
 
 #[repr(C)]
 #[vtable_impl(LuaModule)]
-#[derive(TypeAssert)]
-#[size = 0x168]
+// #[derive(TypeAssert)]
+// #[size = 0x168]
 pub(crate) struct LuaModuleVTable {
 
 }

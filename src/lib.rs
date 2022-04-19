@@ -85,16 +85,6 @@ pub fn validate() {
     app::WeaponShizueFishingrodLinkEventReel::assert();
     app::WeaponShizueFishingrodLinkEventShoot::assert();
 
-    app::ModuleAccessor::assert();
-    app::BattleObjectModuleAccessorVTable::assert();
-
-    // modules
-    app::WorkModuleVTable::assert();
-    app::FighterWorkModuleImpl::assert();
-
-    app::CancelModuleVTable::assert();
-    app::FighterCancelModuleImpl::assert();
-
     app::AttackAbsoluteData::assert();
     app::AttackData::assert();
     app::DamageInfo::assert();

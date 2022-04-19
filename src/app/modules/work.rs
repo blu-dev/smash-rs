@@ -446,8 +446,13 @@ impl Index<usize> for TransitionGroup {
 
 #[repr(C)]
 #[vtable_impl(WorkModule)]
+#[derive(TypeAssert)]
+#[size = 0x288]
 pub(crate) struct WorkModuleVTable {
+    #[offset = 0x0]
     destructor: extern "C" fn(this: &mut WorkModule),
+
+    #[offset = 0x8]
     deleter: extern "C" fn(this: &mut WorkModule),
 
     /// Checks if this module is implemented
@@ -461,9 +466,13 @@ pub(crate) struct WorkModuleVTable {
     /// either of the following:
     /// * Get the [owner module accessor](app::BattleObjectModuleAccessor) from it
     /// * Cast it to any object's implementation and read fields
+    #[offset = 0x10]
     pub is_virtual : extern "C" fn(this: &WorkModule) -> bool,
     
+    #[offset = 0x18]
     handle_int_msc_command: extern "C" fn(this: &mut WorkModule, command: &lib::MscCommand) -> lib::TValue,
+
+    #[offset = 0x20]
     handle_float_msc_command: extern "C" fn(this: &mut WorkModule, command: &lib::MscCommand) -> lib::TValue,
 
     /// Initializes the module by copying the provided arrays/transition information and initializing the memory
@@ -473,25 +482,31 @@ pub(crate) struct WorkModuleVTable {
     /// * `transition_groups` - The transition groups the module should use. This must be valid for the lifetime of the module.
     /// * `param_object` - The structure holding on to the parameter information this object should reference. This field can be `null`
     /// * `agent_kind` - What kind of agent owns this module
+    #[offset = 0x28]
     initialize: extern "C" fn(this: &mut WorkModule, array_info: &WorkArrayInfo, transition_term_info: &TransitionTermInfo, transition_groups: *const TransitionGroup, param_object: u64, agent_kind: u32),
 
     /// Finalizes the module by removing references to everything passed in during initialization
+    #[offset = 0x30]
     finalize: extern "C" fn(this: &mut WorkModule),
 
     /// Starts the module by clearing all of the work storage and attaching required event listeners
+    #[offset = 0x38]
     start_module: extern "C" fn(this: &mut WorkModule),
 
     /// Ends the module by clearing all of the work storage and removing its event listeners
+    #[offset = 0x40]
     end_module: extern "C" fn(this: &mut WorkModule),
 
     /// Calculates all params set to be calculated at runtime, including, but not limited to, params like `jump_initial_speed_y`, `jump_initial_accel_y`, etc.
     /// 
     /// After this call, these params are accessible through the param accessor methods and are cached in the module
+    #[offset = 0x48]
     pub calc_params: extern "C" fn(this: &mut WorkModule),
 
     /// Sets the transition term information for this module to use
     /// 
     /// This enables the user to swap out the transition term info on the fly if need be, and is called during initialization
+    #[offset = 0x50]
     pub set_transition_term_info: extern "C" fn(this: &mut WorkModule, info: &TransitionTermInfo),
 
     /// Gets the specified float from the module's internal storage
@@ -500,6 +515,7 @@ pub(crate) struct WorkModuleVTable {
     /// 
     /// ### Notes
     /// The implementation does not check that this ID is for a float, it only checks the [`WorkKind`] and the index
+    #[offset = 0x58]
     pub get_float: extern "C" fn(this: &WorkModule, what: WorkId) -> f32,
 
     /// Sets the specified float in the module's internal storage
@@ -509,6 +525,7 @@ pub(crate) struct WorkModuleVTable {
     /// 
     /// ### Notes
     /// The implementation does not check that this ID is for a float, it only checks the [`WorkKind`] and the index
+    #[offset = 0x60]
     pub set_float: extern "C" fn(this: &mut WorkModule, value: f32, what: WorkId),
 
     /// Sets the specified floats in the module's internal storage
@@ -519,6 +536,7 @@ pub(crate) struct WorkModuleVTable {
     /// 
     /// ### Notes
     /// The implementation does not check that these IDs are for floats, it only checks the [`WorkKind`]s and the indices
+    #[offset = 0x68]
     set_floats_impl: extern "C" fn(this: &mut WorkModule, value: f32, ids: *const WorkId, count: u32),
 
     /// Assigns a random value in the specified range to the specified float in the module's internal storage
@@ -531,6 +549,7 @@ pub(crate) struct WorkModuleVTable {
     /// * The implementation does not check that this ID is for a float, it only checks the [`WorkKind`] and the index
     /// * If `maximum` is less than `minimum`, then the value is not set at all.
     /// * If `maximum` is equal to `minimum`, then the value is set to `maximum`
+    #[offset = 0x70]
     pub random_float: extern "C" fn(this: &mut WorkModule, minimum: f32, maximum: f32, what: WorkId),
 
     /// Adds the specified amount to the specified float in the module's internal storage
@@ -540,6 +559,7 @@ pub(crate) struct WorkModuleVTable {
     /// 
     /// ### Notes
     /// The implementation does not check that this ID is for a float, it only checks the [`WorkKind`] and the index
+    #[offset = 0x78]
     pub add_float: extern "C" fn(this: &mut WorkModule, amount: f32, what: WorkId),
 
     /// Subtracts the specified amount from the specified float in the module's internal storage
@@ -549,6 +569,7 @@ pub(crate) struct WorkModuleVTable {
     /// 
     /// ### Notes
     /// The implementation does not check that this ID is for a float, it only checks the [`WorkKind`] and the index
+    #[offset = 0x80]
     pub sub_float: extern "C" fn(this: &mut WorkModule, amount: f32, what: WorkId),
 
     /// Multiplies the specified amount by the specified float in the module's internal storage and sets it
@@ -558,6 +579,7 @@ pub(crate) struct WorkModuleVTable {
     /// 
     /// ### Notes
     /// The implementation does not check that this ID is for a float, it only checks the [`WorkKind`] and the index
+    #[offset = 0x88]
     pub mul_float: extern "C" fn(this: &mut WorkModule, amount: f32, what: WorkId),
 
     /// Divides the specified float in the module's internal storage by the specified amount
@@ -567,6 +589,7 @@ pub(crate) struct WorkModuleVTable {
     /// 
     /// ### Notes
     /// The implementation does not check that this ID is for a float, it only checks the [`WorkKind`] and the index
+    #[offset = 0x90]
     pub div_float: extern "C" fn(this: &mut WorkModule, amount: f32, what: WorkId),
 
     /// Gets the specified 32-bit integer from the module's internal storage
@@ -575,6 +598,7 @@ pub(crate) struct WorkModuleVTable {
     /// 
     /// ### Notes
     /// The implementation does not check that this ID is for an integer, it only checks the [`WorkKind`] and the index
+    #[offset = 0x98]
     pub get_int: extern "C" fn(this: &mut WorkModule, what: WorkId) -> i32,
 
     /// Sets the specified 32-bit integer in the module's internal storage
@@ -584,6 +608,7 @@ pub(crate) struct WorkModuleVTable {
     /// 
     /// ### Notes
     /// The implementation does not check that this ID is for an integer, it only checks the [`WorkKind`] and the index
+    #[offset = 0xA0]
     pub set_int: extern "C" fn(this: &mut WorkModule, value: i32, what: WorkId),
 
     /// Sets the specified 32-bit integers in the module's internal storage
@@ -594,6 +619,7 @@ pub(crate) struct WorkModuleVTable {
     /// 
     /// ### Notes
     /// The implementation does not check that these IDs are for integers, it only checks the [`WorkKind`]s and the indices
+    #[offset = 0xA8]
     set_ints_impl: extern "C" fn(this: &mut WorkModule, value: i32, ids: *const WorkId, count: u32),
 
     /// Gets the specified 64-bit integer from the module's internal storage
@@ -602,6 +628,7 @@ pub(crate) struct WorkModuleVTable {
     /// 
     /// ### Notes
     /// The implementation does not check that this ID is for an integer, it only checks the [`WorkKind`] and the index
+    #[offset = 0xB0]
     pub get_int64: extern "C" fn(this: &mut WorkModule, what: WorkId) -> i64,
 
     /// Sets the specified 64-bit integer in the module's internal storage
@@ -611,6 +638,7 @@ pub(crate) struct WorkModuleVTable {
     /// 
     /// ### Notes
     /// The implementation does not check that this ID is for an integer, it only checks the [`WorkKind`] and the index
+    #[offset = 0xB8]
     pub set_int64: extern "C" fn(this: &mut WorkModule, value: i64, what: WorkId),
 
     /// Assigns a random value in the specified range to the specified 32-bit integer in the module's internal storage
@@ -623,6 +651,7 @@ pub(crate) struct WorkModuleVTable {
     /// * The implementation does not check that this ID is for an integer, it only checks the [`WorkKind`] and the index
     /// * If `maximum` is less than `minimum`, then the value is not set at all.
     /// * If `maximum` is equal to `minimum`, then the value is set to `maximum`
+    #[offset = 0xC0]
     pub random_int: extern "C" fn(this: &mut WorkModule, minimum: i32, maximum: i32, what: WorkId),
 
     /// Increments the specified 32-bit integer in the module's internal storage
@@ -631,6 +660,7 @@ pub(crate) struct WorkModuleVTable {
     /// 
     /// ### Notes
     /// The implementation does not check that this ID is for an integer, it only checks the [`WorkKind`] and the index
+    #[offset = 0xC8]
     pub inc_int: extern "C" fn(this: &mut WorkModule, what: WorkId),
 
     /// Decrements the specified 32-bit integer in the module's internal storage
@@ -639,6 +669,7 @@ pub(crate) struct WorkModuleVTable {
     /// 
     /// ### Notes
     /// The implementation does not check that this ID is for an integer, it only checks the [`WorkKind`] and the index
+    #[offset = 0xD0]
     pub dec_int: extern "C" fn(this: &mut WorkModule, what: WorkId),
 
     /// Adds the specified amount to the specified 32-bit integer in the module's internal storage
@@ -648,6 +679,7 @@ pub(crate) struct WorkModuleVTable {
     /// 
     /// ### Notes
     /// The implementation does not check that this ID is for an integer, it only checks the [`WorkKind`] and the index
+    #[offset = 0xD8]
     pub add_int: extern "C" fn(this: &mut WorkModule, amount: i32, what: WorkId),
 
     /// Subtracts the specified amount from the specified 32-bit integer in the module's internal storage
@@ -657,6 +689,7 @@ pub(crate) struct WorkModuleVTable {
     /// 
     /// ### Notes
     /// The implementation does not check that this ID is for an integer, it only checks the [`WorkKind`] and the index
+    #[offset = 0xE0]
     pub sub_int: extern "C" fn(this: &mut WorkModule, amount: i32, what: WorkId),
 
     /// Multiplies the specified amount by the specified 32-bit integer in the module's internal storage and sets it
@@ -666,6 +699,7 @@ pub(crate) struct WorkModuleVTable {
     /// 
     /// ### Notes
     /// The implementation does not check that this ID is for an integer, it only checks the [`WorkKind`] and the index
+    #[offset = 0xE8]
     pub mul_int: extern "C" fn(this: &mut WorkModule, amount: i32, what: WorkId),
 
     /// Divides the specified 32-bit integer in the module's internal storage by the specified amount
@@ -675,6 +709,7 @@ pub(crate) struct WorkModuleVTable {
     /// 
     /// ### Notes
     /// The implementation does not check that this ID is for an integer, it only checks the [`WorkKind`] and the index
+    #[offset = 0xF0]
     pub div_int: extern "C" fn(this: &mut WorkModule, amount: i32, what: WorkId),
 
     /// Counts down the specified 32-bit integer until it is equal to the specified minimum
@@ -695,6 +730,7 @@ pub(crate) struct WorkModuleVTable {
     /// 
     /// ### Notes
     /// The implementation does not check that this ID is for an integer, it only checks the [`WorkKind`] and the index
+    #[offset = 0xF8]
     pub count_down_int: extern "C" fn(this: &mut WorkModule, what: WorkId, floor: i32) -> bool,
 
     /// Counts down the specified 32-bit integer until it is equal to the specified minimum
@@ -711,6 +747,7 @@ pub(crate) struct WorkModuleVTable {
     /// 
     /// ### Notes
     /// The implementation does not check that this ID is for an integer, it only checks the [`WorkKind`] and the index
+    #[offset = 0x100]
     count_down_ints_impl: extern "C" fn(this: &mut WorkModule, ids: *const WorkId, count: u32, floor: i32),
 
     /// Gets the specified flag from the module's internal storage
@@ -719,6 +756,7 @@ pub(crate) struct WorkModuleVTable {
     /// 
     /// ### Notes
     /// The implementation does not check that this ID is for a flag, it only checks the [`WorkKind`] and the index
+    #[offset = 0x108]
     pub is_flag: extern "C" fn(this: &WorkModule, what: WorkId) -> bool,
 
     /// Sets the specified flag to true
@@ -727,6 +765,7 @@ pub(crate) struct WorkModuleVTable {
     /// 
     /// ### Notes
     /// The implementation does not check that this ID is for a flag, it only checks the [`WorkKind`] and the index
+    #[offset = 0x110]
     pub on_flag: extern "C" fn(this: &mut WorkModule, what: WorkId),
 
     /// Sets the specified flags to true
@@ -736,6 +775,7 @@ pub(crate) struct WorkModuleVTable {
     /// 
     /// ### Notes
     /// The implementation does not check that these IDs are for flags, it only checks the [`WorkKind`] and the indices
+    #[offset = 0x118]
     on_flags_impl: extern "C" fn(this: &mut WorkModule, ids: *const WorkId, count: u32),
 
     /// Sets the specified flag to false
@@ -744,6 +784,7 @@ pub(crate) struct WorkModuleVTable {
     /// 
     /// ### Notes
     /// The implementation does not check that this ID is for a flag, it only checks the [`WorkKind`] and the index
+    #[offset = 0x120]
     pub off_flag: extern "C" fn(this: &mut WorkModule, what: WorkId),
 
     /// Sets the specified flags to false
@@ -753,6 +794,7 @@ pub(crate) struct WorkModuleVTable {
     /// 
     /// ### Notes
     /// The implementation does not check that these IDs are for flags, it only checks the [`WorkKind`] and the indices
+    #[offset = 0x128]
     off_flags_impl: extern "C" fn(this: &mut WorkModule, ids: *const WorkId, count: u32),
 
     /// Sets the specified flag in the module's internal storage
@@ -762,6 +804,7 @@ pub(crate) struct WorkModuleVTable {
     /// 
     /// ### Notes
     /// The implementation does not check that this ID is for a flag, it only checks the [`WorkKind`] and the index
+    #[offset = 0x130]
     pub set_flag: extern "C" fn(this: &mut WorkModule, value: bool, what: WorkId),
 
     /// Sets the specified flag to false and returns true if it was previously on
@@ -774,6 +817,7 @@ pub(crate) struct WorkModuleVTable {
     /// 
     /// ### Notes
     /// The implementation does not check that this ID is for a flag, it only checks the [`WorkKind`] and the index
+    #[offset = 0x138]
     pub turn_off_flag: extern "C" fn(this: &mut WorkModule, what: WorkId) -> bool,
 
     /// Enables the specified transition term group
@@ -801,6 +845,7 @@ pub(crate) struct WorkModuleVTable {
     ///     wm.enable_transition_term_group_ex(app::transition_terms::LANDING);
     /// }
     /// ```
+    #[offset = 0x140]
     pub enable_transition_term_group: extern "C" fn(this: &mut WorkModule, what: WorkId),
 
     /// Disabled the specified transition term group
@@ -811,6 +856,7 @@ pub(crate) struct WorkModuleVTable {
     /// * The implementation does not check that this ID is for a transition term group, it only checks the index
     /// * Disabling the transition term **group** does not disable all contained transition terms inherently. If any of them
     /// have been enabled by a call to `enable_transition_term`, they will still be enabled after this call.
+    #[offset = 0x148]
     pub unable_transition_term_group: extern "C" fn(this: &mut WorkModule, what: WorkId),
 
     /// Clears both group flags for all flags in the transition term group
@@ -820,6 +866,7 @@ pub(crate) struct WorkModuleVTable {
     /// ### Notes
     /// * The implementation does not check that this ID is for a transition term group, it only checks the index
     /// * This call has the same behavior as calling both `unable_transition_term_group` and `unable_transition_term_group_ex_all` with the argument `what`
+    #[offset = 0x150]
     pub clear_transition_term_group: extern "C" fn(this: &mut WorkModule, what: WorkId),
 
     /// Checks if the transition term group is enabled
@@ -833,6 +880,7 @@ pub(crate) struct WorkModuleVTable {
     /// 
     /// ### Notes
     /// The implementation does not check that this ID is for a transition term group, it only checks the index
+    #[offset = 0x158]
     pub is_enable_transition_term_group: extern "C" fn(this: &WorkModule, what: WorkId) -> bool,
 
     /// Enables the EX flag on the specified transition term
@@ -843,6 +891,7 @@ pub(crate) struct WorkModuleVTable {
     /// * The implementation does not check that this ID is for a transition term, it only checks the index
     /// * Calling this function (and by extension setting the flag) will do nothing until the group flag is also set
     /// for this transition term (can be set by calling `enable_transition_term_group` on a group that contains the flag)
+    #[offset = 0x160]
     pub enable_transition_term_group_ex: extern "C" fn(this: &mut WorkModule, what: WorkId),
 
     /// Enables the EX flag on all of the transition terms of the specified group
@@ -853,6 +902,7 @@ pub(crate) struct WorkModuleVTable {
     /// * The implementation does not check that this ID is for a transition term group, it only checks the index
     /// * Pairing this function to a call of `enable_transition_term_group` with the same group ID effectively enables
     /// every transition term in the group
+    #[offset = 0x168]
     pub enable_transition_term_group_ex_all: extern "C" fn(this: &mut WorkModule, what: WorkId),
 
     /// Disables the EX flag on the specified transition term
@@ -863,6 +913,7 @@ pub(crate) struct WorkModuleVTable {
     /// * The implementation does not check that this ID is for a transition term, it only checks the index
     /// * Calling this function (and by extension disabling the flag) will do nothing if the group flag is not also set
     /// for this transition term (can be set by calling `enable_transition_term_group` on a group that contains the flag)
+    #[offset = 0x170]
     pub unable_transition_term_group_ex: extern "C" fn(this: &mut WorkModule, what: WorkId),
 
     /// Disables the EX flag on all of the transition terms of the specified group
@@ -871,6 +922,7 @@ pub(crate) struct WorkModuleVTable {
     /// 
     /// ### Notes
     /// The implementation does not check that this ID is for a transition term group, it only checks the index
+    #[offset = 0x178]
     pub unable_transition_term_group_ex_all: extern "C" fn(this: &mut WorkModule, what: WorkId),
 
     /// Checks if the transition term is enabled.
@@ -896,6 +948,7 @@ pub(crate) struct WorkModuleVTable {
     /// 
     /// ### Notes
     /// The implementation does not check that this ID is for a transition term, it only checks the index
+    #[offset = 0x180]
     pub is_enable_transition_term: extern "C" fn(this: &WorkModule, what: WorkId) -> bool,
 
     /// Enables the specified transition term
@@ -906,6 +959,7 @@ pub(crate) struct WorkModuleVTable {
     /// * The implementation does not check that this ID is for a transition term, it only checks the index
     /// * This call will set the flag regardless of whether or not this is enabled as part of a group, but if
     /// it is enabled as part of a group the flag means nothing.
+    #[offset = 0x188]
     pub enable_transition_term: extern "C" fn(this: &mut WorkModule, what: WorkId),
 
     /// Disables the specified transition term
@@ -916,9 +970,11 @@ pub(crate) struct WorkModuleVTable {
     /// * The implementation does not check that this ID is for a transition term, it only checks the index
     /// * This call will disable the flag regardless of whether or not this is enabled as part of a group, but if
     /// it is enabled as part of a group the flag means nothing.
+    #[offset = 0x190]
     pub unable_transition_term: extern "C" fn(this: &mut WorkModule, what: WorkId),
 
     /// Disables all transition terms in the module
+    #[offset = 0x198]
     pub clear_transition_term: extern "C" fn(this: &mut WorkModule),
 
     /// Checks if any of the `forbid` flags are set for the specified transition term
@@ -927,6 +983,7 @@ pub(crate) struct WorkModuleVTable {
     /// 
     /// ### Notes
     /// The implementation does not check that this ID is for a transition term, it only checks the index
+    #[offset = 0x1A0]
     pub is_enable_transition_term_forbid: extern "C" fn(this: &WorkModule) -> bool,
 
     /// Sets the [`TransitionTerm::ENABLE_FORBID`] flag for the specified transition term
@@ -936,6 +993,7 @@ pub(crate) struct WorkModuleVTable {
     /// ### Notes
     /// * The implementation does not check that this ID is for a transition term, it only checks the index
     /// * This only sets one of the three flags which can forbid a transition term
+    #[offset = 0x1A8]
     pub enable_transition_term_forbid: extern "C" fn(this: &mut WorkModule, what: WorkId),
 
     /// Disables the [`TransitionTerm::ENABLE_FORBID`] flag for the specified transition term
@@ -945,6 +1003,7 @@ pub(crate) struct WorkModuleVTable {
     /// ### Notes
     /// * The implementation does not check that this ID is for a transition term, it only checks the index
     /// * This only disables one of the three flags which can forbid a transition term
+    #[offset = 0x1B0]
     pub unable_transition_term_forbid: extern "C" fn(this: &mut WorkModule, what: WorkId),
 
     /// Sets the [`TransitionTerm::ENABLE_FORBID`] flag for all transition terms in the specified group
@@ -954,6 +1013,7 @@ pub(crate) struct WorkModuleVTable {
     /// ### Notes
     /// * The implementation does not check that this ID is for a transition term group, it only checks the index
     /// * This only sets one of the three flags which can forbid a transition term
+    #[offset = 0x1B8]
     pub enable_transition_term_forbid_group: extern "C" fn(this: &mut WorkModule, what: WorkId),
 
     /// Disables the [`TransitionTerm::ENABLE_FORBID`] flag for all transition terms in the specified group
@@ -963,12 +1023,14 @@ pub(crate) struct WorkModuleVTable {
     /// ### Notes
     /// * The implementation does not check that this ID is for a transition term group, it only checks the index
     /// * This only disables one of the three flags which can forbid a transition term
+    #[offset = 0x1C0]
     pub unable_transition_term_forbid_group: extern "C" fn(this: &mut WorkModule, what: WorkId),
 
     /// Disables the [`TransitionTerm::ENABLE_FORBID`] flag for all transition terms in the module
     /// 
     /// ### Notes
     /// This only disables one of the three flags which can forbid a transition term
+    #[offset = 0x1C8]
     pub clear_transition_term_forbid: extern "C" fn(this: &mut WorkModule),
 
     /// Sets the [`TransitionTerm::ENABLE_FORBID_OTHER`] flag for the specified transition term
@@ -979,6 +1041,7 @@ pub(crate) struct WorkModuleVTable {
     /// * The implementation does not check that this ID is for a transition term, it only checks the index
     /// * This only sets one of the three flags which can forbid a transition term
     /// * This function is not exported by the main executable, the name is assumed
+    #[offset = 0x1D0]
     pub enable_transition_term_forbid_other: extern "C" fn(this: &mut WorkModule, what: WorkId),
 
     /// Disables the [`TransitionTerm::ENABLE_FORBID_OTHER`] flag for the specified transition term
@@ -989,6 +1052,7 @@ pub(crate) struct WorkModuleVTable {
     /// * The implementation does not check that this ID is for a transition term, it only checks the index
     /// * This only disables one of the three flags which can forbid a transition term
     /// * This function is not exported by the main executable, the name is assumed
+    #[offset = 0x1D8]
     pub unable_transition_term_forbid_other: extern "C" fn(this: &mut WorkModule, what: WorkId),
 
     /// Sets the [`TransitionTerm::ENABLE_FORBID_OTHER`] flag for all transition terms in the specified group
@@ -999,6 +1063,7 @@ pub(crate) struct WorkModuleVTable {
     /// * The implementation does not check that this ID is for a transition term group, it only checks the index
     /// * This only sets one of the three flags which can forbid a transition term
     /// * This function is not exported by the main executable, the name is assumed
+    #[offset = 0x1E0]
     pub enable_transition_term_forbid_group_other: extern "C" fn(this: &mut WorkModule, what: WorkId),
 
     /// Disables the [`TransitionTerm::ENABLE_FORBID_OTHER`] flag for all transition terms in the specified group
@@ -1009,6 +1074,7 @@ pub(crate) struct WorkModuleVTable {
     /// * The implementation does not check that this ID is for a transition term group, it only checks the index
     /// * This only disables one of the three flags which can forbid a transition term
     /// * This function is not exported by the main executable, the name is assumed
+    #[offset = 0x1E8]
     pub unable_transition_term_forbid_group_other: extern "C" fn(this: &mut WorkModule, what: WorkId),
 
     /// Disables the [`TransitionTerm::ENABLE_FORBID_OTHER`] flag for all transition terms in the module
@@ -1016,6 +1082,7 @@ pub(crate) struct WorkModuleVTable {
     /// ### Notes
     /// * This only disables one of the three flags which can forbid a transition term
     /// * This function is not exported by the main executable, the name is assumed
+    #[offset = 0x1F0]
     pub clear_transition_term_forbid_other: extern "C" fn(this: &mut WorkModule),
 
     /// Sets the [`TransitionTerm::ENABLE_FORBID_INDIVIDUAL`] flag for the specified transition term
@@ -1025,6 +1092,7 @@ pub(crate) struct WorkModuleVTable {
     /// ### Notes
     /// * The implementation does not check that this ID is for a transition term, it only checks the index
     /// * This only sets one of the three flags which can forbid a transition term
+    #[offset = 0x1F8]
     pub enable_transition_term_forbid_indivi: extern "C" fn(this: &mut WorkModule, what: WorkId),
 
     /// Disables the [`TransitionTerm::ENABLE_FORBID_INDIVIDUAL`] flag for the specified transition term
@@ -1034,6 +1102,7 @@ pub(crate) struct WorkModuleVTable {
     /// ### Notes
     /// * The implementation does not check that this ID is for a transition term, it only checks the index
     /// * This only disables one of the three flags which can forbid a transition term
+    #[offset = 0x200]
     pub unable_transition_term_forbid_indivi: extern "C" fn(this: &mut WorkModule, what: WorkId),
 
     /// Sets the [`TransitionTerm::ENABLE_FORBID_INDIVIDUAL`] flag for all transition terms in the specified group
@@ -1043,6 +1112,7 @@ pub(crate) struct WorkModuleVTable {
     /// ### Notes
     /// * The implementation does not check that this ID is for a transition term group, it only checks the index
     /// * This only sets one of the three flags which can forbid a transition term
+    #[offset = 0x208]
     pub enable_transition_term_forbid_group_indivi: extern "C" fn(this: &mut WorkModule, what: WorkId),
 
     /// Disables the [`TransitionTerm::ENABLE_FORBID_INDIVIDUAL`] flag for all transition terms in the specified group
@@ -1052,6 +1122,7 @@ pub(crate) struct WorkModuleVTable {
     /// ### Notes
     /// * The implementation does not check that this ID is for a transition term group, it only checks the index
     /// * This only disables one of the three flags which can forbid a transition term
+    #[offset = 0x210]
     pub unable_transition_term_forbid_group_indivi: extern "C" fn(this: &mut WorkModule, what: WorkId),
 
     /// Disables the [`TransitionTerm::ENABLE_FORBID_INDIVIDUAL`] flag for all transition terms in the module
@@ -1059,9 +1130,11 @@ pub(crate) struct WorkModuleVTable {
     /// ### Notes
     /// * This only disables one of the three flags which can forbid a transition term
     /// * This function is not exported by the main executable, the name is assumed
+    #[offset = 0x218]
     pub clear_transition_term_forbid_indivi: extern "C" fn(this: &mut WorkModule),
 
     /// Re-initializes all of the internal storage to 0 (floats are `0.0`, ints are `0`, and flags are `false`)
+    #[offset = 0x220]
     pub clear_all: extern "C" fn(this: &mut WorkModule),
 
     /// Clears the status arrays of the module's internal storage
@@ -1076,20 +1149,24 @@ pub(crate) struct WorkModuleVTable {
     /// or you anything with index 32 and greater must be cleared/kept manually
     /// * This function is called by `StatusModule::init_settings`
     /// * This function is not exported by the main executable, the name is assumed
+    #[offset = 0x228]
     pub clear_status: extern "C" fn(this: &mut WorkModule, keep_float: i32, keep_int: i32, keep_flag: i32),
 
     /// Gets the internal work array info structure
     ///
     /// ### Notes
     /// This function is not exported by the main executable, the name is assumed
+    #[offset = 0x230]
     get_work_array_info: extern "C" fn(this: &mut WorkModule) -> *mut WorkArrayInfo,
 
     /// Gets the specified internal work array
     /// 
     /// ### Notes
     /// This function is not exported by the main executable, the name is assumed
+    #[offset = 0x238]
     get_work_array: extern "C" fn(this: &mut WorkModule) -> *mut WorkArray,
 
+    #[offset = 0x240]
     unk_3: extern "C" fn(this: &mut WorkModule),
 
     /// Gets a 32-bit integer from this module's param object
@@ -1100,12 +1177,14 @@ pub(crate) struct WorkModuleVTable {
     /// ### Notes
     /// * This function is called internally by `get_param_int`
     /// * This function is not exported by the main executable, the name is assumed
+    #[offset = 0x248]
     get_param_int_impl: extern "C" fn(this: &WorkModule, param_object: phx::Hash40, param_name: phx::Hash40) -> i32,
 
     /// Gets a 32-bit integer from this module's param object
     /// ### Arguments
     /// * `param_object` - The structure which holds the sought param (for fighter params, this field should be the name of the param)
     /// * `param_name` - The name of the param to be retrieved (for fighter params, this field should be `0`)
+    #[offset = 0x250]
     pub get_param_int: extern "C" fn(this: &WorkModule, param_object: phx::Hash40, param_name: phx::Hash40) -> i32,
 
     /// Gets a 64-bit integer from this module's param object
@@ -1116,12 +1195,14 @@ pub(crate) struct WorkModuleVTable {
     /// ### Notes
     /// * This function is called internally by `get_param_int64`
     /// * This function is not exported by the main executable, the name is assumed
+    #[offset = 0x258]
     get_param_int64_impl: extern "C" fn(this: &WorkModule, param_object: phx::Hash40, param_name: phx::Hash40) -> i64,
 
     /// Gets a 64-bit integer from this module's param object
     /// ### Arguments
     /// * `param_object` - The structure which holds the sought param (for fighter params, this field should be the name of the param)
     /// * `param_name` - The name of the param to be retrieved (for fighter params, this field should be `0`)
+    #[offset = 0x260]
     pub get_param_int64: extern "C" fn(this: &WorkModule, param_object: phx::Hash40, param_name: phx::Hash40) -> i64,
 
     /// Gets a float from this module's param object
@@ -1132,12 +1213,14 @@ pub(crate) struct WorkModuleVTable {
     /// ### Notes
     /// * This function is called internally by `get_param_float`
     /// * This function is not exported by the main executable, the name is assumed
+    #[offset = 0x268]
     get_param_float_impl: extern "C" fn(this: &WorkModule, param_object: phx::Hash40, param_name: phx::Hash40) -> f32,
 
     /// Gets a float from this module's param object
     /// ### Arguments
     /// * `param_object` - The structure which holds the sought param (for fighter params, this field should be the name of the param)
     /// * `param_name` - The name of the param to be retrieved (for fighter params, this field should be `0`)
+    #[offset = 0x270]
     pub get_param_float: extern "C" fn(this: &WorkModule, param_object: phx::Hash40, param_name: phx::Hash40) -> f32,
 
     /// Sets the move customization fields of the param object
@@ -1148,6 +1231,7 @@ pub(crate) struct WorkModuleVTable {
     /// ### Notes
     /// * This is only really used by mii fighters and joker that we are aware of (joker for arsene, mii fighters for their specials)
     /// * This is associated with the `FIGHTER_WAZA_CUSTOMIZE` constants and work IDs
+    #[offset = 0x278]
     pub set_customize_no: extern "C" fn(this: &mut WorkModule, variant: i32, move_no: i32),
 
     /// Recalculates runtime-cached params based off of a stat change.
@@ -1160,95 +1244,8 @@ pub(crate) struct WorkModuleVTable {
     /// getting struck by lightning
     /// * This function sends an event with ID `0x31`
     /// * This function is not exported by the main executable, the name is assumed
+    #[offset = 0x280]
     pub recalculate_params: extern "C" fn(this: &mut WorkModule, _unused: u64, is_abnormal: bool)
-}
-
-#[cfg(feature = "type_assert")]
-impl WorkModuleVTable {
-    pub fn assert() {
-        assert_eq!(size_of!(WorkModuleVTable), 0x288);
-        assert_eq!(offset_of!(WorkModuleVTable, destructor),                                 0x000);
-        assert_eq!(offset_of!(WorkModuleVTable, deleter),                                    0x008);
-        assert_eq!(offset_of!(WorkModuleVTable, is_virtual),                                 0x010);
-        assert_eq!(offset_of!(WorkModuleVTable, handle_int_msc_command),                     0x018);
-        assert_eq!(offset_of!(WorkModuleVTable, handle_float_msc_command),                   0x020);
-        assert_eq!(offset_of!(WorkModuleVTable, initialize),                                 0x028);
-        assert_eq!(offset_of!(WorkModuleVTable, finalize),                                   0x030);
-        assert_eq!(offset_of!(WorkModuleVTable, start_module),                               0x038);
-        assert_eq!(offset_of!(WorkModuleVTable, end_module),                                 0x040);
-        assert_eq!(offset_of!(WorkModuleVTable, calc_params),                                0x048);
-        assert_eq!(offset_of!(WorkModuleVTable, set_transition_term_info),                   0x050);
-        assert_eq!(offset_of!(WorkModuleVTable, get_float),                                  0x058);
-        assert_eq!(offset_of!(WorkModuleVTable, set_float),                                  0x060);
-        assert_eq!(offset_of!(WorkModuleVTable, set_floats_impl),                            0x068);
-        assert_eq!(offset_of!(WorkModuleVTable, random_float),                               0x070);
-        assert_eq!(offset_of!(WorkModuleVTable, add_float),                                  0x078);
-        assert_eq!(offset_of!(WorkModuleVTable, sub_float),                                  0x080);
-        assert_eq!(offset_of!(WorkModuleVTable, mul_float),                                  0x088);
-        assert_eq!(offset_of!(WorkModuleVTable, div_float),                                  0x090);
-        assert_eq!(offset_of!(WorkModuleVTable, get_int),                                    0x098);
-        assert_eq!(offset_of!(WorkModuleVTable, set_int),                                    0x0A0);
-        assert_eq!(offset_of!(WorkModuleVTable, set_ints_impl),                              0x0A8);
-        assert_eq!(offset_of!(WorkModuleVTable, get_int64),                                  0x0B0);
-        assert_eq!(offset_of!(WorkModuleVTable, set_int64),                                  0x0B8);
-        assert_eq!(offset_of!(WorkModuleVTable, random_int),                                 0x0C0);
-        assert_eq!(offset_of!(WorkModuleVTable, inc_int),                                    0x0C8);
-        assert_eq!(offset_of!(WorkModuleVTable, dec_int),                                    0x0D0);
-        assert_eq!(offset_of!(WorkModuleVTable, add_int),                                    0x0D8);
-        assert_eq!(offset_of!(WorkModuleVTable, sub_int),                                    0x0E0);
-        assert_eq!(offset_of!(WorkModuleVTable, mul_int),                                    0x0E8);
-        assert_eq!(offset_of!(WorkModuleVTable, div_int),                                    0x0F0);
-        assert_eq!(offset_of!(WorkModuleVTable, count_down_int),                             0x0F8);
-        assert_eq!(offset_of!(WorkModuleVTable, count_down_ints_impl),                       0x100);
-        assert_eq!(offset_of!(WorkModuleVTable, is_flag),                                    0x108);
-        assert_eq!(offset_of!(WorkModuleVTable, on_flag),                                    0x110);
-        assert_eq!(offset_of!(WorkModuleVTable, on_flags_impl),                              0x118);
-        assert_eq!(offset_of!(WorkModuleVTable, off_flag),                                   0x120);
-        assert_eq!(offset_of!(WorkModuleVTable, off_flags_impl),                             0x128);
-        assert_eq!(offset_of!(WorkModuleVTable, set_flag),                                   0x130);
-        assert_eq!(offset_of!(WorkModuleVTable, turn_off_flag),                              0x138);
-        assert_eq!(offset_of!(WorkModuleVTable, enable_transition_term_group),               0x140);
-        assert_eq!(offset_of!(WorkModuleVTable, unable_transition_term_group),               0x148);
-        assert_eq!(offset_of!(WorkModuleVTable, clear_transition_term_group),                0x150);
-        assert_eq!(offset_of!(WorkModuleVTable, is_enable_transition_term_group),            0x158);
-        assert_eq!(offset_of!(WorkModuleVTable, enable_transition_term_group_ex),            0x160);
-        assert_eq!(offset_of!(WorkModuleVTable, enable_transition_term_group_ex_all),        0x168);
-        assert_eq!(offset_of!(WorkModuleVTable, unable_transition_term_group_ex),            0x170);
-        assert_eq!(offset_of!(WorkModuleVTable, unable_transition_term_group_ex_all),        0x178);
-        assert_eq!(offset_of!(WorkModuleVTable, is_enable_transition_term),                  0x180);
-        assert_eq!(offset_of!(WorkModuleVTable, enable_transition_term),                     0x188);
-        assert_eq!(offset_of!(WorkModuleVTable, unable_transition_term),                     0x190);
-        assert_eq!(offset_of!(WorkModuleVTable, clear_transition_term),                      0x198);
-        assert_eq!(offset_of!(WorkModuleVTable, is_enable_transition_term_forbid),           0x1A0);
-        assert_eq!(offset_of!(WorkModuleVTable, enable_transition_term_forbid),              0x1A8);
-        assert_eq!(offset_of!(WorkModuleVTable, unable_transition_term_forbid),              0x1B0);
-        assert_eq!(offset_of!(WorkModuleVTable, enable_transition_term_forbid_group),        0x1B8);
-        assert_eq!(offset_of!(WorkModuleVTable, unable_transition_term_forbid_group),        0x1C0);
-        assert_eq!(offset_of!(WorkModuleVTable, clear_transition_term_forbid),               0x1C8);
-        assert_eq!(offset_of!(WorkModuleVTable, enable_transition_term_forbid_other),        0x1D0);
-        assert_eq!(offset_of!(WorkModuleVTable, unable_transition_term_forbid_other),        0x1D8);
-        assert_eq!(offset_of!(WorkModuleVTable, enable_transition_term_forbid_group_other),  0x1E0);
-        assert_eq!(offset_of!(WorkModuleVTable, unable_transition_term_forbid_group_other),  0x1E8);
-        assert_eq!(offset_of!(WorkModuleVTable, clear_transition_term_forbid_other),         0x1F0);
-        assert_eq!(offset_of!(WorkModuleVTable, enable_transition_term_forbid_indivi),       0x1F8);
-        assert_eq!(offset_of!(WorkModuleVTable, unable_transition_term_forbid_indivi),       0x200);
-        assert_eq!(offset_of!(WorkModuleVTable, enable_transition_term_forbid_group_indivi), 0x208);
-        assert_eq!(offset_of!(WorkModuleVTable, unable_transition_term_forbid_group_indivi), 0x210);
-        assert_eq!(offset_of!(WorkModuleVTable, clear_transition_term_forbid_indivi),        0x218);
-        assert_eq!(offset_of!(WorkModuleVTable, clear_all),                                  0x220);
-        assert_eq!(offset_of!(WorkModuleVTable, clear_status),                               0x228);
-        assert_eq!(offset_of!(WorkModuleVTable, get_work_array_info),                        0x230);
-        assert_eq!(offset_of!(WorkModuleVTable, get_work_array),                             0x238);
-        assert_eq!(offset_of!(WorkModuleVTable, unk_3),                                      0x240);
-        assert_eq!(offset_of!(WorkModuleVTable, get_param_int_impl),                         0x248);
-        assert_eq!(offset_of!(WorkModuleVTable, get_param_int),                              0x250);
-        assert_eq!(offset_of!(WorkModuleVTable, get_param_int64_impl),                       0x258);
-        assert_eq!(offset_of!(WorkModuleVTable, get_param_int64),                            0x260);
-        assert_eq!(offset_of!(WorkModuleVTable, get_param_float_impl),                       0x268);
-        assert_eq!(offset_of!(WorkModuleVTable, get_param_float),                            0x270);
-        assert_eq!(offset_of!(WorkModuleVTable, set_customize_no),                           0x278);
-        assert_eq!(offset_of!(WorkModuleVTable, recalculate_params),                         0x280);
-    }
 }
 
 /// A method to store agent/game state across multiple users
@@ -1339,30 +1336,17 @@ impl WorkModule {
 /// The fighter implementation of [`WorkModule`](app::WorkModule)
 #[repr(C)]
 #[virtual_implementor(WorkModule)]
+#[derive(TypeAssert)]
+#[size = 0x98]
 pub struct FighterWorkModuleImpl {
-    parent: WorkModule,
-    work_array_info: WorkArrayInfo,
-    transition_term_info: TransitionTermInfo,
-    transition_groups: *const *const TransitionGroup, // technically this is a pointer to (*const TransitionGroup, usize) but the size is never checked
-    param_object: u64,
-    fighter_kind: app::FighterKind,
-    entry_id: app::FighterEntryID,
-    _x48: u64,
-    fighter_info: *mut app::FighterInformation,
-    // more
-}
-
-#[cfg(feature = "type_assert")]
-impl FighterWorkModuleImpl {
-    pub fn assert() {
-        assert_eq!(offset_of!(FighterWorkModuleImpl, parent), 0x0);
-        assert_eq!(offset_of!(FighterWorkModuleImpl, work_array_info), 0x10);
-        assert_eq!(offset_of!(FighterWorkModuleImpl, transition_term_info), 0x20);
-        assert_eq!(offset_of!(FighterWorkModuleImpl, transition_groups), 0x30);
-        assert_eq!(offset_of!(FighterWorkModuleImpl, param_object), 0x38);
-        assert_eq!(offset_of!(FighterWorkModuleImpl, fighter_kind), 0x40);
-        assert_eq!(offset_of!(FighterWorkModuleImpl, entry_id), 0x44);
-        assert_eq!(offset_of!(FighterWorkModuleImpl, _x48), 0x48);
-        assert_eq!(offset_of!(FighterWorkModuleImpl, fighter_info), 0x50);
-    }
+    #[offset = 0x00] parent: WorkModule,
+    #[offset = 0x10] work_array_info: cpp::Array2<WorkArray>,
+    #[offset = 0x20] transition_term_info: TransitionTermInfo,
+    #[offset = 0x30] transition_groups: *const cpp::Array<TransitionGroup>,
+    #[offset = 0x38] param_object: u64,
+    #[offset = 0x40] fighter_kind: app::FighterKind,
+    #[offset = 0x44] entry_id: app::FighterEntryID,
+    #[offset = 0x48] _x48: u64,
+    #[offset = 0x50] fighter_info: *mut app::FighterInformation,
+    #[offset = 0x58] _x58: [u64; 8]
 }

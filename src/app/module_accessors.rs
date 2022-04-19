@@ -5,105 +5,55 @@ use crate::*;
 use app::*;
 
 #[repr(C)]
+#[derive(TypeAssert)]
+#[size = 0x190]
 pub struct ModuleAccessor {
-    event_manager:                                   lib::EventManager,
-    posture_module:                                  *mut Module,
-    status_module:                                   *mut StatusModule,
-    control_module:                                  *mut Module,
-    work_module:                                     *mut WorkModule,
-    ground_module:                                   *mut Module,
-    camera_module:                                   *mut Module,
-    kinetic_module:                                  *mut Module,
-    color_blend_module:                              *mut Module,
-    model_module:                                    *mut Module,
-    physics_module:                                  *mut Module,
-    motion_module:                                   *mut Module,
-    stop_module:                                     *mut Module,
-    article_module:                                  *mut Module,
-    attack_module:                                   *mut Module,
-    damage_module:                                   *mut Module,
-    hit_module:                                      *mut Module,
-    combo_module:                                    *mut Module,
-    area_module:                                     *mut Module,
-    item_module:                                     *mut Module,
-    link_module:                                     *mut Module,
-    team_module:                                     *mut Module,
-    search_module:                                   *mut Module,
-    unk_module_1:                                    *mut Module,
-    turn_module:                                     *mut Module,
-    reflect_module:                                  *mut Module,
-    shield_module:                                   *mut Module,
-    reflector_module:                                *mut Module,
-    absorber_module:                                 *mut Module,
-    jostle_module:                                   *mut Module,
-    catch_module:                                    *mut Module,
-    cancel_module:                                   *mut CancelModule,
-    unk_module_2:                                    *mut Module, // appears to have to do with spirits
-    capture_module:                                  *mut Module,
-    effect_module:                                   *mut Module,
-    sound_module:                                    *mut Module,
-    visibility_module:                               *mut Module,
-    grab_module:                                     *mut Module,
-    slope_module:                                    *mut Module,
-    shake_module:                                    *mut Module,
-    slow_module:                                     *mut Module,
-    unk_module_3:                                    *mut Module,
-    shadow_module:                                   *mut Module,
-    motion_animcmd_module:                           *mut Module,
-    lua_module:                                      *mut Module,
-    ink_paint_module:                                *mut Module,
-}
-
-#[cfg(feature = "type_assert")]
-impl ModuleAccessor {
-    pub fn assert() {
-        assert_eq!(size_of!(ModuleAccessor), 0x190);
-        assert_eq!(offset_of!(ModuleAccessor, posture_module),        0x028);
-        assert_eq!(offset_of!(ModuleAccessor, status_module),         0x030);
-        assert_eq!(offset_of!(ModuleAccessor, control_module),        0x038);
-        assert_eq!(offset_of!(ModuleAccessor, work_module),           0x040);
-        assert_eq!(offset_of!(ModuleAccessor, ground_module),         0x048);
-        assert_eq!(offset_of!(ModuleAccessor, camera_module),         0x050);
-        assert_eq!(offset_of!(ModuleAccessor, kinetic_module),        0x058);
-        assert_eq!(offset_of!(ModuleAccessor, color_blend_module),    0x060);
-        assert_eq!(offset_of!(ModuleAccessor, model_module),          0x068);
-        assert_eq!(offset_of!(ModuleAccessor, physics_module),        0x070);
-        assert_eq!(offset_of!(ModuleAccessor, motion_module),         0x078);
-        assert_eq!(offset_of!(ModuleAccessor, stop_module),           0x080);
-        assert_eq!(offset_of!(ModuleAccessor, article_module),        0x088);
-        assert_eq!(offset_of!(ModuleAccessor, attack_module),         0x090);
-        assert_eq!(offset_of!(ModuleAccessor, damage_module),         0x098);
-        assert_eq!(offset_of!(ModuleAccessor, hit_module),            0x0A0);
-        assert_eq!(offset_of!(ModuleAccessor, combo_module),          0x0A8);
-        assert_eq!(offset_of!(ModuleAccessor, area_module),           0x0B0);
-        assert_eq!(offset_of!(ModuleAccessor, item_module),           0x0B8);
-        assert_eq!(offset_of!(ModuleAccessor, link_module),           0x0C0);
-        assert_eq!(offset_of!(ModuleAccessor, team_module),           0x0C8);
-        assert_eq!(offset_of!(ModuleAccessor, search_module),         0x0D0);
-        assert_eq!(offset_of!(ModuleAccessor, unk_module_1),          0x0D8);
-        assert_eq!(offset_of!(ModuleAccessor, turn_module),           0x0E0);
-        assert_eq!(offset_of!(ModuleAccessor, reflect_module),        0x0E8);
-        assert_eq!(offset_of!(ModuleAccessor, shield_module),         0x0F0);
-        assert_eq!(offset_of!(ModuleAccessor, reflector_module),      0x0F8);
-        assert_eq!(offset_of!(ModuleAccessor, absorber_module),       0x100);
-        assert_eq!(offset_of!(ModuleAccessor, jostle_module),         0x108);
-        assert_eq!(offset_of!(ModuleAccessor, catch_module),          0x110);
-        assert_eq!(offset_of!(ModuleAccessor, cancel_module),         0x118);
-        assert_eq!(offset_of!(ModuleAccessor, unk_module_2),          0x120);
-        assert_eq!(offset_of!(ModuleAccessor, capture_module),        0x128);
-        assert_eq!(offset_of!(ModuleAccessor, effect_module),         0x130);
-        assert_eq!(offset_of!(ModuleAccessor, sound_module),          0x138);
-        assert_eq!(offset_of!(ModuleAccessor, visibility_module),     0x140);
-        assert_eq!(offset_of!(ModuleAccessor, grab_module),           0x148);
-        assert_eq!(offset_of!(ModuleAccessor, slope_module),          0x150);
-        assert_eq!(offset_of!(ModuleAccessor, shake_module),          0x158);
-        assert_eq!(offset_of!(ModuleAccessor, slow_module),           0x160);
-        assert_eq!(offset_of!(ModuleAccessor, unk_module_3),          0x168);
-        assert_eq!(offset_of!(ModuleAccessor, shadow_module),         0x170);
-        assert_eq!(offset_of!(ModuleAccessor, motion_animcmd_module), 0x178);
-        assert_eq!(offset_of!(ModuleAccessor, lua_module),            0x180);
-        assert_eq!(offset_of!(ModuleAccessor, ink_paint_module),      0x188);
-    }
+    #[offset = 0x000] event_manager:                                   lib::EventManager,
+    #[offset = 0x028] posture_module:                                  *mut Module,
+    #[offset = 0x030] status_module:                                   *mut StatusModule,
+    #[offset = 0x038] control_module:                                  *mut Module,
+    #[offset = 0x040] work_module:                                     *mut WorkModule,
+    #[offset = 0x048] ground_module:                                   *mut Module,
+    #[offset = 0x050] camera_module:                                   *mut Module,
+    #[offset = 0x058] kinetic_module:                                  *mut Module,
+    #[offset = 0x060] color_blend_module:                              *mut Module,
+    #[offset = 0x068] model_module:                                    *mut Module,
+    #[offset = 0x070] physics_module:                                  *mut Module,
+    #[offset = 0x078] motion_module:                                   *mut Module,
+    #[offset = 0x080] stop_module:                                     *mut Module,
+    #[offset = 0x088] article_module:                                  *mut Module,
+    #[offset = 0x090] attack_module:                                   *mut Module,
+    #[offset = 0x098] damage_module:                                   *mut Module,
+    #[offset = 0x0A0] hit_module:                                      *mut Module,
+    #[offset = 0x0A8] combo_module:                                    *mut Module,
+    #[offset = 0x0B0] area_module:                                     *mut Module,
+    #[offset = 0x0B8] item_module:                                     *mut Module,
+    #[offset = 0x0C0] link_module:                                     *mut Module,
+    #[offset = 0x0C8] team_module:                                     *mut Module,
+    #[offset = 0x0D0] search_module:                                   *mut Module,
+    #[offset = 0x0D8] unk_module_1:                                    *mut Module,
+    #[offset = 0x0E0] turn_module:                                     *mut Module,
+    #[offset = 0x0E8] reflect_module:                                  *mut Module,
+    #[offset = 0x0F0] shield_module:                                   *mut Module,
+    #[offset = 0x0F8] reflector_module:                                *mut Module,
+    #[offset = 0x100] absorber_module:                                 *mut Module,
+    #[offset = 0x108] jostle_module:                                   *mut Module,
+    #[offset = 0x110] catch_module:                                    *mut Module,
+    #[offset = 0x118] cancel_module:                                   *mut CancelModule,
+    #[offset = 0x120] unk_module_2:                                    *mut Module, // appears to have to do with spirits
+    #[offset = 0x128] capture_module:                                  *mut Module,
+    #[offset = 0x130] effect_module:                                   *mut Module,
+    #[offset = 0x138] sound_module:                                    *mut Module,
+    #[offset = 0x140] visibility_module:                               *mut Module,
+    #[offset = 0x148] grab_module:                                     *mut Module,
+    #[offset = 0x150] slope_module:                                    *mut Module,
+    #[offset = 0x158] shake_module:                                    *mut Module,
+    #[offset = 0x160] slow_module:                                     *mut Module,
+    #[offset = 0x168] unk_module_3:                                    *mut Module,
+    #[offset = 0x170] shadow_module:                                   *mut Module,
+    #[offset = 0x178] motion_animcmd_module:                           *mut Module,
+    #[offset = 0x180] lua_module:                                      *mut LuaModule,
+    #[offset = 0x188] ink_paint_module:                                *mut Module,
 }
 
 impl ModuleAccessor {
@@ -118,10 +68,24 @@ impl ModuleAccessor {
             &mut *self.cancel_module
         }
     }
+
+    pub fn status<'a>(&'a self) -> &'a mut StatusModule {
+        unsafe {
+            &mut *self.status_module
+        }
+    }
+
+    pub fn lua<'a>(&'a self) -> &'a mut LuaModule {
+        unsafe {
+            &mut *self.lua_module
+        }
+    }
 }
 
 #[repr(C)]
 #[vtable_impl(BattleObjectModuleAccessor)]
+#[derive(TypeAssert)]
+#[size = 0x38]
 pub(crate) struct BattleObjectModuleAccessorVTable {
 
     /// Checks if this module accessor is implemented
@@ -134,30 +98,25 @@ pub(crate) struct BattleObjectModuleAccessorVTable {
     /// If the module accessor is not implemented, there should be no attempt to
     /// use any of its modules as if they were implemented, and there should be
     /// not attempt to cast it to an implementor's type.
+    #[offset = 0x0]
     pub is_virtual: extern "C" fn(this: &BattleObjectModuleAccessor) -> bool,
 
-
+    #[offset = 0x8]
     destructor: extern "C" fn(this: &mut BattleObjectModuleAccessor),
+    #[offset = 0x10]
     deleter: extern "C" fn(this: &mut BattleObjectModuleAccessor),
 
+    #[offset = 0x18]
     initialize_modules: extern "C" fn(this: &mut BattleObjectModuleAccessor, init_args: *const u64),
-    finalize_modules: extern "C" fn(this: &mut BattleObjectModuleAccessor),
-    start_modules: extern "C" fn(this: &mut BattleObjectModuleAccessor),
-    end_modules: extern "C" fn(this: &mut BattleObjectModuleAccessor),
-}
 
-#[cfg(feature = "type_assert")]
-impl BattleObjectModuleAccessorVTable {
-    pub fn assert() {
-        assert_eq!(size_of!(BattleObjectModuleAccessorVTable), 0x38);
-        assert_eq!(offset_of!(BattleObjectModuleAccessorVTable, is_virtual), 0x0);
-        assert_eq!(offset_of!(BattleObjectModuleAccessorVTable, destructor), 0x8);
-        assert_eq!(offset_of!(BattleObjectModuleAccessorVTable, deleter), 0x10);
-        assert_eq!(offset_of!(BattleObjectModuleAccessorVTable, initialize_modules), 0x18);
-        assert_eq!(offset_of!(BattleObjectModuleAccessorVTable, finalize_modules), 0x20);
-        assert_eq!(offset_of!(BattleObjectModuleAccessorVTable, start_modules), 0x28);
-        assert_eq!(offset_of!(BattleObjectModuleAccessorVTable, end_modules), 0x30);
-    }
+    #[offset = 0x20]
+    finalize_modules: extern "C" fn(this: &mut BattleObjectModuleAccessor),
+
+    #[offset = 0x28]
+    start_modules: extern "C" fn(this: &mut BattleObjectModuleAccessor),
+
+    #[offset = 0x30]
+    end_modules: extern "C" fn(this: &mut BattleObjectModuleAccessor),
 }
 
 #[repr(C)]
