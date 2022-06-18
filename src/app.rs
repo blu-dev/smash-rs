@@ -16,6 +16,7 @@ mod modules;
 mod module_accessors;
 mod singletons;
 mod specializers;
+pub mod stage;
 
 pub use ai_extras::*;
 pub use bosses::*;
