@@ -15,6 +15,8 @@ mod items;
 mod modules;
 mod module_accessors;
 mod singletons;
+pub mod smashball;
+pub mod smashballheavy;
 mod specializers;
 pub mod stage;
 
