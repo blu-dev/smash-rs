@@ -19,6 +19,7 @@ pub mod smashball;
 pub mod smashballheavy;
 mod specializers;
 pub mod stage;
+pub mod sv_information;
 
 pub use ai_extras::*;
 pub use bosses::*;
