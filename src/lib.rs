@@ -1,6 +1,5 @@
 #![feature(repr_simd)]
 #![feature(simd_ffi)]
-#![feature(const_panic)] // for compile time checks
 #![feature(const_trait_impl)]
 
 #![allow(incomplete_features)]

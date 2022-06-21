@@ -3,21 +3,21 @@ use crate::*;
 #[repr(C)]
 pub struct AttackAbsoluteData {
     pub power: f32,
-    pub angle: f32, // vector
+    pub vector: i32,
     pub r_eff: i32,
     pub r_fix: i32,
     pub r_add: i32,
-    pub slip: f32, // trip probability
+    pub slip: f32,
     pub stop_frame: f32,
     pub stop_delay: f32,
-    pub attribute: phx::Hash40,
-    pub sound_level: u8,
-    pub sound_attr: u8,
-    pub lr_check: u8,
+    pub attr: phx::Hash40,
+    pub sound_level: app::CollisionSoundLevel,
+    pub sound_attr: app::CollisionSoundAttr,
+    pub lr_check: app::AttackLRCheck,
     pub no_stop: bool,
     pub no_effect: bool,
     unused: u8,
-    pub region: u8,
+    pub region: app::AttackRegion,
     pub catch: bool
 }
 
@@ -25,34 +25,34 @@ pub struct AttackAbsoluteData {
 impl AttackAbsoluteData {
     pub fn assert() {
         assert_eq!(size_of!(AttackAbsoluteData), 0x30);
-        assert_eq!(offset_of!(AttackAbsoluteData, power), 0x0);
-        assert_eq!(offset_of!(AttackAbsoluteData, angle), 0x4);
-        assert_eq!(offset_of!(AttackAbsoluteData, r_eff), 0x8);
-        assert_eq!(offset_of!(AttackAbsoluteData, r_fix), 0xC);
-        assert_eq!(offset_of!(AttackAbsoluteData, r_add), 0x10);
-        assert_eq!(offset_of!(AttackAbsoluteData, slip), 0x14);
-        assert_eq!(offset_of!(AttackAbsoluteData, stop_frame), 0x18);
-        assert_eq!(offset_of!(AttackAbsoluteData, stop_delay), 0x1C);
-        assert_eq!(offset_of!(AttackAbsoluteData, attribute), 0x20);
+        assert_eq!(offset_of!(AttackAbsoluteData, power),       0x0);
+        assert_eq!(offset_of!(AttackAbsoluteData, vector),      0x4);
+        assert_eq!(offset_of!(AttackAbsoluteData, r_eff),       0x8);
+        assert_eq!(offset_of!(AttackAbsoluteData, r_fix),       0xC);
+        assert_eq!(offset_of!(AttackAbsoluteData, r_add),       0x10);
+        assert_eq!(offset_of!(AttackAbsoluteData, slip),        0x14);
+        assert_eq!(offset_of!(AttackAbsoluteData, stop_frame),  0x18);
+        assert_eq!(offset_of!(AttackAbsoluteData, stop_delay),  0x1C);
+        assert_eq!(offset_of!(AttackAbsoluteData, attr),        0x20);
         assert_eq!(offset_of!(AttackAbsoluteData, sound_level), 0x28);
-        assert_eq!(offset_of!(AttackAbsoluteData, sound_attr), 0x29);
-        assert_eq!(offset_of!(AttackAbsoluteData, lr_check), 0x2A);
-        assert_eq!(offset_of!(AttackAbsoluteData, no_stop), 0x2B);
-        assert_eq!(offset_of!(AttackAbsoluteData, no_effect), 0x2C);
-        assert_eq!(offset_of!(AttackAbsoluteData, region), 0x2E);
-        assert_eq!(offset_of!(AttackAbsoluteData, catch), 0x2F);
+        assert_eq!(offset_of!(AttackAbsoluteData, sound_attr),  0x29);
+        assert_eq!(offset_of!(AttackAbsoluteData, lr_check),    0x2A);
+        assert_eq!(offset_of!(AttackAbsoluteData, no_stop),     0x2B);
+        assert_eq!(offset_of!(AttackAbsoluteData, no_effect),   0x2C);
+        assert_eq!(offset_of!(AttackAbsoluteData, region),      0x2E);
+        assert_eq!(offset_of!(AttackAbsoluteData, catch),       0x2F);
     }
 }
 
 #[repr(C)]
 pub struct AttackData {
-    pub offset: phx::Vec3,
-    padding: f32,
-    pub offset2: phx::Vec3,
+    pub offset: phx::Vector3f,
+    padding1: f32,
+    pub offset2: phx::Vector3f,
     padding2: f32,
     pub power: f32,
     pub size: f32,
-    pub angle: i32, // vector
+    pub vector: i32,
     pub r_eff: i32,
     pub r_fix: i32,
     pub r_add: i32,
@@ -60,14 +60,14 @@ pub struct AttackData {
     pub stop_frame: f32,
     pub stop_delay: f32,
     pub node: phx::Hash40,
-    pub target_category: u16,
-    pub target_situation: u8,
+    pub target_category: app::CollisionCategoryMask,
+    pub target_situation: app::CollisionSituationMask,
     pub target_lr: bool,
-    pub target_part: u8,
-    pub attribute: phx::Hash40,
-    pub sound_level: u8,
-    pub sound_attr: u8,
-    pub set_off: u8,
+    pub target_part: app::CollisionPartMask,
+    pub attr: phx::Hash40,
+    pub sound_level: app::CollisionSoundLevel,
+    pub sound_attr: app::CollisionSoundAttr,
+    pub set_off: app::AttackSetOffKind,
     pub no_scale: bool,
     pub shield: bool,
     pub reflector: bool,
@@ -75,19 +75,19 @@ pub struct AttackData {
     pub direct: bool,
     pub no_invincible: bool,
     pub no_xlu: bool,
-    pub lr_check: u8,
+    pub lr_check: app::AttackLRCheck,
     pub catch: bool,
     pub no_team: bool,
     pub no_stop: bool,
     pub no_effect: bool,
-    unused: u8,
+    unused1: u8,
     pub speed: bool,
-    pub region: u8,
+    pub region: app::AttackRegion,
     pub ignore_down: bool,
-    pub check_type: u8, // 0x0 for sphere, 0x2 for capsule, 0x1 for AABB (which doesn't work on hitboxes)
+    pub check_type: app::CollisionShapeType,
     pub sub_shield: u16,
-    pub camera_quake: u8,
-    pub serial_hit_frame: i32,
+    pub camera_quake: app::CameraQuakeKind,
+    pub serial_hit_frame: u32,
     pub force_reaction: bool,
     pub no_attacker_log: bool,
     pub no_weight_reaction: u8,
@@ -112,7 +112,7 @@ impl AttackData {
         assert_eq!(offset_of!(AttackData, offset2),                   0x10);
         assert_eq!(offset_of!(AttackData, power),                     0x20);
         assert_eq!(offset_of!(AttackData, size),                      0x24);
-        assert_eq!(offset_of!(AttackData, angle),                     0x28);
+        assert_eq!(offset_of!(AttackData, vector),                    0x28);
         assert_eq!(offset_of!(AttackData, r_eff),                     0x2C);
         assert_eq!(offset_of!(AttackData, r_fix),                     0x30);
         assert_eq!(offset_of!(AttackData, r_add),                     0x34);
@@ -124,7 +124,7 @@ impl AttackData {
         assert_eq!(offset_of!(AttackData, target_situation),          0x52);
         assert_eq!(offset_of!(AttackData, target_lr),                 0x53);
         assert_eq!(offset_of!(AttackData, target_part),               0x54);
-        assert_eq!(offset_of!(AttackData, attribute),                 0x58);
+        assert_eq!(offset_of!(AttackData, attr),                      0x58);
         assert_eq!(offset_of!(AttackData, sound_level),               0x60);
         assert_eq!(offset_of!(AttackData, sound_attr),                0x61);
         assert_eq!(offset_of!(AttackData, set_off),                   0x62);

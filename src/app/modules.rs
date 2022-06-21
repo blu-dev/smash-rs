@@ -32,10 +32,10 @@ struct ModuleVTable {
 /// 
 /// Smash Ultimate takes its module system from Smash 4 and expands upon it.
 /// 
-/// Due to the nature of fighter/weapon code being written primarily in lua, transpiled to C++,
+/// Due to the nature of fighter/weapon code being written primarily in Lua, transpiled to C++,
 /// and then compiled into relocatable character modules (the NRO files), many calls in Ultimate
 /// are exported as symbols. However, the MSC environment still exists in Ultimate even though it
-/// is wrapped up nicely in lua and overall very hidden away.
+/// is wrapped up nicely in Lua and overall very hidden away.
 /// 
 /// Every module (for most objects there are ~50 modules) inherits from a base class (named here
 /// simply as `Module`)lib:: and must support the following operations:
@@ -44,7 +44,7 @@ struct ModuleVTable {
 /// 2. Handle MSC commands that will return an integer
 /// 3. Handle MSC commands that will return a float
 /// 
-/// Not every module actually has an implementation which will handle the the MSC commands, and some don't
+/// Not every module actually has an implementation which will handle the MSC commands, and some don't
 /// really need to. That being said, when they do it can provide insights into their *non*-exported methods.
 /// 
 /// For example, all that is exported by the main executable for [`CancelModule`] is [`CancelModule::is_enable_cancel`]
