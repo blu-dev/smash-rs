@@ -1,4 +1,6 @@
 mod ai;
+mod attack;
+mod collision;
 mod control;
 mod cut_in;
 mod fighters;
@@ -8,6 +10,8 @@ mod status;
 mod work;
 
 pub use ai::*;
+pub use attack::*;
+pub use collision::*;
 pub use control::*;
 pub use cut_in::*;
 pub use fighters::*;
