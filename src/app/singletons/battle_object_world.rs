@@ -57,21 +57,13 @@ pub struct BattleObjectWorld {
 impl BattleObjectWorld {
     pub fn instance() -> Option<&'static Self> {
         unsafe {
-            if impl_::INSTANCE.is_null() {
-                None
-            } else {
-                Some(&*impl_::INSTANCE)
-            }
+            impl_::INSTANCE.as_ref()
         }
     }
 
     pub fn instance_mut() -> Option<&'static mut Self> {
         unsafe {
-            if impl_::INSTANCE.is_null() {
-                None
-            } else {
-                Some(&mut *impl_::INSTANCE)
-            }
+            impl_::INSTANCE.as_mut()
         }
     }
 
@@ -105,7 +97,7 @@ impl BattleObjectWorld {
         }
     }
 
-    pub fn move_speed<'a>(&'a self) -> &'a phx::Vector3f {
+    pub fn move_speed(&self) -> &phx::Vector3f {
         unsafe {
             &*(impl_::move_speed(self) as *const phx::Vector3f)
         }

@@ -168,21 +168,13 @@ pub struct FighterManager {
 impl FighterManager {
     pub fn instance() -> Option<&'static Self> {
         unsafe {
-            if impl_::INSTANCE.is_null() {
-                None
-            } else {
-                Some(&*impl_::INSTANCE)
-            }
+            impl_::INSTANCE.as_ref()
         }
     }
 
     pub fn instance_mut() -> Option<&'static mut Self> {
         unsafe {
-            if impl_::INSTANCE.is_null() {
-                None
-            } else {
-                Some(&mut *impl_::INSTANCE)
-            }
+            impl_::INSTANCE.as_mut()
         }
     }
 
@@ -234,25 +226,25 @@ impl FighterManager {
         }
     }
 
-    pub fn get_fighter_entry<'a>(&'a self, entry_id: app::FighterEntryID) -> Option<&'a app::FighterEntry> {
+    pub fn get_fighter_entry(&self, entry_id: app::FighterEntryID) -> Option<&app::FighterEntry> {
         unsafe {
             impl_::get_fighter_entry(self, entry_id).as_ref()
         }
     }
 
-    pub fn get_fighter_information<'a>(&'a self, entry_id: app::FighterEntryID) -> Option<&'a app::FighterInformation> {
+    pub fn get_fighter_information(&self, entry_id: app::FighterEntryID) -> Option<&app::FighterInformation> {
         unsafe {
             impl_::get_fighter_information(self, entry_id).as_ref()
         }
     }
 
-    pub fn get_fighter_entry_mut<'a>(&'a mut self, entry_id: app::FighterEntryID) -> Option<&'a mut app::FighterEntry> {
+    pub fn get_fighter_entry_mut(&mut self, entry_id: app::FighterEntryID) -> Option<&mut app::FighterEntry> {
         unsafe {
             impl_::get_fighter_entry(self, entry_id).as_mut()
         }
     }
 
-    pub fn get_fighter_information_mut<'a>(&'a mut self, entry_id: app::FighterEntryID) -> Option<&'a mut app::FighterInformation> {
+    pub fn get_fighter_information_mut(&mut self, entry_id: app::FighterEntryID) -> Option<&mut app::FighterInformation> {
         unsafe {
             impl_::get_fighter_information(self, entry_id).as_mut()
         }

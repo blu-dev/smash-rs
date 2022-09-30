@@ -4,7 +4,7 @@ mod impl_ {
     use crate::*;
 
     extern "C" {
-        #[link_name = "_ZN3lib9SingletonIN3app12StageManagerEE9instance_E"]
+        #[link_name = "_ZN3lib9SingletonIN3app11ItemManagerEE9instance_E"]
         pub(super) static INSTANCE: *mut app::ItemManager;
 
         #[link_name = "_ZN3app8lua_bind47ItemManager__find_active_item_from_area_id_implEPNS_11ItemManagerEj"]
@@ -36,21 +36,13 @@ pub struct ItemManager {}
 impl ItemManager {
     pub fn instance() -> Option<&'static Self> {
         unsafe {
-            if impl_::INSTANCE.is_null() {
-                None
-            } else {
-                Some(&*impl_::INSTANCE)
-            }
+            impl_::INSTANCE.as_ref()
         }
     }
 
     pub fn instance_mut() -> Option<&'static mut Self> {
         unsafe {
-            if impl_::INSTANCE.is_null() {
-                None
-            } else {
-                Some(&mut *impl_::INSTANCE)
-            }
+            impl_::INSTANCE.as_mut()
         }
     }
 

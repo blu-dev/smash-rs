@@ -9,10 +9,11 @@ pub(crate) struct BattleObjectVTable {}
 pub struct BattleObject {
     vtable: &'static BattleObjectVTable,
     pub battle_object_id: u32,
-    pub kind: u32,
+    pub kind: i32,
     pub entry_id: i32,
     pub agent_kind: phx::Hash40,
     pub module_accessor: *const app::BattleObjectModuleAccessor,
+    _x28: [u8; 0x38],
 }
 
 #[repr(C)]

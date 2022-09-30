@@ -264,11 +264,7 @@ impl L2CValue {
     pub fn try_table(&self) -> Option<&lib::L2CTable> {
         unsafe {
             if matches!(self.ty, ValueType::Table) {
-                if self.raw.table.is_null() {
-                    None
-                } else {
-                    Some(&*self.raw.table)
-                }
+                self.raw.table.as_ref()
             } else {
                 None
             }
@@ -278,11 +274,7 @@ impl L2CValue {
     pub fn try_table_mut(&mut self) -> Option<&mut lib::L2CTable> {
         unsafe {
             if matches!(self.ty, ValueType::Table) {
-                if self.raw.table.is_null() {
-                    None
-                } else {
-                    Some(&mut *self.raw.table)
-                }
+                self.raw.table.as_mut()
             } else {
                 None
             }
@@ -292,11 +284,7 @@ impl L2CValue {
     pub fn try_inner_function(&self) -> Option<&lib::L2CInnerFunctionBase> {
         unsafe {
             if matches!(self.ty, ValueType::InnerFunction) {
-                if self.raw.inner_function.is_null() {
-                    None
-                } else {
-                    Some(&mut *self.raw.inner_function)
-                }
+                self.raw.inner_function.as_ref()
             } else {
                 None
             }

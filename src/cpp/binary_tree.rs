@@ -79,62 +79,38 @@ impl<'a, O: PartialOrd, V> Iterator for RecursiveTreeNodeIter<'a, O, V> {
 
 impl<O: PartialOrd, V> TreeNode<O, V> {
     pub fn left(&self) -> Option<&TreeNode<O, V>> {
-        if self.left.is_null() {
-            None
-        } else {
-            unsafe {
-                Some(&*self.left)
-            }
+        unsafe {
+            self.left.as_ref()
         }
     }
 
     pub fn left_mut(&mut self) -> Option<&mut TreeNode<O, V>> {
-        if self.left.is_null() {
-            None
-        } else {
-            unsafe {
-                Some(&mut *self.left)
-            }
+        unsafe {
+            self.left.as_mut()
         }
     }
 
     pub fn right(&self) -> Option<&TreeNode<O, V>> {
-        if self.right.is_null() {
-            None
-        } else {
-            unsafe {
-                Some(&*self.right)
-            }
+        unsafe {
+            self.right.as_ref()
         }
     }
 
     pub fn right_mut(&mut self) -> Option<&mut TreeNode<O, V>> {
-        if self.right.is_null() {
-            None
-        } else {
-            unsafe {
-                Some(&mut *self.right)
-            }
+        unsafe {
+            self.right.as_mut()
         }
     }
 
     pub fn parent(&self) -> Option<&TreeNode<O, V>> {
-        if self.parent.is_null() {
-            None
-        } else {
-            unsafe {
-                Some(&*self.parent)
-            }
+        unsafe {
+            self.parent.as_ref()
         }
     }
 
     pub fn parent_mut(&mut self) -> Option<&mut TreeNode<O, V>> {
-        if self.parent.is_null() {
-            None
-        } else {
-            unsafe {
-                Some(&mut *self.parent)
-            }
+        unsafe {
+            self.parent.as_mut()
         }
     }
 
@@ -182,22 +158,14 @@ pub struct Tree<O: PartialOrd, V> {
 
 impl<O: PartialOrd, V> Tree<O, V> {
     fn root(&self) -> Option<&TreeNode<O, V>> {
-        if self.root.is_null() {
-            None
-        } else {
-            unsafe {
-                Some(&*self.root)
-            }
+        unsafe {
+            self.root.as_ref()
         }
     }
 
     fn root_mut(&mut self) -> Option<&mut TreeNode<O, V>> {
-        if self.root.is_null() {
-            None
-        } else {
-            unsafe {
-                Some(&mut *self.root)
-            }
+        unsafe {
+            self.root.as_mut()
         }
     }
 

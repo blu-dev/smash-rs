@@ -27,22 +27,14 @@ impl<K, V> MapEntry<K, V> {
     }
 
     pub fn next(&self) -> Option<&Self> {
-        if self.next.is_null() {
-            None
-        } else {
-            unsafe {
-                Some(&*self.next)
-            }
+        unsafe {
+            self.next.as_ref()
         }
     }
 
     pub fn next_mut(&mut self) -> Option<&mut Self> {
-        if self.next.is_null() {
-            None
-        } else {
-            unsafe {
-                Some(&mut *self.next)
-            }
+        unsafe {
+            self.next.as_mut()
         }
     }
 }
