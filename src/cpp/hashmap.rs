@@ -312,13 +312,13 @@ impl<H: Into<Hash40>, V> Index<H> for HashMap<Hash40, V> {
 
     fn index(&self, index: H) -> &Self::Output {
         let hash = index.into();
-        self.get_hash(hash.as_u64()).expect("Could not index HashMap!")
+        self.get_hash(hash.0).expect("Could not index HashMap!")
     }
 }
 
 impl<H: Into<Hash40>, V> IndexMut<H> for HashMap<Hash40, V> {
     fn index_mut(&mut self, index: H) -> &mut Self::Output {
         let hash = index.into();
-        self.get_hash_mut(hash.as_u64()).expect("Could not index HashMap!")
+        self.get_hash_mut(hash.0).expect("Could not index HashMap!")
     }
 }

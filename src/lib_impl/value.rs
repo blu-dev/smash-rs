@@ -506,7 +506,7 @@ impl fmt::Display for L2CValue {
             ValueType::UserData => write!(f, "{:#x}", self.try_pointer().unwrap() as u64),
             ValueType::Table => write!(f, "Table"),
             ValueType::InnerFunction => write!(f, "InnerFunction"),
-            ValueType::Hash => write!(f, "Hash({:#x})", self.try_hash().unwrap()),
+            ValueType::Hash => write!(f, "Hash({})", self.try_hash().unwrap()),
             ValueType::String => write!(f, "\"{}\"", self.try_string().unwrap())
         }
     }
@@ -800,7 +800,7 @@ impl Index<&str> for L2CValue {
 
     fn index(&self, index: &str) -> &Self::Output {
         unsafe {
-            let result = hash_index(self, index.into());
+            let result = hash_index(self, phx::hash40(index));
             if result.is_null() {
                 panic!("Failed to index L2CValue");
             } else {
@@ -815,7 +815,7 @@ impl Index<String> for L2CValue {
 
     fn index(&self, index: String) -> &Self::Output {
         unsafe {
-            let result = hash_index(self, index.into());
+            let result = hash_index(self, phx::hash40(&index));
             if result.is_null() {
                 panic!("Failed to index L2CValue");
             } else {
@@ -841,7 +841,7 @@ impl IndexMut<phx::Hash40> for L2CValue {
 impl IndexMut<&str> for L2CValue {
     fn index_mut(&mut self, index: &str) -> &mut Self::Output {
         unsafe {
-            let result = hash_index(self, index.into());
+            let result = hash_index(self, phx::hash40(index));
             if result.is_null() {
                 panic!("Failed to index L2CValue");
             } else {
@@ -854,7 +854,7 @@ impl IndexMut<&str> for L2CValue {
 impl IndexMut<String> for L2CValue {
     fn index_mut(&mut self, index: String) -> &mut Self::Output {
         unsafe {
-            let result = hash_index(self, index.into());
+            let result = hash_index(self, phx::hash40(&index));
             if result.is_null() {
                 panic!("Failed to index L2CValue");
             } else {
