@@ -16,6 +16,7 @@ pub mod global_parameter;
 mod items;
 mod module_accessors;
 mod modules;
+pub mod nfp;
 mod singletons;
 pub mod smashball;
 pub mod smashballheavy;
