@@ -57,6 +57,10 @@ pub struct ModuleAccessor {
 }
 
 impl ModuleAccessor {
+    pub fn event_manager(&mut self) -> &mut lib::EventManager {
+        &mut self.event_manager
+    }
+    
     pub fn work<'a>(&'a self) -> &'a mut WorkModule {
         unsafe {
             &mut *self.work_module
