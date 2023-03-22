@@ -99,7 +99,7 @@ impl EventListenerVTable {
 static EVENT_LISTENER_VTABLE: EventListenerVTable = EventListenerVTable {
     destructor: EventListenerVTable::destructor,
     deleter: EventListenerVTable::deleter,
-    is_equal: EventListenerVTable::deleter,
+    is_equal: EventListenerVTable::is_equal,
     call: EventListenerVTable::call
 };
 
