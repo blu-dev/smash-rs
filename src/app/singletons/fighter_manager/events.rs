@@ -7,7 +7,11 @@ use std::ops::{Deref, DerefMut};
 pub enum FighterEventID {
     ChangeTagVisibility = 0xF,
     UIDamageUpdate = 0x11,
-    JackUpdateRebelGauge = 0x58
+    JackUpdateRebelGauge = 0x58,
+    BraveUpdateMenu = 0x5F,
+    BraveUpdateMenu2 = 0x60,
+    BraveUpdateMenu3 = 0x61,
+    BraveUpdateMenu4 = 0x63,
 }
 
 macro_rules! impl_event {
@@ -112,8 +116,80 @@ impl JackUpdateRebelGaugeEvent {
     }
 }
 
+#[repr(C)]
+#[derive(Debug)]
+pub struct BraveUpdateMenuEvent {    // set command for slot?
+    base: FighterEvent,
+    menu_entry: u32,            // 1-indexed
+    command_id: i32,            // id of command
+    mp_cost: f32
+}
+
+#[repr(C)]
+#[derive(Debug)]
+pub struct BraveUpdateMenu2Event {   // set if command is enabled?
+    base: FighterEvent,
+    menu_entry: u32,            // 1-indexed
+    command_enabled: bool       // if command is enabled
+}
+
+#[repr(C)]
+#[derive(Debug)]
+pub struct BraveUpdateMenu3Event {   // display menu?
+    base: FighterEvent,
+}
+
+#[repr(C)]
+#[derive(Debug)]
+pub struct BraveUpdateMenu4Event {   // set current selected slot?
+    base: FighterEvent,
+    menu_entry: u32,
+}
+
+impl BraveUpdateMenuEvent {
+    pub fn new(entry_id: app::FighterEntryID, menu_entry: u32, command_id: i32, mp_cost: f32) -> Self {
+        Self {
+            base: FighterEvent::new(FighterEventID::BraveUpdateMenu, entry_id),
+            menu_entry,
+            command_id,
+            mp_cost
+        }
+    }
+}
+
+impl BraveUpdateMenu2Event {
+    pub fn new(entry_id: app::FighterEntryID, menu_entry: u32, command_enabled: bool) -> Self {
+        Self {
+            base: FighterEvent::new(FighterEventID::BraveUpdateMenu2, entry_id),
+            menu_entry,
+            command_enabled
+        }
+    }
+}
+
+impl BraveUpdateMenu3Event {
+    pub fn new(entry_id: app::FighterEntryID) -> Self {
+        Self {
+            base: FighterEvent::new(FighterEventID::BraveUpdateMenu3, entry_id)
+        }
+    }
+}
+
+impl BraveUpdateMenu4Event {
+    pub fn new(entry_id: app::FighterEntryID, menu_entry: u32) -> Self {
+        Self {
+            base: FighterEvent::new(FighterEventID::BraveUpdateMenu4, entry_id),
+            menu_entry
+        }
+    }
+}
+
 impl_event!(
     (JackUpdateRebelGaugeEvent, JackUpdateRebelGauge)
     (UIDamageUpdateEvent, UIDamageUpdate)
     (ChangeTagVisibilityEvent, ChangeTagVisibility)
+    (BraveUpdateMenuEvent, BraveUpdateMenu)
+    (BraveUpdateMenu2Event, BraveUpdateMenu2)
+    (BraveUpdateMenu3Event, BraveUpdateMenu3)
+    (BraveUpdateMenu4Event, BraveUpdateMenu4)
 );
