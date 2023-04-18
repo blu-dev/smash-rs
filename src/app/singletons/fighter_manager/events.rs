@@ -118,7 +118,7 @@ impl JackUpdateRebelGaugeEvent {
 
 #[repr(C)]
 #[derive(Debug)]
-pub struct BraveUpdateMenuEvent {    // set command for slot?
+pub struct BraveUpdateMenuEvent {    // set command for slot
     base: FighterEvent,
     menu_entry: u32,            // 1-indexed
     command_id: i32,            // id of command
@@ -127,7 +127,7 @@ pub struct BraveUpdateMenuEvent {    // set command for slot?
 
 #[repr(C)]
 #[derive(Debug)]
-pub struct BraveUpdateMenu2Event {   // set if command is enabled?
+pub struct BraveUpdateMenu2Event {   // set if command is enabled
     base: FighterEvent,
     menu_entry: u32,            // 1-indexed
     command_enabled: bool       // if command is enabled
@@ -135,13 +135,13 @@ pub struct BraveUpdateMenu2Event {   // set if command is enabled?
 
 #[repr(C)]
 #[derive(Debug)]
-pub struct BraveUpdateMenu3Event {   // display menu?
+pub struct BraveUpdateMenu3Event {   // display menu
     base: FighterEvent,
 }
 
 #[repr(C)]
 #[derive(Debug)]
-pub struct BraveUpdateMenu4Event {   // set current selected slot?
+pub struct BraveUpdateMenu4Event {   // set the selected entry on menu open
     base: FighterEvent,
     menu_entry: u32,
 }
