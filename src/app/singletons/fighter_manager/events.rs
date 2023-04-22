@@ -141,7 +141,7 @@ pub struct BraveShowMenu {   // display menu
 
 #[repr(C)]
 #[derive(Debug)]
-pub struct BraveSetMenuCommand {   // set the selected entry on menu open
+pub struct BraveSetMenuSelectedCommand {   // set the selected entry on menu open
     base: FighterEvent,
     menu_entry: u32,
 }
@@ -175,7 +175,7 @@ impl BraveShowMenu {
     }
 }
 
-impl BraveSetMenuCommand {
+impl BraveSetMenuSelectedCommand {
     pub fn new(entry_id: app::FighterEntryID, menu_entry: u32) -> Self {
         Self {
             base: FighterEvent::new(FighterEventID::BraveUpdateMenu4, entry_id),
@@ -191,5 +191,5 @@ impl_event!(
     (BraveSetMenuCommand, BraveUpdateMenu)
     (BraveEnableMenuCommand, BraveUpdateMenu2)
     (BraveShowMenu, BraveUpdateMenu3)
-    (BraveSetMenuCommand, BraveUpdateMenu4)
+    (BraveSetMenuSelectedCommand, BraveUpdateMenu4)
 );
