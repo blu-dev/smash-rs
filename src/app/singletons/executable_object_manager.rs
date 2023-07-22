@@ -6,7 +6,7 @@ pub struct ExecutableObject {
     category: i32,
     padding: u32,
     run_on_frame_advance: bool,
-    padding: [u8; 0x2F],
+    padding2: [u8; 0x2F],
     function: *mut ExecutableFunction,
 }
 
