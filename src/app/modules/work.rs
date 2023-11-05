@@ -7,22 +7,22 @@ use crate::*;
 
 use thiserror::Error;
 
-macro_rules! const_partial_eq {
-    ($id:ident) => {
-        impl const std::cmp::PartialEq for $id {
-            fn eq(&self, other: &Self) -> bool {
-                (*self as u8) == (*other as u8)
-            }
-        }
-    };
-}
+// macro_rules! const_partial_eq {
+//     ($id:ident) => {
+//         impl const std::cmp::PartialEq for $id {
+//             fn eq(&self, other: &Self) -> bool {
+//                 (*self as u8) == (*other as u8)
+//             }
+//         }
+//     };
+// }
 
 /// Enum representing the category fo data that a [`WorkId`] refers to. This field
 /// determines where data is stored. [`WorkKind::Transition`] and [`WorkKind::TransitionGroup`]
 /// are not checked by any calls to the [`WorkModule`] accessors, however [`WorkKind::Instance`]
 /// and [`WorkKind::Status`] are used.
 #[repr(u8)]
-#[derive(Debug, Copy, Clone, Eq)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum WorkKind {
     Instance = 0x0,
     Status = 0x1,
@@ -31,8 +31,6 @@ pub enum WorkKind {
 
     None = 0xFF,
 }
-
-const_partial_eq!(WorkKind);
 
 impl From<u8> for WorkKind {
     fn from(arg: u8) -> Self {
@@ -50,7 +48,7 @@ impl From<u8> for WorkKind {
 /// has no impact on where the data is stored, and is not check by any calls to the
 /// [`WorkModule`] accessors.
 #[repr(u8)]
-#[derive(Debug, Copy, Clone, Eq)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum WorkType {
     Float = 0x0,
     Int = 0x1,
@@ -58,8 +56,6 @@ pub enum WorkType {
 
     None = 0xFF,
 }
-
-const_partial_eq!(WorkType);
 
 impl From<u8> for WorkType {
     fn from(arg: u8) -> Self {
@@ -84,13 +80,6 @@ pub struct WorkId(u32);
 
 impl WorkId {
     pub(crate) const fn from_parts(ty: WorkType, kind: WorkKind, index: u32) -> Self {
-        if ty == WorkType::None {
-            panic!("WorkType cannot be None");
-        }
-        if kind == WorkKind::None {
-            panic!("WorkKind cannot be None");
-        }
-
         let ty = (ty as u8 as u32) << 0x1C;
         let kind = (kind as u8 as u32) << 0x18;
         let index = index & 0x00FF_FFFF;

@@ -4,6 +4,7 @@
 #![feature(pointer_byte_offsets)]
 #![allow(incomplete_features)]
 #![allow(improper_ctypes)] // For simd
+#![allow(non_snake_case)]
 pub mod app;
 pub mod cpp;
 mod lib_impl;
