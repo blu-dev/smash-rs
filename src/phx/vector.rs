@@ -69,8 +69,8 @@ impl fmt::Display for Vector2f {
 impl From<cpp::simd::Vector2> for Vector2f {
     fn from(other: cpp::simd::Vector2) -> Self {
         Self {
-            x: other.x,
-            y: other.y,
+            x: other.vec[0],
+            y: other.vec[1],
         }
     }
 }
@@ -78,8 +78,7 @@ impl From<cpp::simd::Vector2> for Vector2f {
 impl Into<cpp::simd::Vector2> for Vector2f {
     fn into(self) -> cpp::simd::Vector2 {
         cpp::simd::Vector2 {
-            x: self.x,
-            y: self.y,
+            vec: [self.x, self.y]
         }
     }
 }
@@ -230,9 +229,9 @@ impl Into<lib::L2CValue> for Vector3f {
 impl From<cpp::simd::Vector3> for Vector3f {
     fn from(other: cpp::simd::Vector3) -> Self {
         Self {
-            x: other.x,
-            y: other.y,
-            z: other.z,
+            x: other.vec[0],
+            y: other.vec[1],
+            z: other.vec[2],
         }
     }
 }
@@ -240,9 +239,7 @@ impl From<cpp::simd::Vector3> for Vector3f {
 impl Into<cpp::simd::Vector3> for Vector3f {
     fn into(self) -> cpp::simd::Vector3 {
         cpp::simd::Vector3 {
-            x: self.x,
-            y: self.y,
-            z: self.z,
+            vec: [self.x, self.y, self.z]
         }
     }
 }
@@ -394,10 +391,10 @@ impl Into<lib::L2CValue> for Vector4f {
 impl From<cpp::simd::Vector4> for Vector4f {
     fn from(other: cpp::simd::Vector4) -> Self {
         Self {
-            x: other.x,
-            y: other.y,
-            z: other.z,
-            w: other.w,
+            x: other.vec[0],
+            y: other.vec[1],
+            z: other.vec[2],
+            w: other.vec[3],
         }
     }
 }
@@ -405,10 +402,7 @@ impl From<cpp::simd::Vector4> for Vector4f {
 impl Into<cpp::simd::Vector4> for Vector4f {
     fn into(self) -> cpp::simd::Vector4 {
         cpp::simd::Vector4 {
-            x: self.x,
-            y: self.y,
-            z: self.z,
-            w: self.w,
+            vec: [self.x, self.y, self.z, self.w]
         }
     }
 }
