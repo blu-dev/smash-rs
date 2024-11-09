@@ -13,7 +13,7 @@ pub struct LinkEvent {
     pub sender_id: u32,
     pub no: u32,
     pub result: bool,
-    padding3: [u8; 3]
+    pub padding3: [u8; 3]
 }
 
 impl Clone for LinkEvent {
