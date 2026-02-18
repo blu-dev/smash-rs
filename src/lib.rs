@@ -2,6 +2,7 @@
 #![feature(simd_ffi)]
 #![feature(const_trait_impl)]
 #![feature(pointer_byte_offsets)]
+#![feature(core_intrinsics)]
 #![allow(incomplete_features)]
 #![allow(improper_ctypes)] // For simd
 #![allow(non_snake_case)]
