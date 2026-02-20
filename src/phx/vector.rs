@@ -69,8 +69,8 @@ impl fmt::Display for Vector2f {
 impl From<cpp::simd::Vector2> for Vector2f {
     fn from(other: cpp::simd::Vector2) -> Self {
         Self {
-            x: other.vec[0],
-            y: other.vec[1],
+            x: other.x(),
+            y: other.y(),
         }
     }
 }
@@ -229,9 +229,9 @@ impl Into<lib::L2CValue> for Vector3f {
 impl From<cpp::simd::Vector3> for Vector3f {
     fn from(other: cpp::simd::Vector3) -> Self {
         Self {
-            x: other.vec[0],
-            y: other.vec[1],
-            z: other.vec[2],
+            x: other.x(),
+            y: other.y(),
+            z: other.z(),
         }
     }
 }
@@ -391,10 +391,10 @@ impl Into<lib::L2CValue> for Vector4f {
 impl From<cpp::simd::Vector4> for Vector4f {
     fn from(other: cpp::simd::Vector4) -> Self {
         Self {
-            x: other.vec[0],
-            y: other.vec[1],
-            z: other.vec[2],
-            w: other.vec[3],
+            x: other.x(),
+            y: other.y(),
+            z: other.z(),
+            w: other.w(),
         }
     }
 }

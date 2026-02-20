@@ -68,10 +68,10 @@ impl Into<lib::L2CValue> for Rect {
 impl From<cpp::simd::Vector4> for Rect {
     fn from(other: cpp::simd::Vector4) -> Self {
         Rect {
-            left: other.vec[0],
-            right: other.vec[1],
-            top: other.vec[2],
-            bottom: other.vec[3]
+            left: other.x(),
+            right: other.y(),
+            top: other.z(),
+            bottom: other.w()
         }
     }
 }
